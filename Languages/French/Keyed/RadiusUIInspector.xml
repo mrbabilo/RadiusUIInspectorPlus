@@ -230,6 +230,24 @@
   <RUI.Inspector.BookmarkOverwrite>Écraser</RUI.Inspector.BookmarkOverwrite>
   <RUI.Inspector.BookmarkOverwriteTip>Remplacer le contenu de ce filtre enregistré par le filtre actuel de ce stockage (et le renommer si un nom est saisi).</RUI.Inspector.BookmarkOverwriteTip>
   <RUI.Inspector.StoragePartlyRefused>Certains peuvent être refusés : le filtre spécial « {0} » est désactivé.</RUI.Inspector.StoragePartlyRefused>
+  <RUI.Inspector.StoragePerishable>Périssable : commence à se gâter après {0} jours, sauf s'il est congelé.</RUI.Inspector.StoragePerishable>
+  <RUI.Inspector.StorageBurnable>Incinérable : peut être détruit par une recette d'incinération (crématorium, feu de camp).</RUI.Inspector.StorageBurnable>
+  <RUI.Inspector.StorageBurnableStuff>Incinérable selon le matériau : seuls certains peuvent être détruits par une recette d'incinération.</RUI.Inspector.StorageBurnableStuff>
+  <RUI.Inspector.StorageSmeltable>Recyclable : peut être fondu à la fonderie.</RUI.Inspector.StorageSmeltable>
+  <RUI.Inspector.StorageSmeltableStuff>Recyclable selon le matériau : seuls certains peuvent être fondus.</RUI.Inspector.StorageSmeltableStuff>
+  <RUI.Inspector.StorageToxicFood>Toxique : intoxique qui le mange.</RUI.Inspector.StorageToxicFood>
+  <RUI.Inspector.StorageToxicDrug>Toxique : drogue.</RUI.Inspector.StorageToxicDrug>
+  <RUI.Inspector.StorageToxicAddictiveDrug>Toxique : drogue addictive.</RUI.Inspector.StorageToxicAddictiveDrug>
+  <RUI.Inspector.StorageToxicWaste>Déchet toxique : pollue le terrain s'il se dissout ou est détruit.</RUI.Inspector.StorageToxicWaste>
+  <RUI.Inspector.StorageToxicGas>Toxique : libère du gaz toxique.</RUI.Inspector.StorageToxicGas>
+  <RUI.Inspector.StorageChildOnly>Vêtement réservé aux enfants.</RUI.Inspector.StorageChildOnly>
+  <RUI.Inspector.StorageMaleOnly>Vêtement réservé aux hommes.</RUI.Inspector.StorageMaleOnly>
+  <RUI.Inspector.StorageFemaleOnly>Vêtement réservé aux femmes.</RUI.Inspector.StorageFemaleOnly>
+  <RUI.Inspector.StorageFoodPlant>Aliment végétal : convient aux végétariens.</RUI.Inspector.StorageFoodPlant>
+  <RUI.Inspector.StorageFoodAnimalProduct>Produit animal (lait, œufs) : convient aux végétariens comme aux carnivores.</RUI.Inspector.StorageFoodAnimalProduct>
+  <RUI.Inspector.StorageFoodMeat>Viande animale.</RUI.Inspector.StorageFoodMeat>
+  <RUI.Inspector.StorageFoodInsect>Viande d'insecte.</RUI.Inspector.StorageFoodInsect>
+  <RUI.Inspector.StorageFoodHuman>Viande humaine.</RUI.Inspector.StorageFoodHuman>
   <RUI.Inspector.StorageLeaving>{1} × {0} stockés ici ne sont plus acceptés : ils seront déplacés.</RUI.Inspector.StorageLeaving>
   <RUI.Inspector.StorageUntickMoves>{1} × {0} stockés ici. Décocher cette ligne les fera déplacer.</RUI.Inspector.StorageUntickMoves>
   <RUI.Inspector.Bookmarks>Filtres enregistrés ({0})</RUI.Inspector.Bookmarks>
@@ -250,5 +268,9 @@
   <RUI.Inspector.StorageSearchHint>Rechercher un objet ou une catégorie…</RUI.Inspector.StorageSearchHint>
   <RUI.Inspector.StorageClearSearch>Effacer la recherche</RUI.Inspector.StorageClearSearch>
   <RUI.Inspector.StorageCollapseAll>Tout replier</RUI.Inspector.StorageCollapseAll>
+  <RUI.Inspector.StorageExpandAll>Tout déplier</RUI.Inspector.StorageExpandAll>
+  <RUI.Inspector.StorageExpandAllTip>Déplie toutes les catégories de l'arbre.</RUI.Inspector.StorageExpandAllTip>
+  <RUI.Inspector.StorageCollapseAllTip>Replie toutes les catégories de l'arbre.</RUI.Inspector.StorageCollapseAllTip>
+  <RUI.Inspector.StorageFoldSearchTip>Une recherche déplie déjà tous les résultats. Effacez-la pour replier ou déplier l'arbre.</RUI.Inspector.StorageFoldSearchTip>
 
 </LanguageData>

@@ -86,6 +86,8 @@ public static class StoragePanel
 
 	private const string BookmarkNameControl = "RUI_StorageBookmarkName";
 
+	private const string SearchControl = "RUI_StorageSearch";
+
 	private static bool specialOpen;
 
 	private static bool bookmarksOpen;
@@ -328,7 +330,7 @@ public static class StoragePanel
 		y += 28f;
 		y = DrawBookmarks(area.x, y, width, area.yMax, filter, parentFilter);
 		y = DrawContents(area.x, y, width, area.yMax, parent);
-		y = DrawSearchRow(area.x, y, width);
+		y = DrawSearchRow(area.x, y, width, RootFor(filter, parentFilter)?.catDef);
 		if (filter.allowedHitPointsConfigurable)
 		{
 			FloatRange range = filter.AllowedHitPointsPercents;
@@ -902,20 +904,37 @@ public static class StoragePanel
 
 	// The clear button sits outside the text field's rect, or the field would take its click. Dropping the
 	// keyboard focus makes the field show the emptied query instead of its own edit buffer.
-	private static float DrawSearchRow(float x, float y, float w)
+	// The field stands out from the plain buttons: magnifier and accent outline, solid once it has focus or a
+	// query. Clicking the magnifier focuses the field.
+	private static float DrawSearchRow(float x, float y, float w, ThingCategoryDef? root)
 	{
-		const float CollapseW = 92f;
-		Rect box = new Rect(x, y, w - CollapseW - 4f, 24f);
-		CardChrome.Rounded(box, Palette.Surface2, 8f);
+		const float FoldW = 100f;
+		Rect box = new Rect(x, y, w - FoldW - 4f, 24f);
 		bool hasQuery = query.Length > 0;
-		string text = Widgets.TextField(new Rect(box.x + 4f, box.y + 4f, box.width - (hasQuery ? 30f : 8f), 16f), query);
+		bool focused = GUI.GetNameOfFocusedControl() == SearchControl;
+		bool active = focused || hasQuery;
+		CardChrome.Rounded(box, active ? Palette.Surface3 : Palette.Surface2, 8f);
+		if (Mouse.IsOver(box) && !focused)
+		{
+			CardChrome.Hover(box, 8f);
+		}
+		CardChrome.Outline(box, active ? RadiusTheme.Accent : Palette.WithAlpha(RadiusTheme.Accent, 0.45f), 1f, 8f);
+		Rect lens = new Rect(box.x + 2f, box.y, 22f, 24f);
+		IconSet.Get("Action/Search").Draw(new Rect(lens.x + 5f, lens.y + 6f, 12f, 12f), active ? RadiusTheme.Accent : Palette.TextDim);
+		if (Widgets.ButtonInvisible(lens))
+		{
+			GUI.FocusControl(SearchControl);
+		}
+		Rect field = new Rect(lens.xMax, box.y + 4f, box.xMax - lens.xMax - (hasQuery ? 26f : 4f), 16f);
+		GUI.SetNextControlName(SearchControl);
+		string text = Widgets.TextField(field, query);
 		if (text != query)
 		{
 			query = text;
 		}
 		if (!hasQuery)
 		{
-			RadiusFont.Label(new Rect(box.x + 8f, box.y, box.width - 16f, box.height), "RUI.Inspector.StorageSearchHint".Translate(), GameFont.Tiny, heading: false, Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+			RadiusFont.Label(new Rect(field.x + 4f, box.y, field.width - 4f, box.height), "RUI.Inspector.StorageSearchHint".Translate(), GameFont.Tiny, heading: false, focused ? Palette.TextDim : Palette.Ink, TextAnchor.MiddleLeft, wrap: false);
 		}
 		else
 		{
@@ -929,21 +948,81 @@ public static class StoragePanel
 				InspectorCore.Poke();
 			}
 		}
-		if (SmallButton(new Rect(box.xMax + 4f, y, CollapseW, 24f), "RUI.Inspector.StorageCollapseAll".Translate()))
+		// One toggle: folds everything while any branch of this tree is open, unfolds every level otherwise.
+		// A search shows every match unfolded, so the toggle rests until it is cleared. The chevron matches
+		// the tree's: the state the button leads to.
+		Rect fold = new Rect(box.xMax + 4f, y, FoldW, 24f);
+		bool anyOpen = AnyBranchOpen(root);
+		if (SmallButton(fold, (anyOpen ? "RUI.Inspector.StorageCollapseAll" : "RUI.Inspector.StorageExpandAll").Translate(), true, anyOpen ? "Action/Next" : "Action/ChevronDown", !hasQuery))
 		{
-			expanded.Clear();
-			specialOpen = false;
+			if (anyOpen)
+			{
+				expanded.Clear();
+				specialOpen = false;
+			}
+			else if (root != null)
+			{
+				ExpandBranch(root);
+				specialOpen = true;
+			}
 			scroll = Vector2.zero;
 		}
+		TooltipHandler.TipRegion(fold, (hasQuery ? "RUI.Inspector.StorageFoldSearchTip" : (anyOpen ? "RUI.Inspector.StorageCollapseAllTip" : "RUI.Inspector.StorageExpandAllTip")).Translate());
 		return y + 28f;
 	}
 
-	// Any other button disarms a pending bookmark delete.
-	private static bool SmallButton(Rect r, string label, bool hot = true)
+	// The expanded set outlives a storage switch, so only this tree's top-level rows say whether it shows open.
+	private static bool AnyBranchOpen(ThingCategoryDef? root)
 	{
-		bool flag = Mouse.IsOver(r);
+		if (specialOpen)
+		{
+			return true;
+		}
+		if (root == null)
+		{
+			return false;
+		}
+		List<ThingCategoryDef> childCategories = root.childCategories;
+		for (int i = 0; i < childCategories.Count; i++)
+		{
+			if (expanded.Contains(childCategories[i]) && totalMemo.TryGetValue(childCategories[i], out var total) && total > 0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Empty categories are skipped: the tree never draws them.
+	private static void ExpandBranch(ThingCategoryDef cat)
+	{
+		List<ThingCategoryDef> childCategories = cat.childCategories;
+		for (int i = 0; i < childCategories.Count; i++)
+		{
+			ThingCategoryDef child = childCategories[i];
+			if (totalMemo.TryGetValue(child, out var total) && total > 0)
+			{
+				expanded.Add(child);
+				ExpandBranch(child);
+			}
+		}
+	}
+
+	// Any other button disarms a pending bookmark delete. hot: the pointer may click here (false outside a
+	// scrolled list). enabled: false greys the button out. An icon, when given, leads the label.
+	private static bool SmallButton(Rect r, string label, bool hot = true, string? icon = null, bool enabled = true)
+	{
+		hot = hot && enabled;
+		bool flag = enabled && Mouse.IsOver(r);
 		CardChrome.Rounded(r, flag ? Palette.Surface3 : Palette.Surface2, 8f);
-		RadiusFont.Label(r, label, GameFont.Tiny, heading: false, flag ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleCenter, wrap: false);
+		Color ink = flag ? Palette.Ink : (enabled ? Palette.TextDim : Palette.WithAlpha(Palette.TextDim, 0.4f));
+		Rect labelRect = r;
+		if (icon != null)
+		{
+			IconSet.Get(icon).Draw(new Rect(r.x + 8f, r.y + (r.height - 12f) * 0.5f, 12f, 12f), flag ? RadiusTheme.Accent : ink);
+			labelRect = new Rect(r.x + 22f, r.y, r.width - 26f, r.height);
+		}
+		RadiusFont.Label(labelRect, label, GameFont.Tiny, heading: false, ink, TextAnchor.MiddleCenter, wrap: false);
 		bool num = hot && Widgets.ButtonInvisible(r);
 		if (num)
 		{
@@ -1220,24 +1299,34 @@ public static class StoragePanel
 				DrawTriState(new Rect(rect2.x + 18f, rect2.y + 7f, 14f, 14f), flag4 ? 1 : 0, 1);
 				ItemIcon(new Rect(rect2.x + 37f, rect2.y + 1f, 26f, 26f), thingDef, flag4);
 				float labelW = rect2.width - 73f;
-				// Stock held here shows on its row; in warning colour once the settings turn it away.
-				if (storedCount.TryGetValue(thingDef, out var stored))
+				bool hasStored = storedCount.TryGetValue(thingDef, out var stored);
+				if (hasStored)
 				{
-					leavingCount.TryGetValue(thingDef, out var leaving);
-					RadiusFont.Label(new Rect(rect2.xMax - 48f, rect2.y, 44f, ItemRowH), stored.ToString(), GameFont.Tiny, heading: false, (leaving > 0) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
-					if (!(flag4 && partlyRefused.ContainsKey(thingDef) && Mouse.IsOver(new Rect(rect2.xMax - 48f - 30f, rect2.y, 24f, ItemRowH))))
-					{
-						TooltipHandler.TipRegion(rect2, (leaving > 0) ? "RUI.Inspector.StorageLeaving".Translate(thingDef.label, leaving) : "RUI.Inspector.StorageUntickMoves".Translate(thingDef.label, stored));
-					}
 					labelW -= 48f;
 				}
+				// Marks and badges carry their own tooltip, so the row's stock tooltip stays off them.
+				Rect tipFree = default;
 				if (flag4 && partlyRefused.TryGetValue(thingDef, out var refusedBy))
 				{
 					int effect = SpecialEffect(refusedBy);
 					Rect mark = new Rect(rect2.x + 69f + labelW - 12f, rect2.y + 10f, 8f, 8f);
 					CardChrome.Rounded(mark, (effect > 0) ? Palette.Good : ((effect < 0) ? Palette.Bad : Palette.Warn), 4f);
-					TooltipHandler.TipRegion(new Rect(mark.x - 6f, rect2.y, 20f, ItemRowH), "RUI.Inspector.StoragePartlyRefused".Translate(refusedBy.LabelCap));
+					tipFree = new Rect(mark.x - 6f, rect2.y, 20f, ItemRowH);
+					TooltipHandler.TipRegion(tipFree, "RUI.Inspector.StoragePartlyRefused".Translate(refusedBy.LabelCap));
 					labelW -= 18f;
+				}
+				float badgesEnd = rect2.x + 69f + labelW;
+				labelW -= DrawTraitBadges(thingDef, badgesEnd, rect2.y, flag4);
+				Rect badgeZone = new Rect(rect2.x + 69f + labelW, rect2.y, badgesEnd - rect2.x - 69f - labelW, ItemRowH);
+				// Stock held here shows on its row; in warning colour once the settings turn it away.
+				if (hasStored)
+				{
+					leavingCount.TryGetValue(thingDef, out var leaving);
+					RadiusFont.Label(new Rect(rect2.xMax - 48f, rect2.y, 44f, ItemRowH), stored.ToString(), GameFont.Tiny, heading: false, (leaving > 0) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
+					if (!Mouse.IsOver(tipFree) && !Mouse.IsOver(badgeZone))
+					{
+						TooltipHandler.TipRegion(rect2, (leaving > 0) ? "RUI.Inspector.StorageLeaving".Translate(thingDef.label, leaving) : "RUI.Inspector.StorageUntickMoves".Translate(thingDef.label, stored));
+					}
 				}
 				RadiusFont.Label(new Rect(rect2.x + 69f, rect2.y, labelW, ItemRowH), thingDef.LabelCap, GameFont.Small, heading: false, flag4 ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
 			}
@@ -1249,6 +1338,207 @@ public static class StoragePanel
 			}
 			cy += ItemRowH;
 		}
+	}
+
+	// Def-level properties behind the vanilla special filters, read once per def. Burnable and smeltable:
+	// 0 never, 1 depends on the material, 2 always (as the filter workers' CanEverMatch / AlwaysMatches).
+	// Food follows the Ideology diet filters; meals and corpses are left out, their kind depends on each thing.
+	// Toxic gathers what harms whoever eats it or stands near it: drugs, toxic waste, tox gas, poisoning food.
+	private enum ToxicBadge : byte
+	{
+		None,
+		Food,
+		Drug,
+		AddictiveDrug,
+		Waste,
+		Gas
+	}
+
+	private enum FoodBadge : byte
+	{
+		None,
+		Plant,
+		AnimalProduct,
+		Meat,
+		Insect,
+		Human
+	}
+
+	private struct ItemTraits
+	{
+		public float rotDays;
+
+		public int burnable;
+
+		public int smeltable;
+
+		public ToxicBadge toxic;
+
+		public bool childOnly;
+
+		public Gender gender;
+
+		public FoodBadge food;
+	}
+
+	private static readonly Dictionary<ThingDef, ItemTraits> traitsMemo = new Dictionary<ThingDef, ItemTraits>();
+
+	private static ItemTraits TraitsOf(ThingDef def)
+	{
+		if (!traitsMemo.TryGetValue(def, out var value))
+		{
+			value.rotDays = def.GetCompProperties<CompProperties_Rottable>()?.daysToRotStart ?? 0f;
+			value.burnable = (!def.burnableByRecipe) ? 0 : (def.MadeFromStuff ? 1 : 2);
+			// Raw metals are smeltable too, but as the material itself: no use flagging them.
+			value.smeltable = (!def.smeltable || def.IsStuff) ? 0 : ((!def.MadeFromStuff) ? 2 : (def.PotentiallySmeltable ? 1 : 0));
+			if (def.IsApparel)
+			{
+				value.childOnly = !def.apparel.developmentalStageFilter.Has(DevelopmentalStage.Adult);
+				value.gender = def.apparel.gender;
+			}
+			value.food = FoodOf(def);
+			value.toxic = ToxicOf(def);
+			traitsMemo[def] = value;
+		}
+		return value;
+	}
+
+	private static ToxicBadge ToxicOf(ThingDef def)
+	{
+		if (def.IsDrug)
+		{
+			return (def.GetCompProperties<CompProperties_Drug>()?.Addictive ?? false) ? ToxicBadge.AddictiveDrug : ToxicBadge.Drug;
+		}
+		if (def.GetCompProperties<CompProperties_DissolutionEffectPollution>() != null)
+		{
+			return ToxicBadge.Waste;
+		}
+		CompProperties_Explosive explosive = def.GetCompProperties<CompProperties_Explosive>();
+		if (explosive != null && (explosive.postExplosionGasType == GasType.ToxGas || IsToxGas(explosive.explosiveDamageType)))
+		{
+			return ToxicBadge.Gas;
+		}
+		if (def.Verbs != null)
+		{
+			for (int i = 0; i < def.Verbs.Count; i++)
+			{
+				ProjectileProperties projectile = def.Verbs[i].defaultProjectile?.projectile;
+				if (projectile != null && (projectile.postExplosionGasType == GasType.ToxGas || IsToxGas(projectile.damageDef)))
+				{
+					return ToxicBadge.Gas;
+				}
+			}
+		}
+		List<IngestionOutcomeDoer> outcomeDoers = def.ingestible?.outcomeDoers;
+		if (outcomeDoers != null)
+		{
+			for (int j = 0; j < outcomeDoers.Count; j++)
+			{
+				if (outcomeDoers[j] is IngestionOutcomeDoer_GiveHediff giveHediff && giveHediff.hediffDef != null && (giveHediff.hediffDef.defName == "ToxicBuildup" || giveHediff.hediffDef.defName == "FoodPoisoning"))
+				{
+					return ToxicBadge.Food;
+				}
+			}
+		}
+		return ToxicBadge.None;
+	}
+
+	private static bool IsToxGas(DamageDef? damage)
+	{
+		return damage != null && damage.defName == "ToxGas";
+	}
+
+	private static FoodBadge FoodOf(ThingDef def)
+	{
+		if (!def.IsIngestible || def.IsDrug || def.IsCorpse || def.IsProcessedFood)
+		{
+			return FoodBadge.None;
+		}
+		switch (FoodUtility.GetFoodKind(def))
+		{
+		case FoodKind.Meat:
+			switch (FoodUtility.GetMeatSourceCategory(def))
+			{
+			case MeatSourceCategory.Humanlike:
+				return FoodBadge.Human;
+			case MeatSourceCategory.Insect:
+				return FoodBadge.Insect;
+			default:
+				return FoodBadge.Meat;
+			}
+		case FoodKind.NonMeat:
+			return FoodBadge.Plant;
+		default:
+			return def.IsAnimalProduct ? FoodBadge.AnimalProduct : FoodBadge.None;
+		}
+	}
+
+	// Draws the badges right-aligned, ending at endX, and returns the width they take from the label. Read from
+	// the left: diet, toxic, perishable, burnable, smeltable, wearer. Faded on a refused row, like its label;
+	// a property that depends on the material is faded too.
+	private static float DrawTraitBadges(ThingDef def, float endX, float y, bool allowed)
+	{
+		ItemTraits traits = TraitsOf(def);
+		float x = endX;
+		float fade = allowed ? 1f : 0.5f;
+		if (traits.gender != Gender.None)
+		{
+			x -= 16f;
+			IconNorm.DrawTexture(traits.gender.GetIcon(), new Rect(x, y + 8f, 12f, 12f), Palette.WithAlpha(Color.white, fade));
+			BadgeTip(x, y, ((traits.gender == Gender.Male) ? "RUI.Inspector.StorageMaleOnly" : "RUI.Inspector.StorageFemaleOnly").Translate());
+		}
+		if (traits.childOnly)
+		{
+			Badge(ref x, y, "Occasion/Growth", Palette.Commands.Social, fade, "RUI.Inspector.StorageChildOnly".Translate());
+		}
+		if (traits.smeltable > 0)
+		{
+			Badge(ref x, y, "Action/Swap", Palette.Health.MarkerFrost, ((traits.smeltable == 2) ? 1f : 0.5f) * fade, ((traits.smeltable == 2) ? "RUI.Inspector.StorageSmeltable" : "RUI.Inspector.StorageSmeltableStuff").Translate());
+		}
+		if (traits.burnable > 0)
+		{
+			Badge(ref x, y, "Stat/Flame", Palette.Health.MarkerBurn, ((traits.burnable == 2) ? 1f : 0.5f) * fade, ((traits.burnable == 2) ? "RUI.Inspector.StorageBurnable" : "RUI.Inspector.StorageBurnableStuff").Translate());
+		}
+		if (traits.rotDays > 0f)
+		{
+			Badge(ref x, y, "Common/Clock", Palette.Health.MarkerVirus, fade, "RUI.Inspector.StoragePerishable".Translate(traits.rotDays.ToString("0.#")));
+		}
+		if (traits.toxic != ToxicBadge.None)
+		{
+			Badge(ref x, y, "Marker/Toxic", Palette.Health.MarkerToxic, fade, ("RUI.Inspector.StorageToxic" + traits.toxic).Translate());
+		}
+		switch (traits.food)
+		{
+		case FoodBadge.Plant:
+			Badge(ref x, y, "Common/Leaf", Palette.Good, fade, "RUI.Inspector.StorageFoodPlant".Translate());
+			break;
+		case FoodBadge.AnimalProduct:
+			Badge(ref x, y, "Stat/Droplet", Palette.Health.Eating, fade, "RUI.Inspector.StorageFoodAnimalProduct".Translate());
+			break;
+		case FoodBadge.Meat:
+			Badge(ref x, y, "Common/Fang", Palette.Health.MarkerBlood, fade, "RUI.Inspector.StorageFoodMeat".Translate());
+			break;
+		case FoodBadge.Insect:
+			Badge(ref x, y, "Event/Bug", Palette.Health.MarkerChronic, fade, "RUI.Inspector.StorageFoodInsect".Translate());
+			break;
+		case FoodBadge.Human:
+			Badge(ref x, y, "Common/Skull", Palette.Bad, fade, "RUI.Inspector.StorageFoodHuman".Translate());
+			break;
+		}
+		return endX - x;
+	}
+
+	// Marker colours carry their own transparency: the badge sets it from alpha alone.
+	private static void Badge(ref float x, float y, string icon, Color color, float alpha, string tip)
+	{
+		x -= 16f;
+		IconSet.Get(icon).Draw(new Rect(x, y + 8f, 12f, 12f), Palette.WithAlpha(color, alpha));
+		BadgeTip(x, y, tip);
+	}
+
+	private static void BadgeTip(float x, float y, string tip)
+	{
+		TooltipHandler.TipRegion(new Rect(x - 2f, y, 16f, ItemRowH), tip);
 	}
 
 	// One faint vertical line per ancestor level, under its chevron, so deep rows still show where they belong.

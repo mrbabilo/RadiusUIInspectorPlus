@@ -230,6 +230,24 @@
   <RUI.Inspector.BookmarkOverwrite>Overwrite</RUI.Inspector.BookmarkOverwrite>
   <RUI.Inspector.BookmarkOverwriteTip>Replace this saved filter's content with this storage's current filter (and rename it if a name is typed).</RUI.Inspector.BookmarkOverwriteTip>
   <RUI.Inspector.StoragePartlyRefused>Some of these may be refused: special filter "{0}" is off.</RUI.Inspector.StoragePartlyRefused>
+  <RUI.Inspector.StoragePerishable>Perishable: starts to rot after {0} days unless frozen.</RUI.Inspector.StoragePerishable>
+  <RUI.Inspector.StorageBurnable>Burnable: can be destroyed by a burn bill (crematorium, campfire).</RUI.Inspector.StorageBurnable>
+  <RUI.Inspector.StorageBurnableStuff>Burnable depending on the material: only some can be destroyed by a burn bill.</RUI.Inspector.StorageBurnableStuff>
+  <RUI.Inspector.StorageSmeltable>Smeltable: can be melted down at a smelter.</RUI.Inspector.StorageSmeltable>
+  <RUI.Inspector.StorageSmeltableStuff>Smeltable depending on the material: only some can be melted down.</RUI.Inspector.StorageSmeltableStuff>
+  <RUI.Inspector.StorageToxicFood>Toxic: eating it poisons.</RUI.Inspector.StorageToxicFood>
+  <RUI.Inspector.StorageToxicDrug>Toxic: drug.</RUI.Inspector.StorageToxicDrug>
+  <RUI.Inspector.StorageToxicAddictiveDrug>Toxic: addictive drug.</RUI.Inspector.StorageToxicAddictiveDrug>
+  <RUI.Inspector.StorageToxicWaste>Toxic waste: pollutes the ground if it dissolves or is destroyed.</RUI.Inspector.StorageToxicWaste>
+  <RUI.Inspector.StorageToxicGas>Toxic: releases tox gas.</RUI.Inspector.StorageToxicGas>
+  <RUI.Inspector.StorageChildOnly>Child-only apparel.</RUI.Inspector.StorageChildOnly>
+  <RUI.Inspector.StorageMaleOnly>Men-only apparel.</RUI.Inspector.StorageMaleOnly>
+  <RUI.Inspector.StorageFemaleOnly>Women-only apparel.</RUI.Inspector.StorageFemaleOnly>
+  <RUI.Inspector.StorageFoodPlant>Plant food: fine for vegetarians.</RUI.Inspector.StorageFoodPlant>
+  <RUI.Inspector.StorageFoodAnimalProduct>Animal product (milk, eggs): fine for vegetarians and carnivores.</RUI.Inspector.StorageFoodAnimalProduct>
+  <RUI.Inspector.StorageFoodMeat>Animal meat.</RUI.Inspector.StorageFoodMeat>
+  <RUI.Inspector.StorageFoodInsect>Insect meat.</RUI.Inspector.StorageFoodInsect>
+  <RUI.Inspector.StorageFoodHuman>Human meat.</RUI.Inspector.StorageFoodHuman>
   <RUI.Inspector.StorageLeaving>{1} × {0} stored here are no longer accepted: haulers will move them out.</RUI.Inspector.StorageLeaving>
   <RUI.Inspector.StorageUntickMoves>{1} × {0} stored here. Unticking this row moves them out.</RUI.Inspector.StorageUntickMoves>
   <RUI.Inspector.Bookmarks>Saved filters ({0})</RUI.Inspector.Bookmarks>
@@ -250,5 +268,9 @@
   <RUI.Inspector.StorageSearchHint>Search items and categories…</RUI.Inspector.StorageSearchHint>
   <RUI.Inspector.StorageClearSearch>Clear search</RUI.Inspector.StorageClearSearch>
   <RUI.Inspector.StorageCollapseAll>Collapse all</RUI.Inspector.StorageCollapseAll>
+  <RUI.Inspector.StorageExpandAll>Expand all</RUI.Inspector.StorageExpandAll>
+  <RUI.Inspector.StorageExpandAllTip>Unfold every category of the tree.</RUI.Inspector.StorageExpandAllTip>
+  <RUI.Inspector.StorageCollapseAllTip>Fold every category of the tree.</RUI.Inspector.StorageCollapseAllTip>
+  <RUI.Inspector.StorageFoldSearchTip>A search already unfolds every match. Clear it to fold or unfold the tree.</RUI.Inspector.StorageFoldSearchTip>
 
 </LanguageData>
