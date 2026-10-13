@@ -1,8 +1,8 @@
 # Journal des modifications
 
-Le mod n'a pas de numéro de version (`About.xml` n'en déclare pas). Les entrées sont datées, les plus récentes en premier.
+Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
-## 2026-10-14
+## 1.1.0 — 2026-10-14
 
 ### Ajouts
 
@@ -26,7 +26,7 @@ Le mod n'a pas de numéro de version (`About.xml` n'en déclare pas). Les entré
   - l'icône et la couleur de chaque objet sont calculées une seule fois ;
   - les infobulles ne sont construites que pour la ligne survolée.
 
-## 2026-10-13
+## 1.0.0 — 2026-10-13
 
 Première version : fork de Radius UI - Inspector (astryl), avec RimKeeper Storage and Filters Helper (Keepercraft) fusionné dans le panneau Stockage.
 
