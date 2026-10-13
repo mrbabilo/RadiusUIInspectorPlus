@@ -1,0 +1,8 @@
+# Build output: deploy.sh builds out of tree and copies the DLL here.
+Assemblies/*.dll
+Assemblies/*.pdb
+bin/
+obj/
+.vs/
+*.user
+.DS_Store

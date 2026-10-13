@@ -1,0 +1,47 @@
+# Radius UI - Inspector Plus
+
+Mod RimWorld 1.6 qui remplace le panneau d'inspection en bas à gauche, avec un panneau Stockage enrichi.
+
+C'est un fork de **Radius UI - Inspector** (astryl), dans lequel **RimKeeper Storage and Filters Helper** (Keepercraft) est fusionné. Il remplace ces deux mods : désactivez-les.
+
+- packageId : `mrbabilo.RadiusUI.InspectorPlus`
+- Auteur : mrbabilo
+- Dépendances : [Harmony](https://steamcommunity.com/sharedfiles/filedetails/?id=2009463077) et [Radius UI Framework](https://steamcommunity.com/sharedfiles/filedetails/?id=3786107692)
+
+## Ce que Plus ajoute au panneau Stockage
+
+- **Filtres enregistrés**, partagés entre les parties. On peut les appliquer en mode remplacer, ajouter ou retirer. On peut aussi les renommer, ou les écraser avec le filtre actuel.
+- **Cochage par glissement** : glisser sur les cases coche ou décoche plusieurs lignes d'un coup.
+- **Liste du contenu** : ce que contient le stockage, une ligne par objet avec sa quantité. Un clic sur une ligne ouvre l'objet dans l'arbre des filtres.
+- **Stock dans l'arbre** : chaque ligne d'objet affiche la quantité stockée ici. La quantité passe en orange quand les réglages refusent ces objets. Un message prévient quand un changement fait sortir des objets déjà stockés.
+- **Filtres spéciaux reliés à l'arbre** : refuser « frais », « fondable »… décoche les objets que ce filtre refuse toujours. Les filtres qui dépendent de l'état de chaque objet (pourri, contaminé) marquent d'une pastille les lignes concernées.
+- **Couleurs** : une couleur par grande catégorie. Les filtres spéciaux sont verts ou rouges selon ce qu'ils laissent entrer.
+- **Icônes d'objets agrandies**, recadrées sur le dessin visible.
+- **Réglage de la hauteur** du panneau Stockage.
+
+## Compiler
+
+Le dépôt ne contient pas la DLL. Le projet `Source/RadiusUIInspector.csproj` (`net472`) se compile contre les DLL du jeu (RimWorld 1.6), contre `0Harmony.dll` et contre `RadiusUI.Framework.dll` installé. Adaptez les `HintPath` du `.csproj` à votre installation.
+
+`deploy.sh` compile hors de l'arbre, copie la DLL dans `Assemblies/` et publie le mod dans le dossier `Mods` du jeu (chemins à adapter en tête du script).
+
+Pour rester compatible avec les autres mods Radius UI, gardez le namespace `RadiusUIInspector`, le nom de DLL `RadiusUIInspector.dll` et l'identifiant Harmony `astryl.radiusui.inspector`.
+
+## Sources et crédits
+
+| Composant | Auteur | Source | Licence |
+|---|---|---|---|
+| Radius UI - Inspector (base du mod) | astryl | [Steam Workshop 3786131805](https://steamcommunity.com/sharedfiles/filedetails/?id=3786131805) | MIT |
+| RimKeeper Storage and Filters Helper (filtres enregistrés, cochage par glissement, hauteur du panneau, liste du contenu) | Keepercraft | [github.com/keepercraft/RimKeeperFilterHelper](https://github.com/keepercraft/RimKeeperFilterHelper) | MIT |
+| Radius UI Framework (dépendance, non incluse) | astryl | [Steam Workshop 3786107692](https://steamcommunity.com/sharedfiles/filedetails/?id=3786107692) | — |
+| Harmony (dépendance, non incluse) | Andreas Pardeike | [github.com/pardeike/HarmonyRimWorld](https://github.com/pardeike/HarmonyRimWorld) | MIT |
+
+Les sources C# d'Inspector viennent d'une décompilation (ILSpy) de la version du Workshop. Elles ont ensuite été modifiées. Le code de RimKeeper a été réécrit pour l'interface Radius UI. Il ne reste pas de copie de son code d'origine.
+
+L'icône et l'image d'aperçu (`About/ModIcon.png`, `About/Preview.png`) sont celles du mod d'origine d'astryl.
+
+Merci à astryl pour la suite Radius UI, et à Keepercraft pour RimKeeper.
+
+## Licence
+
+MIT, voir `LICENSE`. La notice d'astryl est conservée, et les modifications de mrbabilo y sont ajoutées.

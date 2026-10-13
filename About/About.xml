@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ModMetaData>
+  <name>Radius UI - Inspector Plus</name>
+  <packageId>mrbabilo.RadiusUI.InspectorPlus</packageId>
+  <author>mrbabilo</author>
+  <description>[h1]◆ Radius UI - Inspector Plus ◆[/h1]
+A fork of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3786131805]Radius UI - Inspector[/url] by astryl, with [url=https://github.com/keepercraft/RimKeeperFilterHelper]RimKeeper Storage and Filters Helper[/url] by Keepercraft merged into its Storage panel. It replaces both mods: disable them.
+
+[h1]✦ What Plus adds to the Storage panel[/h1]
+[list]
+[*][b]Saved filters[/b] shared across saves: apply them in replace, add or remove mode, rename them, overwrite them with the current filter.
+[*][b]Drag to tick[/b]: drag over checkboxes to set many rows at once.
+[*][b]Contents list[/b]: what the storage holds, one row per item with its count. Click a row to open it in the filter tree.
+[*][b]Stock in the tree[/b]: each item row shows how many are stored here, and turns orange when the settings refuse them. A message warns when a change makes stored things leave.
+[*][b]Special filters that act on the tree[/b]: refusing "fresh", "smeltable" and the like unticks the items it refuses outright; filters that depend on each thing (rotten, tainted) mark the rows they can still turn away.
+[*][b]Colours[/b]: each top-level category has its colour; special filters are green or red depending on what they let in.
+[*][b]Larger item icons[/b], cropped to the visible art, and a Storage panel height setting.
+[/list]
+Plus is maintained by mrbabilo. Everything below comes from the original Inspector by astryl.
+
+The inspect pane in the bottom left is the panel you look at more than any other, and vanilla gives it a tan box, a wall of grey text, and tabs that drop a window over your colony every time you open one. Radius UI - Inspector replaces it with a dock: a portrait, the things you actually check, and tab buttons that open their content inside the panel. Same flat, dark, icon led look as the rest of the Radius UI suite. Safe to add or remove whenever you want.
+
+[h1]✦ Tabs open inside the panel[/h1]
+This is the part to read first. Clicking a tab does not throw a window over your base. The panel grows to fit it in one smooth motion, and the tab draws itself in the space that opened.
+[list]
+[*][b]Every tab still belongs to whoever wrote it[/b]: the inspector never redraws another mod's tab, it moves it. Vanilla Health, Bills, Storage, Social and the rest render exactly as they always did, in the panel instead of over it.
+[*][b]Modded tabs work the same way[/b]: Radius UI - Health Tab shows its full medical chart in there, True RPG Inventory shows its paperdoll. Neither needed a patch, and neither does yours.
+[*][b]Close it and it shrinks back[/b]: the Overview pill returns the panel to its normal height, so nothing is ever left hanging open.
+[*][b]It reserves its own space[/b]: the command buttons on the right slide clear as the panel grows, so a wide tab never ends up underneath them.
+[/list]
+
+[h1]✦ Build the panel you want[/h1]
+The overview is a grid you arrange, not a fixed list somebody else picked.
+[list]
+[*][b]Rows and columns[/b]: put a skill bar across from a need bar, three needs in one row, or a wide health summary on its own. A row holds as many cells as you want.
+[*][b]Pick from everything[/b]: mood, any single need, any single skill, the whole skills grid, a health summary, the equipped weapon, armor, or a spacer.
+[*][b]Your own headings[/b]: headers are cells too. Rename them, move them, delete them.
+[*][b]Edited in place[/b]: press the gear and the editor opens on the panel itself. No menu diving, no restart, and it saves with your game.
+[/list]
+
+[h1]✦ Not just colonists[/h1]
+[list]
+[*][b]Anything you can select[/b]: items, walls, coolers, campfires, plants, corpses and modded buildings all get the same dock.
+[*][b]Read at a glance[/b]: hit points, fuel and growth as bars, then quality, stack size, value, power draw, and flags like forbidden or broken down as chips.
+[*][b]Modded things included[/b]: underneath, each thing prints its own report exactly as it always has, so content from any mod reads correctly without a patch.
+[*][b]Many at once[/b]: select a crowd and you get one row each, portraits and mood for pawns, and a click focuses whichever one you want.
+[/list]
+
+[h1]✦ Quiet when you are not using it[/h1]
+[list]
+[*][b]It folds away[/b]: after a few idle seconds the panel drops to a slim strip and your map is clear. Touch it and it is back.
+[*][b]Pin it[/b] if you would rather it stayed open, or set your own delay, or turn folding off entirely.
+[*][b]Wide mode[/b] for larger screens and busier layouts.
+[/list]
+
+[h1]✦ Built to share the screen[/h1]
+[list]
+[*][b]RimHUD[/b]: if RimHUD is running, this mod stands aside completely and notes it once in the log. They will not fight over the pane.
+[*][b]A way back[/b]: one setting restores the plain vanilla tab row if you ever want it.
+[*][b]Fails safe[/b]: if drawing ever goes wrong, the pane quietly returns to vanilla instead of flooding your log or spoiling your game.
+[*][b]Nothing in your save[/b]: add it or remove it mid colony.
+[/list]
+
+[h1]✦ Requirements[/h1]
+[list]
+[*][b]Harmony[/b] and [b]Radius UI Framework[/b]. The framework carries the shared colours, icons and widgets for the whole suite.
+[*][b]RimWorld 1.6[/b].
+[/list]
+
+[h3] My Quality Commitment:[/h3]
+[list]
+[*] [b]Fully Tested:[/b] Every feature and line of code has been thoroughly tested in-game to ensure it functions as intended and integrates smoothly.
+[*] [b]Active Support:[/b] I am fully committed to maintaining this mod. If you encounter any bugs, compatibility issues, or unintended behavior, please report them in the comments or a dedicated discussion thread.
+[*] [b]No Abandonware:[/b] I will actively patch, refine, and update this mod to keep it working and up to standard.
+[*] [b]No Coffee:[/b] I will never ask for donations for AI created / assisted mods. I share these in the hopes they spark joy for someone, making AI generated content and then begging for money that could go to artists and people more deserving is NOT responsible AI usage.
+[/list]</description>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+    <li>
+      <packageId>astryl.RadiusUI.Framework</packageId>
+      <displayName>Radius UI Framework</displayName>
+      <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=3786107692</steamWorkshopUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>astryl.RadiusUI.Framework</li>
+  </loadAfter>
+  <loadBefore>
+    <!-- GOAT loads after the original Inspector packageId; keep that order. -->
+    <li>Reziro.GOAT</li>
+  </loadBefore>
+  <incompatibleWith>
+    <li>astryl.RadiusUI.Inspector</li>
+    <li>Keepercraft.RimKeeperFilterHelper</li>
+    <li>astryl.RadiusUI.Inspector.RimKeeperCompat</li>
+  </incompatibleWith>
+</ModMetaData>

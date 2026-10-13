@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>RadiusUIInspector</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>annotations</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Mods/3708476081/Assemblies/0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="RadiusUI.Framework">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Mods/3786107692/Assemblies/RadiusUI.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

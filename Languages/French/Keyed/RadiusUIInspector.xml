@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Traduction française de Radius UI - Inspector (avec les filtres fusionnés de RimKeeper).
+  Les termes suivent la traduction française officielle de RimWorld.
+-->
+<LanguageData>
+
+  <RUI.Inspector.Title>Radius UI - Inspecteur</RUI.Inspector.Title>
+
+  <!-- Réglages -->
+  <RUI.Inspector.Enabled>Remplacer le panneau d'inspection des pions</RUI.Inspector.Enabled>
+  <RUI.Inspector.EnabledTip>Désactivé, le panneau d'inspection d'origine est utilisé partout. Une sélection qui n'est pas un pion unique utilise toujours le panneau d'origine.</RUI.Inspector.EnabledTip>
+  <RUI.Inspector.SectionGeneral>Général</RUI.Inspector.SectionGeneral>
+  <RUI.Inspector.AutoMinimize>Réduire en cas d'inactivité</RUI.Inspector.AutoMinimize>
+  <RUI.Inspector.AutoMinimizeTip>Après un moment sans interaction, le panneau se replie en une bande compacte. Cliquez sur la bande, ou sélectionnez autre chose, pour le rouvrir. Épinglez le panneau pour le garder ouvert.</RUI.Inspector.AutoMinimizeTip>
+  <RUI.Inspector.MinimizeDelay>Réduire après {0} secondes</RUI.Inspector.MinimizeDelay>
+  <RUI.Inspector.ShowVanillaTabs>Afficher la rangée d'onglets d'origine</RUI.Inspector.ShowVanillaTabs>
+  <RUI.Inspector.ShowVanillaTabsTip>Garde les boutons d'onglets d'origine (Journal, Équipement, Social, etc.) au-dessus du panneau, en plus des onglets du panneau.</RUI.Inspector.ShowVanillaTabsTip>
+  <RUI.Inspector.Reset>Rétablir les valeurs par défaut</RUI.Inspector.Reset>
+  <RUI.Inspector.PaneWidth>Largeur du panneau : {0} px</RUI.Inspector.PaneWidth>
+  <RUI.Inspector.PaneWidthTip>Largeur du panneau. 540 (par défaut) laisse de la place aux cellules en paire ; plus étroit convient aux mises en page sur une colonne. Les boutons d'action se décalent dans tous les cas.</RUI.Inspector.PaneWidthTip>
+  <RUI.Inspector.PaneHeight>Hauteur du panneau : {0} px</RUI.Inspector.PaneHeight>
+  <RUI.Inspector.PaneHeightTip>Hauteur maximale du panneau des pions. Il rétrécit quand son contenu est plus court. La valeur par défaut, 232, correspond au panneau ancré de RimHUD.</RUI.Inspector.PaneHeightTip>
+  <RUI.Inspector.SectionLayout>Mise en page</RUI.Inspector.SectionLayout>
+  <RUI.Inspector.SectionOptions>Options</RUI.Inspector.SectionOptions>
+  <RUI.Inspector.SectionPortrait>Portrait</RUI.Inspector.SectionPortrait>
+  <RUI.Inspector.SectionTabs>Onglets</RUI.Inspector.SectionTabs>
+  <RUI.Inspector.SectionRail>Panneau de gauche</RUI.Inspector.SectionRail>
+  <RUI.Inspector.PortraitSmall>Petit</RUI.Inspector.PortraitSmall>
+  <RUI.Inspector.PortraitMedium>Moyen</RUI.Inspector.PortraitMedium>
+  <RUI.Inspector.PortraitLarge>Grand</RUI.Inspector.PortraitLarge>
+  <RUI.Inspector.PortraitZoom>Zoom : {0}</RUI.Inspector.PortraitZoom>
+  <RUI.Inspector.PortraitPanX>Décalage X : {0}</RUI.Inspector.PortraitPanX>
+  <RUI.Inspector.PortraitPanY>Décalage Y : {0}</RUI.Inspector.PortraitPanY>
+  <RUI.Inspector.LayoutSettings>Réglages</RUI.Inspector.LayoutSettings>
+  <RUI.Inspector.LayoutHint>La mise en page du panneau (rangées, colonnes et éléments) se modifie dans le panneau lui-même : sélectionnez un pion et appuyez sur le bouton en forme d'engrenage.</RUI.Inspector.LayoutHint>
+  <RUI.Inspector.ResetLayout>Réinitialiser la mise en page</RUI.Inspector.ResetLayout>
+  <RUI.Inspector.LaneBody>Corps</RUI.Inspector.LaneBody>
+  <RUI.Inspector.WHeader>Titre</RUI.Inspector.WHeader>
+  <RUI.Inspector.WSpacer>Espace</RUI.Inspector.WSpacer>
+  <RUI.Inspector.WMood>Barre d'humeur</RUI.Inspector.WMood>
+  <RUI.Inspector.WHealth>Résumé de santé</RUI.Inspector.WHealth>
+  <RUI.Inspector.WHealthBar>Barre de santé</RUI.Inspector.WHealthBar>
+  <RUI.Inspector.WSkillsGrid>Grille des compétences</RUI.Inspector.WSkillsGrid>
+  <RUI.Inspector.WEquip>Arme équipée</RUI.Inspector.WEquip>
+  <RUI.Inspector.WReadout>Texte d'origine (zone, emploi du temps, état)</RUI.Inspector.WReadout>
+  <RUI.Inspector.WArmor>Ligne d'armure</RUI.Inspector.WArmor>
+  <RUI.Inspector.RenameTip>Cliquez pour renommer ce titre</RUI.Inspector.RenameTip>
+  <RUI.Inspector.RenameHeader>Renommer le titre</RUI.Inspector.RenameHeader>
+  <RUI.Inspector.HitPoints>Points de vie</RUI.Inspector.HitPoints>
+  <RUI.Inspector.Fuel>Carburant</RUI.Inspector.Fuel>
+  <RUI.Inspector.Growth>Croissance</RUI.Inspector.Growth>
+  <RUI.Inspector.Forbidden>Interdit</RUI.Inspector.Forbidden>
+  <RUI.Inspector.BrokenDown>En panne</RUI.Inspector.BrokenDown>
+  <RUI.Inspector.PowerOn>Allumé</RUI.Inspector.PowerOn>
+  <RUI.Inspector.PowerOff>Éteint</RUI.Inspector.PowerOff>
+  <RUI.Inspector.MoodTicks>Repères des seuils de crise</RUI.Inspector.MoodTicks>
+  <RUI.Inspector.Rows>Lignes</RUI.Inspector.Rows>
+  <RUI.Inspector.HealthBands>Bandes d'alerte</RUI.Inspector.HealthBands>
+  <RUI.Inspector.SkillsHideZero>Masquer les compétences de niveau 0</RUI.Inspector.SkillsHideZero>
+
+  <!-- Panneau -->
+  <RUI.Inspector.Overview>Aperçu</RUI.Inspector.Overview>
+  <RUI.Inspector.Mood>Humeur</RUI.Inspector.Mood>
+  <RUI.Inspector.Needs>Besoins</RUI.Inspector.Needs>
+  <RUI.Inspector.Skills>Compétences</RUI.Inspector.Skills>
+  <RUI.Inspector.InfoTip>Afficher la fiche d'information</RUI.Inspector.InfoTip>
+  <RUI.Inspector.PinTip>Épingler le panneau ouvert</RUI.Inspector.PinTip>
+  <RUI.Inspector.UnpinTip>Désépingler - le panneau se réduit de nouveau en cas d'inactivité</RUI.Inspector.UnpinTip>
+  <RUI.Inspector.MinimizeTip>Réduire en une bande compacte</RUI.Inspector.MinimizeTip>
+  <RUI.Inspector.ExpandTip>Cliquez pour déplier l'inspecteur</RUI.Inspector.ExpandTip>
+  <RUI.Inspector.SheetTitle>Réglages de l'inspecteur</RUI.Inspector.SheetTitle>
+  <RUI.Inspector.AllSettings>Tous les réglages</RUI.Inspector.AllSettings>
+  <RUI.Inspector.CloseTip>Fermer</RUI.Inspector.CloseTip>
+  <RUI.Inspector.Drop>Lâcher</RUI.Inspector.Drop>
+  <RUI.Inspector.FocusTip>Cliquez pour inspecter ce pion</RUI.Inspector.FocusTip>
+  <RUI.Inspector.FocusTipThing>Cliquez pour inspecter ceci</RUI.Inspector.FocusTipThing>
+  <RUI.Inspector.Mass>{0} / {1} kg</RUI.Inspector.Mass>
+  <RUI.Inspector.SettingsTip>Personnaliser l'inspecteur</RUI.Inspector.SettingsTip>
+  <RUI.Inspector.Idle>Inactif</RUI.Inspector.Idle>
+  <RUI.Inspector.Unarmed>Désarmé</RUI.Inspector.Unarmed>
+  <RUI.Inspector.WholeBody>corps entier</RUI.Inspector.WholeBody>
+  <RUI.Inspector.MinorBreak>Crise mineure à {0}</RUI.Inspector.MinorBreak>
+  <RUI.Inspector.Bleeding>Saignement - à soigner rapidement</RUI.Inspector.Bleeding>
+  <RUI.Inspector.BleedingDeath>Saignement - {0}</RUI.Inspector.BleedingDeath>
+  <RUI.Inspector.MultiSelected>{0} sélectionnés</RUI.Inspector.MultiSelected>
+  <RUI.Inspector.MultiMore>+{0} de plus</RUI.Inspector.MultiMore>
+  <RUI.Inspector.WoundNeedsTending>1 blessure à soigner</RUI.Inspector.WoundNeedsTending>
+  <RUI.Inspector.WoundsNeedTending>{0} blessures à soigner</RUI.Inspector.WoundsNeedTending>
+  <RUI.Inspector.Untended>non soignée(s)</RUI.Inspector.Untended>
+  <RUI.Inspector.Healthy>Aucune affection</RUI.Inspector.Healthy>
+  <RUI.Inspector.Armor>Armure : tranchant {0}, contondant {1}</RUI.Inspector.Armor>
+
+  <RUI.Inspector.StorageViaThing>Paramètres de stockage</RUI.Inspector.StorageViaThing>
+  <RUI.Inspector.StorageViaComp>Paramètres de stockage (via un composant)</RUI.Inspector.StorageViaComp>
+  <RUI.Inspector.StorageViaGroup>Paramètres du groupe de stockage partagé</RUI.Inspector.StorageViaGroup>
+  <RUI.Inspector.StorageViaZone>Paramètres de stockage de la zone</RUI.Inspector.StorageViaZone>
+  <RUI.Inspector.AllowAll>Tout autoriser</RUI.Inspector.AllowAll>
+  <RUI.Inspector.ClearAll>Tout refuser</RUI.Inspector.ClearAll>
+
+  <RUI.Inspector.ZoneCells>{0} cases</RUI.Inspector.ZoneCells>
+  <RUI.Inspector.ZoneFill>Cases occupées</RUI.Inspector.ZoneFill>
+
+  <RUI.Inspector.ContentsSummary>{0} objets &#183; {1} &#183; {2}</RUI.Inspector.ContentsSummary>
+  <RUI.Inspector.ContentsEmpty>Vide</RUI.Inspector.ContentsEmpty>
+  <RUI.Inspector.ContentsNoMatch>Aucun résultat</RUI.Inspector.ContentsNoMatch>
+  <RUI.Inspector.ContentsDrop>Lâcher</RUI.Inspector.ContentsDrop>
+  <RUI.Inspector.ContentsOther>Autre</RUI.Inspector.ContentsOther>
+  <RUI.Inspector.SortName>Nom</RUI.Inspector.SortName>
+  <RUI.Inspector.SortCount>Quantité</RUI.Inspector.SortCount>
+  <RUI.Inspector.SortMass>Masse</RUI.Inspector.SortMass>
+  <RUI.Inspector.SortValue>Valeur</RUI.Inspector.SortValue>
+
+  <RUI.Inspector.WArea>Zone autorisée</RUI.Inspector.WArea>
+  <RUI.Inspector.WTimetable>Emploi du temps</RUI.Inspector.WTimetable>
+  <RUI.Inspector.WPolicies>Politiques</RUI.Inspector.WPolicies>
+  <RUI.Inspector.WMedical>Soins et réaction</RUI.Inspector.WMedical>
+  <RUI.Inspector.CtlArea>Zone</RUI.Inspector.CtlArea>
+  <RUI.Inspector.CtlTimetable>Horaires</RUI.Inspector.CtlTimetable>
+  <RUI.Inspector.CtlApparel>Tenue</RUI.Inspector.CtlApparel>
+  <RUI.Inspector.CtlFood>Nourriture</RUI.Inspector.CtlFood>
+  <RUI.Inspector.CtlDrug>Drogues</RUI.Inspector.CtlDrug>
+  <RUI.Inspector.CtlReading>Lecture</RUI.Inspector.CtlReading>
+  <RUI.Inspector.CtlMedical>Soins médicaux</RUI.Inspector.CtlMedical>
+  <RUI.Inspector.CtlSelfTend>Se soigner soi-même</RUI.Inspector.CtlSelfTend>
+  <RUI.Inspector.CtlHostility>Réaction à l'hostilité</RUI.Inspector.CtlHostility>
+
+  <RUI.Inspector.WInspect>Texte d'inspection</RUI.Inspector.WInspect>
+  <RUI.Inspector.WMechEnergy>Énergie du méca</RUI.Inspector.WMechEnergy>
+  <RUI.Inspector.WProduction>Production animale</RUI.Inspector.WProduction>
+  <RUI.Inspector.WPortrait>Portrait</RUI.Inspector.WPortrait>
+  <RUI.Inspector.WName>Nom</RUI.Inspector.WName>
+  <RUI.Inspector.WActivity>Activité en cours</RUI.Inspector.WActivity>
+
+  <RUI.Inspector.LayoutEditorTitle>Éditeur de mise en page</RUI.Inspector.LayoutEditorTitle>
+  <RUI.Inspector.LayoutEditorHint>Les changements s'appliquent en direct. Déplacez cette fenêtre sur le côté pour voir le panneau se mettre à jour.</RUI.Inspector.LayoutEditorHint>
+
+  <!-- Préréglages de mise en page. Le suffixe est LayoutPreset.Id, une clé anglaise fixe jamais affichée. -->
+  <RUI.Inspector.PresetGlance>Coup d'œil</RUI.Inspector.PresetGlance>
+  <RUI.Inspector.PresetDescGlance>L'humeur et les quatre besoins qui craquent en premier. Rien d'autre.</RUI.Inspector.PresetDescGlance>
+  <RUI.Inspector.PresetCare>Soin</RUI.Inspector.PresetCare>
+  <RUI.Inspector.PresetDescCare>Tous les besoins en paires, la santé, l'affectation. Pas de compétences.</RUI.Inspector.PresetDescCare>
+  <RUI.Inspector.PresetOversee>Supervision</RUI.Inspector.PresetOversee>
+  <RUI.Inspector.PresetDescOversee>La mise en page par défaut : besoins, compétences et affectation, en paires.</RUI.Inspector.PresetDescOversee>
+  <RUI.Inspector.PresetMedic>Médecin</RUI.Inspector.PresetMedic>
+  <RUI.Inspector.PresetDescMedic>La santé d'abord, puis les besoins de récupération et la protection.</RUI.Inspector.PresetDescMedic>
+  <RUI.Inspector.PresetFull>Complet</RUI.Inspector.PresetFull>
+  <RUI.Inspector.PresetDescFull>Tout, y compris la grille complète des compétences.</RUI.Inspector.PresetDescFull>
+
+  <RUI.Inspector.LayoutBuild>Construire</RUI.Inspector.LayoutBuild>
+  <RUI.Inspector.LayoutPreview>Aperçu</RUI.Inspector.LayoutPreview>
+  <RUI.Inspector.LayoutAddRow>+ Ajouter une rangée</RUI.Inspector.LayoutAddRow>
+  <RUI.Inspector.LayoutAddCell>+ ajouter une cellule</RUI.Inspector.LayoutAddCell>
+  <RUI.Inspector.LayoutGripTip>Faites glisser une cellule pour la déplacer. Lâchez-la sur un autre emplacement, ou entre deux rangées pour créer une rangée.</RUI.Inspector.LayoutGripTip>
+  <RUI.Inspector.LayoutDelRow>Supprimer la rangée</RUI.Inspector.LayoutDelRow>
+  <RUI.Inspector.LayoutMoveUp>Monter la rangée</RUI.Inspector.LayoutMoveUp>
+  <RUI.Inspector.LayoutMoveDown>Descendre la rangée</RUI.Inspector.LayoutMoveDown>
+  <RUI.Inspector.LayoutDragHint>Lâchez sur un emplacement pour la placer, entre deux rangées pour une nouvelle rangée, ou à l'extérieur pour annuler.</RUI.Inspector.LayoutDragHint>
+
+  <RUI.Inspector.JumpNeeds>Cliquez pour ouvrir l'onglet Besoins</RUI.Inspector.JumpNeeds>
+  <RUI.Inspector.JumpSkills>Cliquez pour ouvrir l'onglet Personnage</RUI.Inspector.JumpSkills>
+  <RUI.Inspector.JumpHealth>Cliquez pour ouvrir l'onglet Santé</RUI.Inspector.JumpHealth>
+
+  <RUI.Inspector.StorageSpecial>Spécial</RUI.Inspector.StorageSpecial>
+
+  <!-- Profils de mise en page par type -->
+  <RUI.Inspector.ProfileColonist>Colon</RUI.Inspector.ProfileColonist>
+  <RUI.Inspector.ProfileAnimal>Animal</RUI.Inspector.ProfileAnimal>
+  <RUI.Inspector.ProfileMech>Méca</RUI.Inspector.ProfileMech>
+  <RUI.Inspector.ProfilePrisoner>Prisonnier</RUI.Inspector.ProfilePrisoner>
+  <RUI.Inspector.CopyFrom>Copier depuis&#8230;</RUI.Inspector.CopyFrom>
+  <RUI.Inspector.ResetProfileTip>Réinitialiser le profil {0} (la mise en page du corps et le panneau de gauche) à sa valeur intégrée.</RUI.Inspector.ResetProfileTip>
+
+  <!-- Cellules par type -->
+  <RUI.Inspector.WWorkMode>Mode de travail</RUI.Inspector.WWorkMode>
+  <RUI.Inspector.WResistance>Résistance</RUI.Inspector.WResistance>
+  <RUI.Inspector.WTraining>Dressage</RUI.Inspector.WTraining>
+  <RUI.Inspector.WMaster>Maître et suivi</RUI.Inspector.WMaster>
+  <RUI.Inspector.CtlWorkMode>Mode de travail</RUI.Inspector.CtlWorkMode>
+  <RUI.Inspector.CtlOverseer>Superviseur</RUI.Inspector.CtlOverseer>
+  <RUI.Inspector.CtlResistance>Résistance</RUI.Inspector.CtlResistance>
+  <RUI.Inspector.CtlWill>Volonté</RUI.Inspector.CtlWill>
+  <RUI.Inspector.CtlInteraction>Interaction</RUI.Inspector.CtlInteraction>
+  <RUI.Inspector.NonRecruitable>Non recrutable</RUI.Inspector.NonRecruitable>
+  <RUI.Inspector.CtlMaster>Maître</RUI.Inspector.CtlMaster>
+  <RUI.Inspector.CtlFollowDrafted>Suivre en mobilisation</RUI.Inspector.CtlFollowDrafted>
+  <RUI.Inspector.CtlFollowFieldwork>Suivre aux travaux des champs</RUI.Inspector.CtlFollowFieldwork>
+
+  <!-- Objets : W* = noms des cellules dans l'éditeur ; les formes courtes sont écrites dans les barres. -->
+  <RUI.Inspector.ProfileThings>Objets</RUI.Inspector.ProfileThings>
+  <RUI.Inspector.WChips>Pastilles d'info</RUI.Inspector.WChips>
+  <RUI.Inspector.WFreshness>Fraîcheur</RUI.Inspector.WFreshness>
+  <RUI.Inspector.WBattery>Charge de la batterie</RUI.Inspector.WBattery>
+  <RUI.Inspector.WPowerGrid>Réseau électrique</RUI.Inspector.WPowerGrid>
+  <RUI.Inspector.WPipeNet>Réseau de tuyaux</RUI.Inspector.WPipeNet>
+  <RUI.Inspector.Freshness>Fraîcheur</RUI.Inspector.Freshness>
+  <RUI.Inspector.Battery>Batterie</RUI.Inspector.Battery>
+  <RUI.Inspector.PowerGrid>Réseau</RUI.Inspector.PowerGrid>
+  <RUI.Inspector.PipeNet>Tuyaux</RUI.Inspector.PipeNet>
+
+  <!-- Cellules de valeur et groupes de cellules -->
+  <RUI.Inspector.WFaction>Titre et faction</RUI.Inspector.WFaction>
+  <RUI.Inspector.WGenderAge>Sexe, race et âge</RUI.Inspector.WGenderAge>
+  <RUI.Inspector.WTraits>Traits</RUI.Inspector.WTraits>
+  <RUI.Inspector.WCarrying>Transporte</RUI.Inspector.WCarrying>
+  <RUI.Inspector.WQueued>Tâches en attente</RUI.Inspector.WQueued>
+  <RUI.Inspector.WMental>État mental</RUI.Inspector.WMental>
+  <RUI.Inspector.QueuedJobs>{0} en attente</RUI.Inspector.QueuedJobs>
+  <RUI.Inspector.StatWord>Statistique</RUI.Inspector.StatWord>
+  <RUI.Inspector.CapacityWord>Capacité</RUI.Inspector.CapacityWord>
+  <RUI.Inspector.RecordWord>Registre</RUI.Inspector.RecordWord>
+  <RUI.Inspector.StatPick>Statistique&#8230;</RUI.Inspector.StatPick>
+  <RUI.Inspector.CapacityPick>Capacité&#8230;</RUI.Inspector.CapacityPick>
+  <RUI.Inspector.RecordPick>Registre&#8230;</RUI.Inspector.RecordPick>
+
+  <!-- Stockage : fonctions fusionnées de RimKeeper -->
+  <RUI.Inspector.StorageHeight>Hauteur du panneau Stockage : {0} px</RUI.Inspector.StorageHeight>
+  <RUI.Inspector.StorageHeightTip>Hauteur de l'onglet Stockage quand il s'ouvre dans le panneau. Limitée à la taille de l'écran.</RUI.Inspector.StorageHeightTip>
+  <RUI.Inspector.StorageContents>Contenu ({0} types, {1} objets)</RUI.Inspector.StorageContents>
+  <RUI.Inspector.StorageContentsEmpty>Rien n'est stocké ici</RUI.Inspector.StorageContentsEmpty>
+  <RUI.Inspector.StorageContentsReveal>Cliquer pour l'afficher dans le filtre ci-dessous.</RUI.Inspector.StorageContentsReveal>
+  <RUI.Inspector.StorageEvicts>{0} objets déjà stockés ici ne sont plus acceptés et seront déplacés : {1}</RUI.Inspector.StorageEvicts>
+  <RUI.Inspector.StorageSpecialTip>Filtres vérifiés sur chaque objet selon son état (frais, pourri, contaminé…). En vert, ils admettent des objets sains ; en rouge, des objets abîmés ou à risque. Refuser un filtre décoche aussi les types d'objets qu'il couvre toujours.</RUI.Inspector.StorageSpecialTip>
+  <RUI.Inspector.BookmarkEdit>Modifier ce filtre enregistré : le renommer, ou l'écraser avec le filtre actuel de ce stockage. Pour partir de son contenu, appliquez-le d'abord avec « Remplacer ».</RUI.Inspector.BookmarkEdit>
+  <RUI.Inspector.BookmarkEditHint>Nouveau nom (vide : garder l'actuel)</RUI.Inspector.BookmarkEditHint>
+  <RUI.Inspector.BookmarkCancelEdit>Annuler la modification</RUI.Inspector.BookmarkCancelEdit>
+  <RUI.Inspector.BookmarkNameTaken>Un autre filtre enregistré s'appelle déjà « {0} ».</RUI.Inspector.BookmarkNameTaken>
+  <RUI.Inspector.BookmarkRename>Renommer</RUI.Inspector.BookmarkRename>
+  <RUI.Inspector.BookmarkRenameTip>Renommer ce filtre enregistré en gardant son contenu.</RUI.Inspector.BookmarkRenameTip>
+  <RUI.Inspector.BookmarkOverwrite>Écraser</RUI.Inspector.BookmarkOverwrite>
+  <RUI.Inspector.BookmarkOverwriteTip>Remplacer le contenu de ce filtre enregistré par le filtre actuel de ce stockage (et le renommer si un nom est saisi).</RUI.Inspector.BookmarkOverwriteTip>
+  <RUI.Inspector.StoragePartlyRefused>Certains peuvent être refusés : le filtre spécial « {0} » est désactivé.</RUI.Inspector.StoragePartlyRefused>
+  <RUI.Inspector.StorageLeaving>{1} × {0} stockés ici ne sont plus acceptés : ils seront déplacés.</RUI.Inspector.StorageLeaving>
+  <RUI.Inspector.StorageUntickMoves>{1} × {0} stockés ici. Décocher cette ligne les fera déplacer.</RUI.Inspector.StorageUntickMoves>
+  <RUI.Inspector.Bookmarks>Filtres enregistrés ({0})</RUI.Inspector.Bookmarks>
+  <RUI.Inspector.BookmarksTip>Les filtres enregistrés sont partagés entre toutes vos parties. Astuce : appuyez sur une case puis glissez sur d'autres lignes pour leur donner le même état.</RUI.Inspector.BookmarksTip>
+  <RUI.Inspector.BookmarkSave>Enregistrer le filtre</RUI.Inspector.BookmarkSave>
+  <RUI.Inspector.BookmarkDefault>Filtre {0}</RUI.Inspector.BookmarkDefault>
+  <RUI.Inspector.BookmarkNone>Aucun filtre enregistré</RUI.Inspector.BookmarkNone>
+  <RUI.Inspector.BookmarkReplace>Remplacer le filtre de ce stockage</RUI.Inspector.BookmarkReplace>
+  <RUI.Inspector.BookmarkAdd>Autoriser aussi ses objets ici</RUI.Inspector.BookmarkAdd>
+  <RUI.Inspector.BookmarkRemove>Refuser ses objets ici</RUI.Inspector.BookmarkRemove>
+  <RUI.Inspector.BookmarkDelete>Supprimer le filtre enregistré</RUI.Inspector.BookmarkDelete>
+  <RUI.Inspector.BookmarkApplyReplace>Remplacer</RUI.Inspector.BookmarkApplyReplace>
+  <RUI.Inspector.BookmarkApplyAdd>Ajouter</RUI.Inspector.BookmarkApplyAdd>
+  <RUI.Inspector.BookmarkApplyRemove>Retirer</RUI.Inspector.BookmarkApplyRemove>
+  <RUI.Inspector.BookmarkDeleteConfirm>Cliquez encore pour supprimer ce filtre de toutes vos parties</RUI.Inspector.BookmarkDeleteConfirm>
+  <RUI.Inspector.BookmarkNameHint>Nom du filtre actuel…</RUI.Inspector.BookmarkNameHint>
+  <RUI.Inspector.BookmarkUpdate>Mettre à jour</RUI.Inspector.BookmarkUpdate>
+  <RUI.Inspector.StorageSearchHint>Rechercher un objet ou une catégorie…</RUI.Inspector.StorageSearchHint>
+  <RUI.Inspector.StorageClearSearch>Effacer la recherche</RUI.Inspector.StorageClearSearch>
+  <RUI.Inspector.StorageCollapseAll>Tout replier</RUI.Inspector.StorageCollapseAll>
+
+</LanguageData>
