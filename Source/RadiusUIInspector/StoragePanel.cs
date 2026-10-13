@@ -1479,9 +1479,9 @@ public static class StoragePanel
 		new BadgeStyle(Trait.Female, null, Palette.Commands.Social)
 	};
 
-	private const float BadgeD = 16f;
+	private const float BadgeD = 20f;
 
-	private const float BadgeStep = 18f;
+	private const float BadgeStep = 22f;
 
 	private const float ChipD = 22f;
 
@@ -1641,7 +1641,7 @@ public static class StoragePanel
 			}
 			bool byStuff = (style.trait == Trait.Burnable && (traits.flags & Trait.BurnableByStuff) != 0) || (style.trait == Trait.Smeltable && (traits.flags & Trait.SmeltableByStuff) != 0);
 			x -= BadgeStep;
-			DrawPastille(new Rect(x + (BadgeStep - BadgeD) * 0.5f, y + (ItemRowH - BadgeD) * 0.5f, BadgeD, BadgeD), style, byStuff ? (fade * 0.45f) : fade, filled: true);
+			DrawPastille(new Rect(x + (BadgeStep - BadgeD) * 0.5f, y + (ItemRowH - BadgeD) * 0.5f, BadgeD, BadgeD), style, byStuff ? (fade * 0.45f) : fade, selected: false);
 			Rect zone = new Rect(x, y, BadgeStep, ItemRowH);
 			if (Mouse.IsOver(zone))
 			{
@@ -1670,22 +1670,25 @@ public static class StoragePanel
 		};
 	}
 
-	// A round chip in the badge's colour with the glyph inked on top; outlined only, it shows the glyph in colour.
-	private static void DrawPastille(Rect rect, BadgeStyle style, float alpha, bool filled)
+	// The glyph keeps the badge's colour on a faint disc of the same hue: a dark glyph on a filled disc was
+	// unreadable at row size. A selected filter chip gets a stronger disc and a ring.
+	private static void DrawPastille(Rect rect, BadgeStyle style, float alpha, bool selected)
 	{
-		Color ink = filled ? Palette.InkOn(style.color) : style.color;
-		if (filled)
+		float radius = rect.width * 0.5f;
+		CardChrome.Rounded(rect, Palette.WithAlpha(style.color, (selected ? 0.35f : 0.16f) * alpha), radius);
+		if (selected)
 		{
-			CardChrome.Rounded(rect, Palette.WithAlpha(style.color, alpha), rect.width * 0.5f);
+			CardChrome.Outline(rect, style.color, 1.5f, radius);
 		}
-		Rect glyph = rect.ContractedBy(rect.width * 0.2f);
+		Rect glyph = rect.ContractedBy(rect.width * 0.17f);
+		Color ink = Palette.WithAlpha(style.color, alpha);
 		if (style.icon != null)
 		{
-			IconSet.Get(style.icon).Draw(glyph, Palette.WithAlpha(ink, alpha));
+			IconSet.Get(style.icon).Draw(glyph, ink);
 		}
 		else
 		{
-			IconNorm.DrawTexture(((style.trait == Trait.Male) ? Gender.Male : Gender.Female).GetIcon(), glyph, Palette.WithAlpha(ink, alpha));
+			IconNorm.DrawTexture(((style.trait == Trait.Male) ? Gender.Male : Gender.Female).GetIcon(), glyph, ink);
 		}
 	}
 
@@ -1718,7 +1721,7 @@ public static class StoragePanel
 			{
 				CardChrome.Rounded(rect, Mouse.IsOver(rect) ? Palette.Surface3 : Palette.Surface2, ChipD * 0.5f);
 			}
-			DrawPastille(rect, style, 1f, on);
+			DrawPastille(rect, style, (on || Mouse.IsOver(rect)) ? 1f : 0.7f, on);
 			if (Mouse.IsOver(rect))
 			{
 				TooltipHandler.TipRegion(rect, ("RUI.Inspector.StorageTrait" + style.trait).Translate().Resolve() + "\n" + "RUI.Inspector.StorageTraitFilterTip".Translate().Resolve());
