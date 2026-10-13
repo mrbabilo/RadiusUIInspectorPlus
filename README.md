@@ -15,6 +15,17 @@ C'est un fork de **Radius UI - Inspector** (astryl), dans lequel **RimKeeper Sto
 - **Liste du contenu** : ce que contient le stockage, une ligne par objet avec sa quantité. Un clic sur une ligne ouvre l'objet dans l'arbre des filtres.
 - **Stock dans l'arbre** : chaque ligne d'objet affiche la quantité stockée ici. La quantité passe en orange quand les réglages refusent ces objets. Un message prévient quand un changement fait sortir des objets déjà stockés.
 - **Filtres spéciaux reliés à l'arbre** : refuser « frais », « fondable »… décoche les objets que ce filtre refuse toujours. Les filtres qui dépendent de l'état de chaque objet (pourri, contaminé) marquent d'une pastille les lignes concernées.
+- **Repères d'objets** : chaque ligne d'objet porte de petites icônes pour ses propriétés. Une infobulle donne le détail de chacune :
+  - type d'aliment : végétal, produit animal, viande, viande d'insecte, viande humaine ;
+  - toxique : drogue (addictive ou non), déchet toxique, gaz toxique, aliment qui intoxique ;
+  - périssable, avec le nombre de jours avant de se gâter ;
+  - incinérable ;
+  - recyclable ;
+  - vêtement réservé aux enfants, aux hommes ou aux femmes.
+
+  Quand la propriété dépend du matériau, l'icône est atténuée.
+- **Recherche mise en évidence** : le champ de recherche de l'arbre a une loupe et un contour coloré, plein quand le champ est actif.
+- **Tout replier / Tout déplier** : un seul bouton fait les deux, selon l'état de l'arbre affiché. Il est désactivé pendant une recherche, qui déplie déjà tous les résultats.
 - **Couleurs** : une couleur par grande catégorie. Les filtres spéciaux sont verts ou rouges selon ce qu'ils laissent entrer.
 - **Icônes d'objets agrandies**, recadrées sur le dessin visible.
 - **Réglage de la hauteur** du panneau Stockage.
