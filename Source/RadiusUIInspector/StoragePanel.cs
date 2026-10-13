@@ -55,7 +55,10 @@ public static class StoragePanel
 
 	private static IStoreSettingsParent? lastParent;
 
-	private static string matchQuery = "\0";
+	// Search text and badge mask the match sets were last built for; null text forces a rebuild.
+	private static string? matchText;
+
+	private static Trait matchMask;
 
 	private static readonly HashSet<ThingCategoryDef> matchCats = new HashSet<ThingCategoryDef>();
 
@@ -81,8 +84,8 @@ public static class StoragePanel
 
 	private const int MaxBookmarkRows = 5;
 
-	// Search row, both range sliders and six tree rows.
-	private const float TreeReserveH = 28f + 64f + 144f;
+	// Search row, badge filter chips, both range sliders and six tree rows.
+	private const float TreeReserveH = 28f + 26f + 64f + 144f;
 
 	private const string BookmarkNameControl = "RUI_StorageBookmarkName";
 
@@ -256,7 +259,9 @@ public static class StoragePanel
 	{
 		scroll = Vector2.zero;
 		query = "";
-		matchQuery = "\0";
+		badgeMask = Trait.None;
+		presentMask = Trait.None;
+		matchText = null;
 		matchCats.Clear();
 		nameMatched.Clear();
 		memoDirty = true;
@@ -331,6 +336,7 @@ public static class StoragePanel
 		y = DrawBookmarks(area.x, y, width, area.yMax, filter, parentFilter);
 		y = DrawContents(area.x, y, width, area.yMax, parent);
 		y = DrawSearchRow(area.x, y, width, RootFor(filter, parentFilter)?.catDef);
+		y = DrawBadgeFilters(area.x, y, width);
 		if (filter.allowedHitPointsConfigurable)
 		{
 			FloatRange range = filter.AllowedHitPointsPercents;
@@ -503,9 +509,12 @@ public static class StoragePanel
 		Rect add = new Rect(remove.x - 4f - BookmarkActionW, row.y, BookmarkActionW, row.height);
 		Rect replace = new Rect(add.x - 4f - BookmarkActionW, row.y, BookmarkActionW, row.height);
 		RadiusFont.Label(new Rect(row.x + 8f, row.y, replace.x - row.x - 12f, row.height), bookmark.name, GameFont.Small, heading: false, Palette.Ink, TextAnchor.MiddleLeft, wrap: false);
-		TooltipHandler.TipRegion(replace, "RUI.Inspector.BookmarkReplace".Translate());
-		TooltipHandler.TipRegion(add, "RUI.Inspector.BookmarkAdd".Translate());
-		TooltipHandler.TipRegion(remove, "RUI.Inspector.BookmarkRemove".Translate());
+		if (Mouse.IsOver(row))
+		{
+			TooltipHandler.TipRegion(replace, "RUI.Inspector.BookmarkReplace".Translate());
+			TooltipHandler.TipRegion(add, "RUI.Inspector.BookmarkAdd".Translate());
+			TooltipHandler.TipRegion(remove, "RUI.Inspector.BookmarkRemove".Translate());
+		}
 		if (SmallButton(replace, "RUI.Inspector.BookmarkApplyReplace".Translate(), hot))
 		{
 			ApplyBookmark(bookmark, filter, parentFilter, StorageBookmark.Mode.Replace);
@@ -753,7 +762,10 @@ public static class StoragePanel
 		ItemIcon(new Rect(row.x + 2f, row.y + 1f, 26f, 26f), def, allowed: leaving < count);
 		RadiusFont.Label(new Rect(row.x + 34f, row.y, row.width - 94f, row.height), def.LabelCap, GameFont.Small, heading: false, (leaving > 0) ? Palette.Warn : Palette.Ink, TextAnchor.MiddleLeft, wrap: false);
 		RadiusFont.Label(new Rect(row.xMax - 60f, row.y, 54f, row.height), count.ToString(), GameFont.Small, heading: false, (leaving > 0) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
-		TooltipHandler.TipRegion(row, ((leaving > 0) ? "RUI.Inspector.StorageLeaving".Translate(def.label, leaving).Resolve() : (def.LabelCap + ": " + count)) + "\n\n" + "RUI.Inspector.StorageContentsReveal".Translate().Resolve());
+		if (Mouse.IsOver(row))
+		{
+			TooltipHandler.TipRegion(row, ((leaving > 0) ? "RUI.Inspector.StorageLeaving".Translate(def.label, leaving).Resolve() : (def.LabelCap + ": " + count)) + "\n\n" + "RUI.Inspector.StorageContentsReveal".Translate().Resolve());
+		}
 		if (Widgets.ButtonInvisible(row))
 		{
 			Reveal(def);
@@ -764,6 +776,7 @@ public static class StoragePanel
 	{
 		pendingDelete = null;
 		query = "";
+		badgeMask = Trait.None;
 		GUI.FocusControl(null);
 		if (def.thingCategories != null)
 		{
@@ -784,33 +797,72 @@ public static class StoragePanel
 	// Item art carries wide transparent margins, so at row size a stack of steel or silver shrinks to a few
 	// pixels. Plain icons are cropped to their opaque part (IconNorm) on a tile that keeps dark items readable
 	// against the card. Icons drawn through a material, rotated or cut from a linked atlas go through vanilla.
+	// The choice of path and the stuff colour are fixed per def: worked out once, not on every row draw.
+	private struct IconInfo
+	{
+		public Texture2D? icon;
+
+		public bool vanilla;
+
+		public Color color;
+	}
+
+	private static readonly Dictionary<ThingDef, IconInfo> iconMemo = new Dictionary<ThingDef, IconInfo>();
+
 	private static void ItemIcon(Rect tile, ThingDef def, bool allowed)
 	{
 		CardChrome.Rounded(tile, allowed ? Palette.Surface3 : Palette.Surface2, 6f);
+		if (!iconMemo.TryGetValue(def, out var info))
+		{
+			info = IconInfoOf(def);
+			iconMemo[def] = info;
+		}
+		if (info.icon == null && !info.vanilla)
+		{
+			return;
+		}
 		Rect box = tile.ContractedBy(2f);
+		Color color = info.color;
+		if (!allowed)
+		{
+			color.a *= 0.45f;
+		}
 		try
 		{
-			if (def.uiIcon == null || def.uiIcon == BaseContent.BadTex)
-			{
-				return;
-			}
-			Texture2D icon = Widgets.GetIconFor(def, out Material material);
-			bool linked = def.uiIconPath.NullOrEmpty() && def.graphicData != null && def.graphicData.linkFlags != LinkFlags.None;
-			Color color = def.MadeFromStuff ? def.GetColorForStuff(GenStuff.DefaultStuffFor(def)) : def.uiIconColor;
-			if (!allowed)
-			{
-				color.a *= 0.45f;
-			}
-			if (icon == null || material != null || def.uiIconAngle != 0f || linked)
+			if (info.vanilla)
 			{
 				Widgets.DefIcon(box, def, null, 1f, null, drawPlaceholder: false, null, null, null, color.a);
-				return;
 			}
-			IconNorm.DrawTexture(icon, box, color);
+			else
+			{
+				IconNorm.DrawTexture(info.icon, box, color);
+			}
 		}
 		catch (Exception)
 		{
 		}
+	}
+
+	private static IconInfo IconInfoOf(ThingDef def)
+	{
+		IconInfo result = default(IconInfo);
+		try
+		{
+			if (def.uiIcon == null || def.uiIcon == BaseContent.BadTex)
+			{
+				return result;
+			}
+			Texture2D icon = Widgets.GetIconFor(def, out Material material);
+			bool linked = def.uiIconPath.NullOrEmpty() && def.graphicData != null && def.graphicData.linkFlags != LinkFlags.None;
+			result.color = def.MadeFromStuff ? def.GetColorForStuff(GenStuff.DefaultStuffFor(def)) : def.uiIconColor;
+			result.vanilla = icon == null || material != null || def.uiIconAngle != 0f || linked;
+			result.icon = icon;
+		}
+		catch (Exception)
+		{
+			result = default(IconInfo);
+		}
+		return result;
 	}
 
 	private static void CancelEdit()
@@ -949,11 +1001,12 @@ public static class StoragePanel
 			}
 		}
 		// One toggle: folds everything while any branch of this tree is open, unfolds every level otherwise.
-		// A search shows every match unfolded, so the toggle rests until it is cleared. The chevron matches
+		// A search or a badge filter shows every match unfolded, so the toggle rests until it is cleared. The chevron matches
 		// the tree's: the state the button leads to.
 		Rect fold = new Rect(box.xMax + 4f, y, FoldW, 24f);
 		bool anyOpen = AnyBranchOpen(root);
-		if (SmallButton(fold, (anyOpen ? "RUI.Inspector.StorageCollapseAll" : "RUI.Inspector.StorageExpandAll").Translate(), true, anyOpen ? "Action/Next" : "Action/ChevronDown", !hasQuery))
+		bool filtering = hasQuery || badgeMask != Trait.None;
+		if (SmallButton(fold, (anyOpen ? "RUI.Inspector.StorageCollapseAll" : "RUI.Inspector.StorageExpandAll").Translate(), true, anyOpen ? "Action/Next" : "Action/ChevronDown", !filtering))
 		{
 			if (anyOpen)
 			{
@@ -967,7 +1020,7 @@ public static class StoragePanel
 			}
 			scroll = Vector2.zero;
 		}
-		TooltipHandler.TipRegion(fold, (hasQuery ? "RUI.Inspector.StorageFoldSearchTip" : (anyOpen ? "RUI.Inspector.StorageCollapseAllTip" : "RUI.Inspector.StorageExpandAllTip")).Translate());
+		TooltipHandler.TipRegion(fold, (filtering ? "RUI.Inspector.StorageFoldSearchTip" : (anyOpen ? "RUI.Inspector.StorageCollapseAllTip" : "RUI.Inspector.StorageExpandAllTip")).Translate());
 		return y + 28f;
 	}
 
@@ -1054,6 +1107,8 @@ public static class StoragePanel
 		{
 			allowedMemo.Clear();
 			totalMemo.Clear();
+			visibleMemo.Clear();
+			presentMask = Trait.None;
 			RebuildCounts(treeNode_ThingCategory.catDef, filter, parentFilter);
 			RebuildPartlyRefused(treeNode_ThingCategory.catDef, filter, parentFilter);
 			memoDirty = false;
@@ -1067,12 +1122,13 @@ public static class StoragePanel
 			RebuildSpecials(treeNode_ThingCategory.catDef, parentFilter);
 		}
 		string text = query.Trim();
-		if (text != matchQuery)
+		if (text != matchText || badgeMask != matchMask)
 		{
-			matchQuery = text;
+			matchText = text;
+			matchMask = badgeMask;
 			matchCats.Clear();
 			nameMatched.Clear();
-			if (text.Length > 0)
+			if (text.Length > 0 || badgeMask != Trait.None)
 			{
 				RebuildMatches(treeNode_ThingCategory.catDef, parentFilter, text);
 			}
@@ -1091,7 +1147,7 @@ public static class StoragePanel
 		try
 		{
 			float cy = 0f;
-			string text2 = query.Trim();
+			string text2 = text;
 			int num2 = 0;
 			int num3 = 0;
 			for (int i = 0; i < specialCache.Count; i++)
@@ -1203,7 +1259,7 @@ public static class StoragePanel
 		{
 			hue = CategoryHue(cat);
 		}
-		bool flag = q.Length > 0;
+		bool flag = q.Length > 0 || badgeMask != Trait.None;
 		int value;
 		int num = (allowedMemo.TryGetValue(cat, out value) ? value : 0);
 		int value2;
@@ -1272,7 +1328,7 @@ public static class StoragePanel
 		for (int j = 0; j < childThingDefs.Count; j++)
 		{
 			ThingDef thingDef = childThingDefs[j];
-			if (!Visible(thingDef, parentFilter) || (flag && !flag2 && !DefMatches(thingDef, q)))
+			if (!Visible(thingDef, parentFilter) || (flag && !ItemMatches(thingDef, q, flag2)))
 			{
 				continue;
 			}
@@ -1300,11 +1356,16 @@ public static class StoragePanel
 				ItemIcon(new Rect(rect2.x + 37f, rect2.y + 1f, 26f, 26f), thingDef, flag4);
 				float labelW = rect2.width - 73f;
 				bool hasStored = storedCount.TryGetValue(thingDef, out var stored);
-				if (hasStored)
+				// The stock column stays on every row once the storage holds anything, so the badges keep one
+				// column right of the names instead of shifting with each row's stock.
+				if (storedCount.Count > 0)
 				{
 					labelW -= 48f;
 				}
 				// Marks and badges carry their own tooltip, so the row's stock tooltip stays off them.
+				float badgesEnd = rect2.x + 69f + labelW;
+				labelW -= DrawTraitBadges(thingDef, badgesEnd, rect2.y, flag4);
+				Rect badgeZone = new Rect(rect2.x + 69f + labelW, rect2.y, badgesEnd - rect2.x - 69f - labelW, ItemRowH);
 				Rect tipFree = default;
 				if (flag4 && partlyRefused.TryGetValue(thingDef, out var refusedBy))
 				{
@@ -1312,18 +1373,18 @@ public static class StoragePanel
 					Rect mark = new Rect(rect2.x + 69f + labelW - 12f, rect2.y + 10f, 8f, 8f);
 					CardChrome.Rounded(mark, (effect > 0) ? Palette.Good : ((effect < 0) ? Palette.Bad : Palette.Warn), 4f);
 					tipFree = new Rect(mark.x - 6f, rect2.y, 20f, ItemRowH);
-					TooltipHandler.TipRegion(tipFree, "RUI.Inspector.StoragePartlyRefused".Translate(refusedBy.LabelCap));
+					if (Mouse.IsOver(tipFree))
+					{
+						TooltipHandler.TipRegion(tipFree, "RUI.Inspector.StoragePartlyRefused".Translate(refusedBy.LabelCap));
+					}
 					labelW -= 18f;
 				}
-				float badgesEnd = rect2.x + 69f + labelW;
-				labelW -= DrawTraitBadges(thingDef, badgesEnd, rect2.y, flag4);
-				Rect badgeZone = new Rect(rect2.x + 69f + labelW, rect2.y, badgesEnd - rect2.x - 69f - labelW, ItemRowH);
 				// Stock held here shows on its row; in warning colour once the settings turn it away.
 				if (hasStored)
 				{
 					leavingCount.TryGetValue(thingDef, out var leaving);
 					RadiusFont.Label(new Rect(rect2.xMax - 48f, rect2.y, 44f, ItemRowH), stored.ToString(), GameFont.Tiny, heading: false, (leaving > 0) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
-					if (!Mouse.IsOver(tipFree) && !Mouse.IsOver(badgeZone))
+					if (Mouse.IsOver(rect2) && !Mouse.IsOver(tipFree) && !Mouse.IsOver(badgeZone))
 					{
 						TooltipHandler.TipRegion(rect2, (leaving > 0) ? "RUI.Inspector.StorageLeaving".Translate(thingDef.label, leaving) : "RUI.Inspector.StorageUntickMoves".Translate(thingDef.label, stored));
 					}
@@ -1340,8 +1401,8 @@ public static class StoragePanel
 		}
 	}
 
-	// Def-level properties behind the vanilla special filters, read once per def. Burnable and smeltable:
-	// 0 never, 1 depends on the material, 2 always (as the filter workers' CanEverMatch / AlwaysMatches).
+	// Def-level properties behind the vanilla special filters, read once per def. Burnable and smeltable carry a
+	// second bit when they depend on the material (as the filter workers' CanEverMatch / AlwaysMatches).
 	// Food follows the Ideology diet filters; meals and corpses are left out, their kind depends on each thing.
 	// Toxic gathers what harms whoever eats it or stands near it: drugs, toxic waste, tox gas, poisoning food.
 	private enum ToxicBadge : byte
@@ -1354,32 +1415,80 @@ public static class StoragePanel
 		Gas
 	}
 
-	private enum FoodBadge : byte
+	// One bit per badge: a def carries the set of its properties, and the filter chips select by the same bits.
+	[Flags]
+	private enum Trait
 	{
-		None,
-		Plant,
-		AnimalProduct,
-		Meat,
-		Insect,
-		Human
+		None = 0,
+		Plant = 1,
+		AnimalProduct = 2,
+		Meat = 4,
+		Insect = 8,
+		Human = 0x10,
+		Toxic = 0x20,
+		Perishable = 0x40,
+		Burnable = 0x80,
+		Smeltable = 0x100,
+		Child = 0x200,
+		Male = 0x400,
+		Female = 0x800,
+		BurnableByStuff = 0x1000,
+		SmeltableByStuff = 0x2000
 	}
 
 	private struct ItemTraits
 	{
+		public Trait flags;
+
 		public float rotDays;
 
-		public int burnable;
-
-		public int smeltable;
-
 		public ToxicBadge toxic;
-
-		public bool childOnly;
-
-		public Gender gender;
-
-		public FoodBadge food;
 	}
+
+	private struct BadgeStyle
+	{
+		public Trait trait;
+
+		public string? icon;
+
+		public Color color;
+
+		public BadgeStyle(Trait trait, string? icon, Color color)
+		{
+			this.trait = trait;
+			this.icon = icon;
+			this.color = color;
+		}
+	}
+
+	// Reading order of the badges on a row and of the filter chips. Food kinds never meet on one row, so they
+	// may share hues with each other; the others stay apart. Gender draws the vanilla symbol instead of an icon.
+	private static readonly BadgeStyle[] badgeStyles = new BadgeStyle[12]
+	{
+		new BadgeStyle(Trait.Plant, "Common/Leaf", Palette.Good),
+		new BadgeStyle(Trait.AnimalProduct, "Stat/Droplet", Palette.Health.Eating),
+		new BadgeStyle(Trait.Meat, "Common/Fang", Palette.Health.BloodPumping),
+		new BadgeStyle(Trait.Insect, "Event/Bug", Palette.Health.Talking),
+		new BadgeStyle(Trait.Human, "Common/Skull", Palette.Health.BloodFiltration),
+		new BadgeStyle(Trait.Toxic, "Marker/Toxic", Palette.WithAlpha(Palette.Health.MarkerToxic, 1f)),
+		new BadgeStyle(Trait.Perishable, "Common/Clock", Palette.Genes.Endogene),
+		new BadgeStyle(Trait.Burnable, "Stat/Flame", Palette.WithAlpha(Palette.Health.MarkerBurn, 1f)),
+		new BadgeStyle(Trait.Smeltable, "Action/Swap", Palette.Flat.InkMid),
+		new BadgeStyle(Trait.Child, "Occasion/Growth", Palette.Health.Consciousness),
+		new BadgeStyle(Trait.Male, null, Palette.Commands.Orders),
+		new BadgeStyle(Trait.Female, null, Palette.Commands.Social)
+	};
+
+	private const float BadgeD = 16f;
+
+	private const float BadgeStep = 18f;
+
+	private const float ChipD = 22f;
+
+	// Properties the chips filter the tree by (all of them must apply), and those found in the tree on screen.
+	private static Trait badgeMask;
+
+	private static Trait presentMask;
 
 	private static readonly Dictionary<ThingDef, ItemTraits> traitsMemo = new Dictionary<ThingDef, ItemTraits>();
 
@@ -1388,19 +1497,61 @@ public static class StoragePanel
 		if (!traitsMemo.TryGetValue(def, out var value))
 		{
 			value.rotDays = def.GetCompProperties<CompProperties_Rottable>()?.daysToRotStart ?? 0f;
-			value.burnable = (!def.burnableByRecipe) ? 0 : (def.MadeFromStuff ? 1 : 2);
+			value.toxic = ToxicOf(def);
+			Trait trait = FoodOf(def);
+			if (value.toxic != ToxicBadge.None)
+			{
+				trait |= Trait.Toxic;
+			}
+			if (value.rotDays > 0f)
+			{
+				trait |= Trait.Perishable;
+			}
+			if (def.burnableByRecipe)
+			{
+				trait |= def.MadeFromStuff ? (Trait.Burnable | Trait.BurnableByStuff) : Trait.Burnable;
+			}
 			// Raw metals are smeltable too, but as the material itself: no use flagging them.
-			value.smeltable = (!def.smeltable || def.IsStuff) ? 0 : ((!def.MadeFromStuff) ? 2 : (def.PotentiallySmeltable ? 1 : 0));
+			if (def.smeltable && !def.IsStuff)
+			{
+				if (!def.MadeFromStuff)
+				{
+					trait |= Trait.Smeltable;
+				}
+				else if (def.PotentiallySmeltable)
+				{
+					trait |= Trait.Smeltable | Trait.SmeltableByStuff;
+				}
+			}
 			if (def.IsApparel)
 			{
-				value.childOnly = !def.apparel.developmentalStageFilter.Has(DevelopmentalStage.Adult);
-				value.gender = def.apparel.gender;
+				if (!def.apparel.developmentalStageFilter.Has(DevelopmentalStage.Adult))
+				{
+					trait |= Trait.Child;
+				}
+				if (def.apparel.gender == Gender.Male)
+				{
+					trait |= Trait.Male;
+				}
+				else if (def.apparel.gender == Gender.Female)
+				{
+					trait |= Trait.Female;
+				}
 			}
-			value.food = FoodOf(def);
-			value.toxic = ToxicOf(def);
+			value.flags = trait;
 			traitsMemo[def] = value;
 		}
 		return value;
+	}
+
+	// Search text and chips combine: a name hit (item or its category) and every selected property.
+	private static bool ItemMatches(ThingDef def, string q, bool categoryNamed)
+	{
+		if (!categoryNamed && q.Length > 0 && !DefMatches(def, q))
+		{
+			return false;
+		}
+		return (TraitsOf(def).flags & badgeMask) == badgeMask;
 	}
 
 	private static ToxicBadge ToxicOf(ThingDef def)
@@ -1448,11 +1599,11 @@ public static class StoragePanel
 		return damage != null && damage.defName == "ToxGas";
 	}
 
-	private static FoodBadge FoodOf(ThingDef def)
+	private static Trait FoodOf(ThingDef def)
 	{
 		if (!def.IsIngestible || def.IsDrug || def.IsCorpse || def.IsProcessedFood)
 		{
-			return FoodBadge.None;
+			return Trait.None;
 		}
 		switch (FoodUtility.GetFoodKind(def))
 		{
@@ -1460,85 +1611,128 @@ public static class StoragePanel
 			switch (FoodUtility.GetMeatSourceCategory(def))
 			{
 			case MeatSourceCategory.Humanlike:
-				return FoodBadge.Human;
+				return Trait.Human;
 			case MeatSourceCategory.Insect:
-				return FoodBadge.Insect;
+				return Trait.Insect;
 			default:
-				return FoodBadge.Meat;
+				return Trait.Meat;
 			}
 		case FoodKind.NonMeat:
-			return FoodBadge.Plant;
+			return Trait.Plant;
 		default:
-			return def.IsAnimalProduct ? FoodBadge.AnimalProduct : FoodBadge.None;
+			return def.IsAnimalProduct ? Trait.AnimalProduct : Trait.None;
 		}
 	}
 
 	// Draws the badges right-aligned, ending at endX, and returns the width they take from the label. Read from
-	// the left: diet, toxic, perishable, burnable, smeltable, wearer. Faded on a refused row, like its label;
-	// a property that depends on the material is faded too.
+	// the left in badgeStyles order. Faded on a refused row, like its label; a property that depends on the
+	// material is faded too.
 	private static float DrawTraitBadges(ThingDef def, float endX, float y, bool allowed)
 	{
 		ItemTraits traits = TraitsOf(def);
 		float x = endX;
 		float fade = allowed ? 1f : 0.5f;
-		if (traits.gender != Gender.None)
+		for (int num = badgeStyles.Length - 1; num >= 0; num--)
 		{
-			x -= 16f;
-			IconNorm.DrawTexture(traits.gender.GetIcon(), new Rect(x, y + 8f, 12f, 12f), Palette.WithAlpha(Color.white, fade));
-			BadgeTip(x, y, ((traits.gender == Gender.Male) ? "RUI.Inspector.StorageMaleOnly" : "RUI.Inspector.StorageFemaleOnly").Translate());
-		}
-		if (traits.childOnly)
-		{
-			Badge(ref x, y, "Occasion/Growth", Palette.Commands.Social, fade, "RUI.Inspector.StorageChildOnly".Translate());
-		}
-		if (traits.smeltable > 0)
-		{
-			Badge(ref x, y, "Action/Swap", Palette.Health.MarkerFrost, ((traits.smeltable == 2) ? 1f : 0.5f) * fade, ((traits.smeltable == 2) ? "RUI.Inspector.StorageSmeltable" : "RUI.Inspector.StorageSmeltableStuff").Translate());
-		}
-		if (traits.burnable > 0)
-		{
-			Badge(ref x, y, "Stat/Flame", Palette.Health.MarkerBurn, ((traits.burnable == 2) ? 1f : 0.5f) * fade, ((traits.burnable == 2) ? "RUI.Inspector.StorageBurnable" : "RUI.Inspector.StorageBurnableStuff").Translate());
-		}
-		if (traits.rotDays > 0f)
-		{
-			Badge(ref x, y, "Common/Clock", Palette.Health.MarkerVirus, fade, "RUI.Inspector.StoragePerishable".Translate(traits.rotDays.ToString("0.#")));
-		}
-		if (traits.toxic != ToxicBadge.None)
-		{
-			Badge(ref x, y, "Marker/Toxic", Palette.Health.MarkerToxic, fade, ("RUI.Inspector.StorageToxic" + traits.toxic).Translate());
-		}
-		switch (traits.food)
-		{
-		case FoodBadge.Plant:
-			Badge(ref x, y, "Common/Leaf", Palette.Good, fade, "RUI.Inspector.StorageFoodPlant".Translate());
-			break;
-		case FoodBadge.AnimalProduct:
-			Badge(ref x, y, "Stat/Droplet", Palette.Health.Eating, fade, "RUI.Inspector.StorageFoodAnimalProduct".Translate());
-			break;
-		case FoodBadge.Meat:
-			Badge(ref x, y, "Common/Fang", Palette.Health.MarkerBlood, fade, "RUI.Inspector.StorageFoodMeat".Translate());
-			break;
-		case FoodBadge.Insect:
-			Badge(ref x, y, "Event/Bug", Palette.Health.MarkerChronic, fade, "RUI.Inspector.StorageFoodInsect".Translate());
-			break;
-		case FoodBadge.Human:
-			Badge(ref x, y, "Common/Skull", Palette.Bad, fade, "RUI.Inspector.StorageFoodHuman".Translate());
-			break;
+			BadgeStyle style = badgeStyles[num];
+			if ((traits.flags & style.trait) == 0)
+			{
+				continue;
+			}
+			bool byStuff = (style.trait == Trait.Burnable && (traits.flags & Trait.BurnableByStuff) != 0) || (style.trait == Trait.Smeltable && (traits.flags & Trait.SmeltableByStuff) != 0);
+			x -= BadgeStep;
+			DrawPastille(new Rect(x + (BadgeStep - BadgeD) * 0.5f, y + (ItemRowH - BadgeD) * 0.5f, BadgeD, BadgeD), style, byStuff ? (fade * 0.45f) : fade, filled: true);
+			Rect zone = new Rect(x, y, BadgeStep, ItemRowH);
+			if (Mouse.IsOver(zone))
+			{
+				TooltipHandler.TipRegion(zone, TraitTip(traits, style.trait));
+			}
 		}
 		return endX - x;
 	}
 
-	// Marker colours carry their own transparency: the badge sets it from alpha alone.
-	private static void Badge(ref float x, float y, string icon, Color color, float alpha, string tip)
+	private static string TraitTip(ItemTraits traits, Trait trait)
 	{
-		x -= 16f;
-		IconSet.Get(icon).Draw(new Rect(x, y + 8f, 12f, 12f), Palette.WithAlpha(color, alpha));
-		BadgeTip(x, y, tip);
+		return trait switch
+		{
+			Trait.Plant => "RUI.Inspector.StorageFoodPlant".Translate(), 
+			Trait.AnimalProduct => "RUI.Inspector.StorageFoodAnimalProduct".Translate(), 
+			Trait.Meat => "RUI.Inspector.StorageFoodMeat".Translate(), 
+			Trait.Insect => "RUI.Inspector.StorageFoodInsect".Translate(), 
+			Trait.Human => "RUI.Inspector.StorageFoodHuman".Translate(), 
+			Trait.Toxic => ("RUI.Inspector.StorageToxic" + traits.toxic).Translate(), 
+			Trait.Perishable => "RUI.Inspector.StoragePerishable".Translate(traits.rotDays.ToString("0.#")), 
+			Trait.Burnable => (((traits.flags & Trait.BurnableByStuff) == 0) ? "RUI.Inspector.StorageBurnable" : "RUI.Inspector.StorageBurnableStuff").Translate(), 
+			Trait.Smeltable => (((traits.flags & Trait.SmeltableByStuff) == 0) ? "RUI.Inspector.StorageSmeltable" : "RUI.Inspector.StorageSmeltableStuff").Translate(), 
+			Trait.Child => "RUI.Inspector.StorageChildOnly".Translate(), 
+			Trait.Male => "RUI.Inspector.StorageMaleOnly".Translate(), 
+			_ => "RUI.Inspector.StorageFemaleOnly".Translate(), 
+		};
 	}
 
-	private static void BadgeTip(float x, float y, string tip)
+	// A round chip in the badge's colour with the glyph inked on top; outlined only, it shows the glyph in colour.
+	private static void DrawPastille(Rect rect, BadgeStyle style, float alpha, bool filled)
 	{
-		TooltipHandler.TipRegion(new Rect(x - 2f, y, 16f, ItemRowH), tip);
+		Color ink = filled ? Palette.InkOn(style.color) : style.color;
+		if (filled)
+		{
+			CardChrome.Rounded(rect, Palette.WithAlpha(style.color, alpha), rect.width * 0.5f);
+		}
+		Rect glyph = rect.ContractedBy(rect.width * 0.2f);
+		if (style.icon != null)
+		{
+			IconSet.Get(style.icon).Draw(glyph, Palette.WithAlpha(ink, alpha));
+		}
+		else
+		{
+			IconNorm.DrawTexture(((style.trait == Trait.Male) ? Gender.Male : Gender.Female).GetIcon(), glyph, Palette.WithAlpha(ink, alpha));
+		}
+	}
+
+	// One chip per property found in the tree on screen (or still selected). Selected chips fill with their colour;
+	// several selected must all apply. Wraps onto extra lines when the panel is narrow.
+	private static float DrawBadgeFilters(float x, float y, float w)
+	{
+		Trait shown = presentMask | badgeMask;
+		if (shown == Trait.None)
+		{
+			return y;
+		}
+		float cx = x;
+		float cy = y;
+		for (int i = 0; i < badgeStyles.Length; i++)
+		{
+			BadgeStyle style = badgeStyles[i];
+			if ((shown & style.trait) == 0)
+			{
+				continue;
+			}
+			if (cx + ChipD > x + w)
+			{
+				cx = x;
+				cy += ChipD + 3f;
+			}
+			Rect rect = new Rect(cx, cy, ChipD, ChipD);
+			bool on = (badgeMask & style.trait) != 0;
+			if (!on)
+			{
+				CardChrome.Rounded(rect, Mouse.IsOver(rect) ? Palette.Surface3 : Palette.Surface2, ChipD * 0.5f);
+			}
+			DrawPastille(rect, style, 1f, on);
+			if (Mouse.IsOver(rect))
+			{
+				TooltipHandler.TipRegion(rect, ("RUI.Inspector.StorageTrait" + style.trait).Translate().Resolve() + "\n" + "RUI.Inspector.StorageTraitFilterTip".Translate().Resolve());
+			}
+			if (Widgets.ButtonInvisible(rect))
+			{
+				badgeMask ^= style.trait;
+				pendingDelete = null;
+				scroll = Vector2.zero;
+				InspectorCore.Poke();
+			}
+			cx += ChipD + 3f;
+		}
+		return cy + ChipD + 4f;
 	}
 
 	// One faint vertical line per ancestor level, under its chevron, so deep rows still show where they belong.
@@ -1804,33 +1998,30 @@ public static class StoragePanel
 		}
 	}
 
+	// The tree asks this for every def on every GUI event, and the parent filter's special-filter test walks all
+	// its refused filters: answers are kept per def until the parent filter changes or the counts are rebuilt.
+	// Parent filters (a building's fixed settings) are not edited from this panel, so nothing else can stale it.
+	private static readonly Dictionary<ThingDef, bool> visibleMemo = new Dictionary<ThingDef, bool>();
+
+	private static ThingFilter? visibleMemoParent;
+
 	private static bool Visible(ThingDef d, ThingFilter? parentFilter)
 	{
 		if (d == null)
 		{
 			return false;
 		}
-		if (!d.PlayerAcquirable)
+		if (parentFilter != visibleMemoParent)
 		{
-			return false;
+			visibleMemo.Clear();
+			visibleMemoParent = parentFilter;
 		}
-		if (d.virtualDefParent != null)
+		if (!visibleMemo.TryGetValue(d, out var value))
 		{
-			return false;
+			value = d.PlayerAcquirable && d.virtualDefParent == null && (parentFilter == null || (parentFilter.Allows(d) && !parentFilter.IsAlwaysDisallowedDueToSpecialFilters(d)));
+			visibleMemo[d] = value;
 		}
-		if (parentFilter == null)
-		{
-			return true;
-		}
-		if (!parentFilter.Allows(d))
-		{
-			return false;
-		}
-		if (parentFilter.IsAlwaysDisallowedDueToSpecialFilters(d))
-		{
-			return false;
-		}
-		return true;
+		return value;
 	}
 
 	private static bool SpecialMatches(SpecialThingFilterDef sf, string q)
@@ -1946,11 +2137,13 @@ public static class StoragePanel
 
 	private static bool RebuildMatches(ThingCategoryDef cat, ThingFilter? parentFilter, string q)
 	{
+		// A category named by the search shows all its items, unless badge filters still sort them.
 		bool flag = false;
-		if (cat.label != null && cat.label.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0)
+		bool named = q.Length > 0 && cat.label != null && cat.label.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+		if (named)
 		{
 			nameMatched.Add(cat);
-			flag = true;
+			flag = badgeMask == Trait.None;
 		}
 		List<ThingCategoryDef> childCategories = cat.childCategories;
 		for (int i = 0; i < childCategories.Count; i++)
@@ -1965,7 +2158,7 @@ public static class StoragePanel
 			List<ThingDef> childThingDefs = cat.childThingDefs;
 			for (int j = 0; j < childThingDefs.Count; j++)
 			{
-				if (Visible(childThingDefs[j], parentFilter) && DefMatches(childThingDefs[j], q))
+				if (Visible(childThingDefs[j], parentFilter) && ItemMatches(childThingDefs[j], q, named))
 				{
 					flag = true;
 					break;
@@ -1996,6 +2189,7 @@ public static class StoragePanel
 			if (Visible(childThingDefs[j], parentFilter))
 			{
 				num2++;
+				presentMask |= TraitsOf(childThingDefs[j]).flags;
 				if (filter.Allows(childThingDefs[j]))
 				{
 					num++;

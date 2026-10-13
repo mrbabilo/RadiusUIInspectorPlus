@@ -248,6 +248,19 @@
   <RUI.Inspector.StorageFoodMeat>Animal meat.</RUI.Inspector.StorageFoodMeat>
   <RUI.Inspector.StorageFoodInsect>Insect meat.</RUI.Inspector.StorageFoodInsect>
   <RUI.Inspector.StorageFoodHuman>Human meat.</RUI.Inspector.StorageFoodHuman>
+  <RUI.Inspector.StorageTraitPlant>Plant food</RUI.Inspector.StorageTraitPlant>
+  <RUI.Inspector.StorageTraitAnimalProduct>Animal product</RUI.Inspector.StorageTraitAnimalProduct>
+  <RUI.Inspector.StorageTraitMeat>Animal meat</RUI.Inspector.StorageTraitMeat>
+  <RUI.Inspector.StorageTraitInsect>Insect meat</RUI.Inspector.StorageTraitInsect>
+  <RUI.Inspector.StorageTraitHuman>Human meat</RUI.Inspector.StorageTraitHuman>
+  <RUI.Inspector.StorageTraitToxic>Toxic</RUI.Inspector.StorageTraitToxic>
+  <RUI.Inspector.StorageTraitPerishable>Perishable</RUI.Inspector.StorageTraitPerishable>
+  <RUI.Inspector.StorageTraitBurnable>Burnable</RUI.Inspector.StorageTraitBurnable>
+  <RUI.Inspector.StorageTraitSmeltable>Smeltable</RUI.Inspector.StorageTraitSmeltable>
+  <RUI.Inspector.StorageTraitChild>Child-only apparel</RUI.Inspector.StorageTraitChild>
+  <RUI.Inspector.StorageTraitMale>Men-only apparel</RUI.Inspector.StorageTraitMale>
+  <RUI.Inspector.StorageTraitFemale>Women-only apparel</RUI.Inspector.StorageTraitFemale>
+  <RUI.Inspector.StorageTraitFilterTip>Click to show only items with this property. When several are selected, items must have them all.</RUI.Inspector.StorageTraitFilterTip>
   <RUI.Inspector.StorageLeaving>{1} × {0} stored here are no longer accepted: haulers will move them out.</RUI.Inspector.StorageLeaving>
   <RUI.Inspector.StorageUntickMoves>{1} × {0} stored here. Unticking this row moves them out.</RUI.Inspector.StorageUntickMoves>
   <RUI.Inspector.Bookmarks>Saved filters ({0})</RUI.Inspector.Bookmarks>

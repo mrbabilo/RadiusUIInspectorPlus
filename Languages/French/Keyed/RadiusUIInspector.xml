@@ -248,6 +248,19 @@
   <RUI.Inspector.StorageFoodMeat>Viande animale.</RUI.Inspector.StorageFoodMeat>
   <RUI.Inspector.StorageFoodInsect>Viande d'insecte.</RUI.Inspector.StorageFoodInsect>
   <RUI.Inspector.StorageFoodHuman>Viande humaine.</RUI.Inspector.StorageFoodHuman>
+  <RUI.Inspector.StorageTraitPlant>Aliment végétal</RUI.Inspector.StorageTraitPlant>
+  <RUI.Inspector.StorageTraitAnimalProduct>Produit animal</RUI.Inspector.StorageTraitAnimalProduct>
+  <RUI.Inspector.StorageTraitMeat>Viande animale</RUI.Inspector.StorageTraitMeat>
+  <RUI.Inspector.StorageTraitInsect>Viande d'insecte</RUI.Inspector.StorageTraitInsect>
+  <RUI.Inspector.StorageTraitHuman>Viande humaine</RUI.Inspector.StorageTraitHuman>
+  <RUI.Inspector.StorageTraitToxic>Toxique</RUI.Inspector.StorageTraitToxic>
+  <RUI.Inspector.StorageTraitPerishable>Périssable</RUI.Inspector.StorageTraitPerishable>
+  <RUI.Inspector.StorageTraitBurnable>Incinérable</RUI.Inspector.StorageTraitBurnable>
+  <RUI.Inspector.StorageTraitSmeltable>Recyclable</RUI.Inspector.StorageTraitSmeltable>
+  <RUI.Inspector.StorageTraitChild>Vêtement pour enfants</RUI.Inspector.StorageTraitChild>
+  <RUI.Inspector.StorageTraitMale>Vêtement pour hommes</RUI.Inspector.StorageTraitMale>
+  <RUI.Inspector.StorageTraitFemale>Vêtement pour femmes</RUI.Inspector.StorageTraitFemale>
+  <RUI.Inspector.StorageTraitFilterTip>Cliquez pour n'afficher que les objets qui ont cette propriété. Si plusieurs sont choisies, les objets doivent toutes les avoir.</RUI.Inspector.StorageTraitFilterTip>
   <RUI.Inspector.StorageLeaving>{1} × {0} stockés ici ne sont plus acceptés : ils seront déplacés.</RUI.Inspector.StorageLeaving>
   <RUI.Inspector.StorageUntickMoves>{1} × {0} stockés ici. Décocher cette ligne les fera déplacer.</RUI.Inspector.StorageUntickMoves>
   <RUI.Inspector.Bookmarks>Filtres enregistrés ({0})</RUI.Inspector.Bookmarks>
