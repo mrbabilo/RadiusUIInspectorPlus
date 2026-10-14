@@ -2,6 +2,12 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
+## Non publiée
+
+### Corrections
+
+- **Filtres spéciaux** : sur une ligne à un seul choix (« Qualité », armes ou vêtements sans qualité), la catégorie s'aligne avec celles des autres lignes au lieu de coller au bord droit.
+
 ## 1.2.1 — 2026-10-14
 
 ### Corrections

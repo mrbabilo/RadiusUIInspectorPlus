@@ -220,7 +220,8 @@ public static partial class StoragePanel
 			bool multi = row.choices.Count > 1;
 			float left = Indent + 6f + ((row.title != null) ? titleW : 0f);
 			float scopeW = (row.scope != null) ? (RadiusFont.Width(row.scope, GameFont.Tiny, bold: false) + 8f) : 0f;
-			float right = vw - 4f - (multi ? (allW + 4f) : 0f) - scopeW;
+			// The "All" column is kept on single-choice rows too, so the scopes line up.
+			float right = vw - 4f - (allW + 4f) - scopeW;
 			// Flow the chips: a new line when the next one does not fit.
 			int lines = 1;
 			float x = left;
