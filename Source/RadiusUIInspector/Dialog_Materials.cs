@@ -73,15 +73,12 @@ public class Dialog_Materials : Window
 		RadiusFont.Label(new Rect(0f, 0f, inRect.width - 70f, 24f), "RUI.Inspector.StorageMaterials".Translate(), GameFont.Small, heading: true, Palette.Ink, TextAnchor.MiddleLeft, wrap: false);
 		RadiusFont.Label(new Rect(inRect.width - 100f, 0f, 70f, 24f), allowed + "/" + shown.Count, GameFont.Tiny, heading: false, (allowed < shown.Count) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
 		query = FlatField.Draw(new Rect(0f, 30f, inRect.width, 28f), query, SearchControl, "RUI.Inspector.StorageSearchHint".Translate());
-		// Allow or refuse what the search shows: every material while it is empty.
-		float half = (inRect.width - 4f) * 0.5f;
-		if (StoragePanel.SmallButton(new Rect(0f, 64f, half, 24f), "RUI.Inspector.AllowAll".Translate()))
+		// One toggle over what the search shows (every material while it is empty): it allows them until all
+		// are allowed, then refuses them.
+		bool allAllowed = shown.Count > 0 && allowed >= shown.Count;
+		if (StoragePanel.SmallButton(new Rect(0f, 64f, inRect.width, 24f), (allAllowed ? "RUI.Inspector.ClearAll" : "RUI.Inspector.AllowAll").Translate(), true, allAllowed ? "Action/Decline" : "Action/Check"))
 		{
-			SetShown(allow: true);
-		}
-		if (StoragePanel.SmallButton(new Rect(half + 4f, 64f, half, 24f), "RUI.Inspector.ClearAll".Translate()))
-		{
-			SetShown(allow: false);
+			SetShown(!allAllowed);
 		}
 		if (painting && !Input.GetMouseButton(0))
 		{

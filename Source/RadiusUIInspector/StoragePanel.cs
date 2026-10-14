@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using RadiusUI.Framework;
 using RimWorld;
@@ -8,7 +9,7 @@ using Verse;
 
 namespace RadiusUIInspector;
 
-public static class StoragePanel
+public static partial class StoragePanel
 {
 	public enum Source
 	{
@@ -323,16 +324,28 @@ public static class StoragePanel
 		{
 			y = DrawPriority(area.x, y, width, storeSettings);
 		}
-		// Allow all, invert, clear all; [UR] Better Filter's advanced dialog takes a fourth slot when it can open.
-		int slots = BetterFilterCompat.CanOpenAdvanced ? 4 : 3;
+		// Allow all or clear all, invert; [UR] Better Filter's advanced dialog takes a third slot when it can open.
+		// One toggle allows everything until everything is allowed, then clears everything: it names what it does.
+		int slots = BetterFilterCompat.CanOpenAdvanced ? 3 : 2;
 		float slotW = (width - 4f * (slots - 1)) / slots;
 		Rect r = new Rect(area.x, y, slotW, 24f);
 		Rect rInvert = new Rect(r.xMax + 4f, y, slotW, 24f);
-		Rect r2 = new Rect(rInvert.xMax + 4f, y, slotW, 24f);
-		if (SmallButton(r, "RUI.Inspector.AllowAll".Translate()))
+		TreeNode_ThingCategory? toggleRoot = RootFor(filter, parentFilter);
+		bool allAllowed = toggleRoot != null && totalMemo.TryGetValue(toggleRoot.catDef, out var total) && allowedMemo.TryGetValue(toggleRoot.catDef, out var allowed) && allowed >= total;
+		if (SmallButton(r, (allAllowed ? "RUI.Inspector.ClearAll" : "RUI.Inspector.AllowAll").Translate(), true, allAllowed ? "Action/Decline" : "Action/Check"))
 		{
-			filter.SetAllowAll(parentFilter);
-			memoDirty = true;
+			if (allAllowed)
+			{
+				BeginEvictWatch();
+				filter.SetDisallowAll();
+				memoDirty = true;
+				EndEvictWatch();
+			}
+			else
+			{
+				filter.SetAllowAll(parentFilter);
+				memoDirty = true;
+			}
 		}
 		if (SmallButton(rInvert, "RUI.Inspector.StorageInvert".Translate(), true, "Action/Swap"))
 		{
@@ -342,16 +355,9 @@ public static class StoragePanel
 			EndEvictWatch();
 		}
 		TooltipHandler.TipRegion(rInvert, "RUI.Inspector.StorageInvertTip".Translate());
-		if (SmallButton(r2, "RUI.Inspector.ClearAll".Translate()))
+		if (slots == 3)
 		{
-			BeginEvictWatch();
-			filter.SetDisallowAll();
-			memoDirty = true;
-			EndEvictWatch();
-		}
-		if (slots == 4)
-		{
-			Rect rAdvanced = new Rect(r2.xMax + 4f, y, slotW, 24f);
+			Rect rAdvanced = new Rect(rInvert.xMax + 4f, y, slotW, 24f);
 			if (SmallButton(rAdvanced, "RUI.Inspector.StorageAdvanced".Translate(), true, "Action/Popout"))
 			{
 				BetterFilterCompat.OpenAdvanced(filter, parentFilter);
@@ -1258,46 +1264,9 @@ public static class StoragePanel
 					InspectorCore.Poke();
 				}
 				cy += 28f;
-				for (int j = 0; j < specialCache.Count && flag2; j++)
+				if (flag2)
 				{
-					SpecialThingFilterDef specialThingFilterDef = specialCache[j];
-					if (text2.Length > 0 && !SpecialMatches(specialThingFilterDef, text2))
-					{
-						continue;
-					}
-					bool flag = filter.Allows(specialThingFilterDef);
-					Rect rect = new Rect(Indent, cy, num - Indent, 24f);
-					if (ViewCull.Visible(cy, 24f, scroll.y, lastViewH))
-					{
-						DrawGuides(1, cy, 24f, RadiusTheme.Accent);
-						if (Mouse.IsOver(rect))
-						{
-							CardChrome.Hover(rect, 8f);
-						}
-						DrawTriState(new Rect(rect.x + 18f, rect.y + 5f, 14f, 14f), flag ? 1 : 0, 1);
-						// Green admits sound things (fresh, clean), red admits spoiled or risky ones (rotten, tainted).
-						int effect = SpecialEffect(specialThingFilterDef);
-						Color tone = (effect > 0) ? Palette.Good : ((effect < 0) ? Palette.Bad : Palette.Ink);
-						float labelX = rect.x + 38f;
-						if (effect != 0)
-						{
-							CardChrome.Rounded(new Rect(labelX, rect.y + 8f, 8f, 8f), flag ? tone : Palette.WithAlpha(tone, 0.35f), 4f);
-							labelX += 14f;
-						}
-						RadiusFont.Label(new Rect(labelX, rect.y, rect.xMax - labelX - 4f, 24f), SpecialLabel(specialThingFilterDef), GameFont.Small, heading: false, flag ? tone : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
-						if (!specialThingFilterDef.description.NullOrEmpty())
-						{
-							TooltipHandler.TipRegion(rect, specialThingFilterDef.description);
-						}
-					}
-					if (PaintHit(rect, flag, flag))
-					{
-						filter.SetAllow(specialThingFilterDef, paintAllow);
-						SyncSpecialDefs(specialThingFilterDef, paintAllow, filter, parentFilter);
-						memoDirty = true;
-						InspectorCore.Poke();
-					}
-					cy += 24f;
+					DrawSpecialRows(filter, parentFilter, num, ref cy, text2);
 				}
 				cy += 6f;
 				CardChrome.Fill(new Rect(0f, cy, num, 1f), Palette.Border);
@@ -1870,6 +1839,20 @@ public static class StoragePanel
 	// from the defName so modded filters named the vanilla way get the same colour. Things that can be burned
 	// or smelted down, finished goods and friendly mechs are green; their counterparts (non-burnable,
 	// unfinished, enemy) are red.
+	private static readonly Dictionary<string, int> EffectByDefName = new Dictionary<string, int>
+	{
+		{ "UsefulFilters_AllowRottable", -1 },
+		{ "UsefulFilters_AllowNonRottable", 1 },
+		{ "UsefulFilters_AllowDeteriorable", -1 },
+		{ "UsefulFilters_AllowNonDeteriorable", 1 },
+		{ "UsefulFilters_AllowFlammable", -1 },
+		{ "UsefulFilters_AllowNonFlammable", 1 },
+		{ "UR_AllowPerishable", -1 },
+		{ "UR_AllowNotPerishable", 1 },
+		{ "UR_AllowDeteriorating", -1 },
+		{ "UR_AllowNotDeteriorating", 1 }
+	};
+
 	private static int SpecialEffect(SpecialThingFilterDef sf)
 	{
 		if (specialEffect.TryGetValue(sf, out var value))
@@ -1877,6 +1860,13 @@ public static class StoragePanel
 			return value;
 		}
 		string n = sf.defName ?? "";
+		// Filters taken over or met in other mods: what may spoil, wear out outside, catch fire or be junk is
+		// red, its counterpart green.
+		if (EffectByDefName.TryGetValue(n, out value))
+		{
+			specialEffect[sf] = value;
+			return value;
+		}
 		if (n.Contains("NonBurnable") || n.Contains("NonSmeltable") || n.Contains("Unfinished") || n.Contains("Enemy") || n.Contains("Hostile"))
 		{
 			value = -1;
@@ -2128,51 +2118,119 @@ public static class StoragePanel
 		return sf.LabelCap;
 	}
 
-	// Pairs of opposite special filters. When this storage can only take one side, the side left decides
-	// every def alike: refusing it would refuse everything. It goes, unless already refused (it must stay
-	// reachable to allow it again).
-	private static readonly string[][] OppositePairs = new string[][]
+	// Special filters with exactly the same effect on this storage are one too many. Only filters the def alone
+	// decides can be compared (every def they can match, they always match): refusing one refuses every thing
+	// of the defs it matches within its category, so two of them that match the same defs do the same. A
+	// filter that matches every def the storage can take does what "Clear all" does: it goes too. Of a group,
+	// a vanilla filter stays first, then one of this mod. A refused filter always stays, so it can be allowed
+	// again; when one of a group is refused, the allowed ones go.
+	private static void DropRedundantSpecials(ThingFilter filter)
 	{
-		new string[] { "UsefulFilters_AllowHasQuality", "UsefulFilters_AllowNoQuality" },
-		new string[] { "UsefulFilters_AllowDeteriorable", "UsefulFilters_AllowNonDeteriorable" },
-		new string[] { "UsefulFilters_AllowRottable", "UsefulFilters_AllowNonRottable" },
-		new string[] { "UsefulFilters_AllowFlammable", "UsefulFilters_AllowNonFlammable" },
-		new string[] { "RUI_AllowHasHitPoints", "RUI_AllowNoHitPoints" },
-		new string[] { "RUI_AllowStackable", "RUI_AllowNonStackable" },
-		new string[] { "UR_AllowQuality", "UR_AllowNoQuality" },
-		new string[] { "UR_AllowDeteriorating", "UR_AllowNotDeteriorating" },
-		new string[] { "UR_AllowPerishable", "UR_AllowNotPerishable" },
-		new string[] { "UR_AllowHitPoints", "UR_AllowNoHitPoints" },
-		new string[] { "UR_AllowStackable", "UR_AllowNonStackable" }
-	};
-
-	private static void DropLoneOpposites(ThingFilter filter)
-	{
-		for (int i = 0; i < OppositePairs.Length; i++)
+		List<ThingDef> defs = visibleDefScratch.Distinct().ToList();
+		List<KeyValuePair<SpecialThingFilterDef, List<int>>> decided = new List<KeyValuePair<SpecialThingFilterDef, List<int>>>();
+		HashSet<SpecialThingFilterDef> drop = new HashSet<SpecialThingFilterDef>();
+		for (int i = 0; i < specialCache.Count; i++)
 		{
-			SpecialThingFilterDef? a = DefDatabase<SpecialThingFilterDef>.GetNamedSilentFail(OppositePairs[i][0]);
-			SpecialThingFilterDef? b = DefDatabase<SpecialThingFilterDef>.GetNamedSilentFail(OppositePairs[i][1]);
-			if (a == null || b == null)
+			SpecialThingFilterDef sf = specialCache[i];
+			List<int>? matched = MatchedDefs(sf, defs);
+			if (matched == null)
 			{
 				continue;
 			}
-			bool hasA = specialCache.Contains(a);
-			bool hasB = specialCache.Contains(b);
-			if (hasA != hasB)
+			if (matched.Count == defs.Count && filter.Allows(sf))
 			{
-				SpecialThingFilterDef lone = hasA ? a : b;
-				if (filter.Allows(lone))
+				drop.Add(sf);
+				continue;
+			}
+			decided.Add(new KeyValuePair<SpecialThingFilterDef, List<int>>(sf, matched));
+		}
+		bool[] grouped = new bool[decided.Count];
+		for (int i = 0; i < decided.Count; i++)
+		{
+			if (grouped[i])
+			{
+				continue;
+			}
+			List<SpecialThingFilterDef> group = new List<SpecialThingFilterDef> { decided[i].Key };
+			for (int j = i + 1; j < decided.Count; j++)
+			{
+				if (!grouped[j] && decided[j].Value.SequenceEqual(decided[i].Value))
 				{
-					specialCache.Remove(lone);
+					grouped[j] = true;
+					group.Add(decided[j].Key);
+				}
+			}
+			if (group.Count < 2)
+			{
+				continue;
+			}
+			bool anyRefused = group.Any((SpecialThingFilterDef sf) => !filter.Allows(sf));
+			SpecialThingFilterDef? keep = anyRefused ? null : group.OrderBy(Provenance).First();
+			foreach (SpecialThingFilterDef sf in group)
+			{
+				if (sf != keep && filter.Allows(sf))
+				{
+					drop.Add(sf);
 				}
 			}
 		}
+		specialCache.RemoveAll(drop.Contains);
+	}
+
+	// Indices in defs of the defs the filter matches, or null when some def depends on each thing.
+	private static List<int>? MatchedDefs(SpecialThingFilterDef sf, List<ThingDef> defs)
+	{
+		try
+		{
+			SpecialThingFilterWorker worker = sf.Worker;
+			if (worker == null)
+			{
+				return null;
+			}
+			List<int> matched = new List<int>();
+			for (int i = 0; i < defs.Count; i++)
+			{
+				ThingDef def = defs[i];
+				if (sf.parentCategory != null && !def.IsWithinCategory(sf.parentCategory))
+				{
+					continue;
+				}
+				bool always = worker.AlwaysMatches(def);
+				if (!always && worker.CanEverMatch(def))
+				{
+					return null;
+				}
+				if (always)
+				{
+					matched.Add(i);
+				}
+			}
+			return matched;
+		}
+		catch (Exception)
+		{
+			return null;
+		}
+	}
+
+	private static int Provenance(SpecialThingFilterDef sf)
+	{
+		if (sf.modContentPack == null || sf.modContentPack.IsOfficialMod)
+		{
+			return 0;
+		}
+		if (sf.modContentPack == InspectorMod.Instance?.Content)
+		{
+			return 1;
+		}
+		return 2;
 	}
 
 	private static void RebuildSpecials(ThingCategoryDef cat, ThingFilter filter, ThingFilter? parentFilter)
 	{
 		specialCache.Clear();
 		materialCache.Clear();
+		specialRows.Clear();
 		specialLabel.Clear();
 		if (cat == null)
 		{
@@ -2194,8 +2252,8 @@ public static class StoragePanel
 		{
 			TryAddSpecial(descendantSpecialThingFilterDef, parentFilter);
 		}
+		DropRedundantSpecials(filter);
 		visibleDefScratch.Clear();
-		DropLoneOpposites(filter);
 		materialCache.SortBy((SpecialThingFilterDef d) => d.label);
 		for (int i = 0; i < specialCache.Count; i++)
 		{
@@ -2209,6 +2267,8 @@ public static class StoragePanel
 				}
 			}
 		}
+		chipText.Clear();
+		BuildSpecialRows(cat);
 	}
 
 	private static void TryAddSpecial(SpecialThingFilterDef sf, ThingFilter? parentFilter)

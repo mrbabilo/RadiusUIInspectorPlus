@@ -8,7 +8,7 @@ Trois mods de filtres sont intégrés au panneau Stockage : Useful Filters (kent
 
 ### Ajouts
 
-- **Matériaux.** Un filtre par matériau (acier, bois, chaque cuir, chaque tissu…) : le refuser refuse tout ce qui en est fait. Le panneau les range dans une section « Matériaux » repliable, avec l'icône de chaque matériau, en ne gardant que les matériaux dont le stockage peut prendre un objet. La case de l'en-tête autorise ou refuse tous les matériaux d'un coup. Les factures, les tenues et l'onglet Stockage vanilla ne les mêlent pas à leur arbre : un bouton « Matériaux » au-dessus de leur filtre ouvre une fenêtre avec les matériaux qui les concernent (recherche, icônes, tout autoriser ou tout refuser, cochage par glissement).
+- **Matériaux.** Un filtre par matériau (acier, bois, chaque cuir, chaque tissu…) : le refuser refuse tout ce qui en est fait. Le panneau les range dans une section « Matériaux » repliable, avec l'icône de chaque matériau, en ne gardant que les matériaux dont le stockage peut prendre un objet. La case de l'en-tête autorise ou refuse tous les matériaux d'un coup. Les factures, les tenues et l'onglet Stockage vanilla ne les mêlent pas à leur arbre : un bouton « Matériaux » au-dessus de leur filtre ouvre une fenêtre avec les matériaux qui les concernent (recherche, icônes, bascule tout autoriser / tout refuser, cochage par glissement).
 - **Nouveaux filtres spéciaux**, par paires : avec ou sans qualité, se détériore ou non, pourrit ou non, inflammable ou non (repris de Useful Filters) ; avec ou sans points de vie, empilable ou non (repris de [UR] Better Filter, chargés seulement sans lui) ; cadavres d'animaux de la colonie ou des autres.
 - **Vêtements et armes inutiles ou utiles** (repris de Useless Filter). Les conditions se règlent dans les réglages du mod : plage de points de vie, plage de qualité, contaminé, propre, biocodé, non biocodé. Une seule condition remplie suffit.
 - **Bouton « Inverser »** : autorise chaque objet refusé et refuse chaque objet autorisé. Les filtres spéciaux gardent leur état.
@@ -17,7 +17,10 @@ Trois mods de filtres sont intégrés au panneau Stockage : Useful Filters (kent
 
 ### Modifications
 
-- Une paire de filtres opposés dont le stockage ne peut prendre qu'un côté est masquée : refuser le côté restant refuserait tout. Un filtre déjà refusé reste affiché.
+- **Filtres spéciaux redondants masqués.** Deux filtres qui ont exactement le même effet sur ce stockage (ils refusent les mêmes objets) n'en font plus qu'un : le filtre vanilla reste en priorité, puis celui d'Inspector Plus. Un filtre qui refuserait tout ce que le stockage peut prendre est masqué aussi, car il fait la même chose que « Tout refuser ». La comparaison ne porte que sur les filtres décidés par le type d'objet seul ; ceux qui dépendent de chaque objet (pourri, contaminé) restent tous. Un filtre déjà refusé reste affiché.
+- **Filtres spéciaux regroupés par ligne.** Chaque ensemble de choix tient sur une ligne titrée : État (frais, pourri), Contamination, Recyclage, Incinération, Biocodage, Corps humains, Compétences des livres, Qualité, Pourriture… Chaque choix est une puce reprenant le libellé du jeu sans son verbe, verte ou rouge selon ce qu'elle laisse entrer ; une puce refusée est pâle et barrée. Les puces passent à la ligne si besoin. Une ligne de plusieurs choix finit par une puce « Tout » qui les autorise tous. La catégorie concernée (Vêtements, Armes) s'affiche en bout de ligne. Les filtres d'autres mods se rangent par paire « X / Non X », ou seuls. Le cochage par glissement marche d'une puce à l'autre.
+- **« Tout autoriser » et « Tout refuser » deviennent un seul bouton à bascule**, dans le panneau comme dans la fenêtre Matériaux. Il autorise tout tant que tout n'est pas autorisé, puis refuse tout.
+- **Couleurs des nouveaux filtres** : ce qui peut pourrir, s'user dehors, prendre feu ou être inutile est en rouge ; l'inverse en vert.
 - Un filtre spécial ne s'affiche plus que si sa propre catégorie contient un objet du stockage (« sans qualité (armes) » n'apparaît plus sur une étagère à vêtements).
 - La plage de qualité s'affiche sans Royalty, comme en vanilla.
 

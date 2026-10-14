@@ -307,4 +307,27 @@
 {0}</RUI.Inspector.UselessImportTip>
   <RUI.Inspector.UselessImported>Useless Filter's conditions copied.</RUI.Inspector.UselessImported>
   <RUI.Inspector.UselessImportFailed>Useless Filter's settings could not be read. See the log.</RUI.Inspector.UselessImportFailed>
+  <RUI.Inspector.SpecialSetState>State</RUI.Inspector.SpecialSetState>
+  <RUI.Inspector.SpecialSetTaint>Taint</RUI.Inspector.SpecialSetTaint>
+  <RUI.Inspector.SpecialSetUsefulness>Usefulness</RUI.Inspector.SpecialSetUsefulness>
+  <RUI.Inspector.SpecialSetBiocoding>Biocoding</RUI.Inspector.SpecialSetBiocoding>
+  <RUI.Inspector.SpecialSetSmelting>Smelting</RUI.Inspector.SpecialSetSmelting>
+  <RUI.Inspector.SpecialSetBurning>Burning</RUI.Inspector.SpecialSetBurning>
+  <RUI.Inspector.SpecialSetAge>Age</RUI.Inspector.SpecialSetAge>
+  <RUI.Inspector.SpecialSetSex>Sex</RUI.Inspector.SpecialSetSex>
+  <RUI.Inspector.SpecialSetHumanCorpses>Human corpses</RUI.Inspector.SpecialSetHumanCorpses>
+  <RUI.Inspector.SpecialSetMechCorpses>Mech corpses</RUI.Inspector.SpecialSetMechCorpses>
+  <RUI.Inspector.SpecialSetAnimalCorpses>Animal corpses</RUI.Inspector.SpecialSetAnimalCorpses>
+  <RUI.Inspector.SpecialSetDiet>Diet</RUI.Inspector.SpecialSetDiet>
+  <RUI.Inspector.SpecialSetResearch>Research</RUI.Inspector.SpecialSetResearch>
+  <RUI.Inspector.SpecialSetSkills>Skills</RUI.Inspector.SpecialSetSkills>
+  <RUI.Inspector.SpecialSetQuality>Quality</RUI.Inspector.SpecialSetQuality>
+  <RUI.Inspector.SpecialSetDeterioration>Deterioration</RUI.Inspector.SpecialSetDeterioration>
+  <RUI.Inspector.SpecialSetRot>Rot</RUI.Inspector.SpecialSetRot>
+  <RUI.Inspector.SpecialSetFlammability>Flammability</RUI.Inspector.SpecialSetFlammability>
+  <RUI.Inspector.SpecialSetHitPoints>Hit points</RUI.Inspector.SpecialSetHitPoints>
+  <RUI.Inspector.SpecialSetStacking>Stacking</RUI.Inspector.SpecialSetStacking>
+  <RUI.Inspector.SpecialVerbPrefixes>allow |</RUI.Inspector.SpecialVerbPrefixes>
+  <RUI.Inspector.SpecialAll>All</RUI.Inspector.SpecialAll>
+  <RUI.Inspector.SpecialAllTip>Allow every choice of this row.</RUI.Inspector.SpecialAllTip>
 </LanguageData>

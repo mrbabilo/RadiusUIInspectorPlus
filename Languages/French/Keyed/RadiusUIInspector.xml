@@ -307,4 +307,27 @@
 {0}</RUI.Inspector.UselessImportTip>
   <RUI.Inspector.UselessImported>Conditions de Useless Filter reprises.</RUI.Inspector.UselessImported>
   <RUI.Inspector.UselessImportFailed>Impossible de lire les réglages de Useless Filter. Voir le journal.</RUI.Inspector.UselessImportFailed>
+  <RUI.Inspector.SpecialSetState>État</RUI.Inspector.SpecialSetState>
+  <RUI.Inspector.SpecialSetTaint>Contamination</RUI.Inspector.SpecialSetTaint>
+  <RUI.Inspector.SpecialSetUsefulness>Utilité</RUI.Inspector.SpecialSetUsefulness>
+  <RUI.Inspector.SpecialSetBiocoding>Biocodage</RUI.Inspector.SpecialSetBiocoding>
+  <RUI.Inspector.SpecialSetSmelting>Recyclage</RUI.Inspector.SpecialSetSmelting>
+  <RUI.Inspector.SpecialSetBurning>Incinération</RUI.Inspector.SpecialSetBurning>
+  <RUI.Inspector.SpecialSetAge>Âge</RUI.Inspector.SpecialSetAge>
+  <RUI.Inspector.SpecialSetSex>Sexe</RUI.Inspector.SpecialSetSex>
+  <RUI.Inspector.SpecialSetHumanCorpses>Corps humains</RUI.Inspector.SpecialSetHumanCorpses>
+  <RUI.Inspector.SpecialSetMechCorpses>Cadavres de mechs</RUI.Inspector.SpecialSetMechCorpses>
+  <RUI.Inspector.SpecialSetAnimalCorpses>Cadavres d'animaux</RUI.Inspector.SpecialSetAnimalCorpses>
+  <RUI.Inspector.SpecialSetDiet>Régime</RUI.Inspector.SpecialSetDiet>
+  <RUI.Inspector.SpecialSetResearch>Recherche</RUI.Inspector.SpecialSetResearch>
+  <RUI.Inspector.SpecialSetSkills>Compétences</RUI.Inspector.SpecialSetSkills>
+  <RUI.Inspector.SpecialSetQuality>Qualité</RUI.Inspector.SpecialSetQuality>
+  <RUI.Inspector.SpecialSetDeterioration>Détérioration</RUI.Inspector.SpecialSetDeterioration>
+  <RUI.Inspector.SpecialSetRot>Pourriture</RUI.Inspector.SpecialSetRot>
+  <RUI.Inspector.SpecialSetFlammability>Inflammabilité</RUI.Inspector.SpecialSetFlammability>
+  <RUI.Inspector.SpecialSetHitPoints>Points de vie</RUI.Inspector.SpecialSetHitPoints>
+  <RUI.Inspector.SpecialSetStacking>Empilement</RUI.Inspector.SpecialSetStacking>
+  <RUI.Inspector.SpecialVerbPrefixes>autoriser |autor. |allow </RUI.Inspector.SpecialVerbPrefixes>
+  <RUI.Inspector.SpecialAll>Tout</RUI.Inspector.SpecialAll>
+  <RUI.Inspector.SpecialAllTip>Autorise tous les choix de cette ligne.</RUI.Inspector.SpecialAllTip>
 </LanguageData>
