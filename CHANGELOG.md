@@ -2,7 +2,7 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
-## 1.2.0 — non publiée
+## 1.2.0 — 2026-10-14
 
 Trois mods de filtres sont intégrés au panneau Stockage : Useful Filters (kentotsu), Useless Filter (Mlie) et Material Filter (CheaterEater). Inspector Plus les déclare incompatibles : désactivez-les. Tant que l'un d'eux reste actif, Inspector Plus ne charge pas sa propre version de ces filtres et affiche ceux du mod.
 
