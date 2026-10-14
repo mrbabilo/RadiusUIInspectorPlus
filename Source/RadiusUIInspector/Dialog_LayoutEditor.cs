@@ -76,6 +76,10 @@ public class Dialog_LayoutEditor : Window
 
 	private static readonly string CopyFromLbl = "RUI.Inspector.CopyFrom".Translate();
 
+	private static readonly string UserPresetsLbl = "RUI.Inspector.UserPresets".Translate();
+
+	private static readonly string UserPresetsTip = "RUI.Inspector.UserPresetsTip".Translate();
+
 	private static readonly string ResetProfileTip = "RUI.Inspector.ResetProfileTip".Translate();
 
 	private static readonly string[] ProfileLabels = new string[4]
@@ -509,8 +513,10 @@ public class Dialog_LayoutEditor : Window
 			num2 = rect5.xMax;
 		}
 		InspectorSettings.LayoutPreset[] presets = InspectorSettings.Presets;
-		float num4 = 82f;
-		float num5 = (float)(things ? 1 : (2 + ((lane == 0) ? presets.Length : 0))) * (num4 + 4f);
+		int num9 = (things ? 1 : (3 + ((lane == 0) ? presets.Length : 0)));
+		// Narrower buttons when the row would not fit the window.
+		float num4 = Mathf.Min(82f, Mathf.Floor((inRect.width + 4f) / (float)num9 - 4f));
+		float num5 = (float)num9 * (num4 + 4f);
 		float num6 = inRect.xMax - num5;
 		float num7 = y;
 		bool flag5 = num6 < num2 + 12f;
@@ -561,13 +567,23 @@ public class Dialog_LayoutEditor : Window
 				}
 				Find.WindowStack.Add(new FloatMenu(list));
 			}
+			// The player's own presets and the RimHUD import (Dialog_LayoutPresets).
+			Rect rect10 = new Rect(rect8.xMax + 4f, num7, num4, 26f);
+			bool flag9 = Mouse.IsOver(rect10);
+			CardChrome.Rounded(rect10, flag9 ? Palette.Surface3 : Palette.Surface2, 8f);
+			RadiusFont.Label(rect10, UserPresetsLbl, GameFont.Tiny, heading: false, flag9 ? RadiusTheme.Accent : Palette.Ink, TextAnchor.MiddleCenter, wrap: false);
+			TooltipHandler.TipRegion(rect10, UserPresetsTip);
+			if (Widgets.ButtonInvisible(rect10))
+			{
+				Find.WindowStack.Add(new Dialog_LayoutPresets());
+			}
 		}
 		if (!things && lane == 0)
 		{
 			for (int num8 = 0; num8 < presets.Length; num8++)
 			{
 				InspectorSettings.LayoutPreset layoutPreset = presets[num8];
-				Rect rect9 = new Rect(num6 + (float)(num8 + 2) * (num4 + 4f), num7, num4, 26f);
+				Rect rect9 = new Rect(num6 + (float)(num8 + 3) * (num4 + 4f), num7, num4, 26f);
 				bool flag8 = Mouse.IsOver(rect9);
 				CardChrome.Rounded(rect9, flag8 ? Palette.Surface3 : Palette.Surface2, 8f);
 				RadiusFont.Label(rect9, layoutPreset.Label, GameFont.Tiny, heading: false, flag8 ? RadiusTheme.Accent : Palette.Ink, TextAnchor.MiddleCenter, wrap: false);

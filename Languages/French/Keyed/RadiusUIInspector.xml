@@ -331,4 +331,41 @@
   <RUI.Inspector.SpecialAll>Tout</RUI.Inspector.SpecialAll>
   <RUI.Inspector.SpecialAllTip>Autorise tous les choix de cette ligne. Glissez sur d'autres cases « Tout » pour faire de même.</RUI.Inspector.SpecialAllTip>
   <RUI.Inspector.SpecialNoneTip>Refuse tous les choix de cette ligne. Glissez sur d'autres cases « Tout » pour faire de même.</RUI.Inspector.SpecialNoneTip>
+  <!-- Infobulles détaillées des pions (RichTips) -->
+  <RUI.Inspector.TipTrainability>Dressabilité</RUI.Inspector.TipTrainability>
+  <RUI.Inspector.TipPetness>Affinité de compagnie</RUI.Inspector.TipPetness>
+  <RUI.Inspector.TipWorkType>Type de travail</RUI.Inspector.TipWorkType>
+  <RUI.Inspector.TipRelevantSkills>Compétences utiles</RUI.Inspector.TipRelevantSkills>
+  <RUI.Inspector.TipIdeo>Idéologie</RUI.Inspector.TipIdeo>
+  <RUI.Inspector.TipXenotype>Xénotype</RUI.Inspector.TipXenotype>
+  <!-- Préréglages de mise en page du joueur (Dialog_LayoutPresets) -->
+  <RUI.Inspector.UserPresets>Préréglages&#8230;</RUI.Inspector.UserPresets>
+  <RUI.Inspector.UserPresetsTip>Enregistrer la mise en page de tous les profils, appliquer une mise en page enregistrée ou importer une mise en page RimHUD.</RUI.Inspector.UserPresetsTip>
+  <RUI.Inspector.UserPresetsTitle>Préréglages de mise en page</RUI.Inspector.UserPresetsTitle>
+  <RUI.Inspector.UserPresetsMine>Mes préréglages ({0})</RUI.Inspector.UserPresetsMine>
+  <RUI.Inspector.UserPresetsNone>Aucun préréglage. Nommez la mise en page actuelle ci-dessus et enregistrez-la.</RUI.Inspector.UserPresetsNone>
+  <RUI.Inspector.UserPresetNameHint>Nom du préréglage</RUI.Inspector.UserPresetNameHint>
+  <RUI.Inspector.UserPresetSave>Enregistrer</RUI.Inspector.UserPresetSave>
+  <RUI.Inspector.UserPresetUpdate>Mettre à jour</RUI.Inspector.UserPresetUpdate>
+  <RUI.Inspector.UserPresetSaveTip>Enregistre le corps et la colonne des quatre profils (colon, animal, mécanoïde, prisonnier). Les préréglages sont partagés entre toutes vos parties.</RUI.Inspector.UserPresetSaveTip>
+  <RUI.Inspector.UserPresetSaved>Préréglage « {0} » enregistré.</RUI.Inspector.UserPresetSaved>
+  <RUI.Inspector.UserPresetApply>Appliquer</RUI.Inspector.UserPresetApply>
+  <RUI.Inspector.UserPresetApplyTip>Remplace la mise en page actuelle par ce préréglage. Un profil absent du préréglage garde sa mise en page.</RUI.Inspector.UserPresetApplyTip>
+  <RUI.Inspector.UserPresetApplied>Préréglage « {0} » appliqué.</RUI.Inspector.UserPresetApplied>
+  <RUI.Inspector.UserPresetOverwriteTip>Remplace ce préréglage par la mise en page actuelle.</RUI.Inspector.UserPresetOverwriteTip>
+  <RUI.Inspector.UserPresetRename>Renommer le préréglage</RUI.Inspector.UserPresetRename>
+  <RUI.Inspector.UserPresetDelete>Supprimer le préréglage</RUI.Inspector.UserPresetDelete>
+  <RUI.Inspector.UserPresetDeleteConfirm>Cliquez encore pour supprimer ce préréglage de toutes vos parties</RUI.Inspector.UserPresetDeleteConfirm>
+  <RUI.Inspector.UserPresetDefaultName>Mise en page</RUI.Inspector.UserPresetDefaultName>
+  <RUI.Inspector.RimHudImport>Importer depuis RimHUD</RUI.Inspector.RimHudImport>
+  <RUI.Inspector.RimHudNone>Aucune mise en page RimHUD trouvée (Config/RimHUD, mod RimHUD, dossiers RimHUD/Presets des mods).</RUI.Inspector.RimHudNone>
+  <RUI.Inspector.RimHudCurrent>Mise en page RimHUD actuelle</RUI.Inspector.RimHudCurrent>
+  <RUI.Inspector.RimHudConfig>Réglages de RimHUD</RUI.Inspector.RimHudConfig>
+  <RUI.Inspector.RimHudMissingMods>demande des mods inactifs</RUI.Inspector.RimHudMissingMods>
+  <RUI.Inspector.RimHudImportOne>Importer</RUI.Inspector.RimHudImportOne>
+  <RUI.Inspector.RimHudImportTip>Ajoute cette mise en page à vos préréglages, sans l'appliquer. Chaque widget RimHUD devient la case Inspector équivalente ; le préréglage garde votre colonne actuelle.</RUI.Inspector.RimHudImportTip>
+  <RUI.Inspector.RimHudImported>« {0} » importé dans vos préréglages.</RUI.Inspector.RimHudImported>
+  <RUI.Inspector.RimHudImportedSkipped>« {0} » importé. Laissés de côté (pas de case Inspector) : {1}</RUI.Inspector.RimHudImportedSkipped>
+  <RUI.Inspector.RimHudFailed>Import de « {0} » impossible : {1}</RUI.Inspector.RimHudFailed>
+  <RUI.Inspector.RimHudEmpty>la mise en page ne contient aucun widget que l'Inspector sait afficher</RUI.Inspector.RimHudEmpty>
 </LanguageData>

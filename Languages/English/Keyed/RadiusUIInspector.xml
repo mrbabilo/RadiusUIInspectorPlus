@@ -331,4 +331,41 @@
   <RUI.Inspector.SpecialAll>All</RUI.Inspector.SpecialAll>
   <RUI.Inspector.SpecialAllTip>Allow every choice of this row. Drag over other "All" boxes to do the same.</RUI.Inspector.SpecialAllTip>
   <RUI.Inspector.SpecialNoneTip>Refuse every choice of this row. Drag over other "All" boxes to do the same.</RUI.Inspector.SpecialNoneTip>
+  <!-- Detailed pawn tooltips (RichTips) -->
+  <RUI.Inspector.TipTrainability>Trainability</RUI.Inspector.TipTrainability>
+  <RUI.Inspector.TipPetness>Petness</RUI.Inspector.TipPetness>
+  <RUI.Inspector.TipWorkType>Work type</RUI.Inspector.TipWorkType>
+  <RUI.Inspector.TipRelevantSkills>Relevant skills</RUI.Inspector.TipRelevantSkills>
+  <RUI.Inspector.TipIdeo>Ideoligion</RUI.Inspector.TipIdeo>
+  <RUI.Inspector.TipXenotype>Xenotype</RUI.Inspector.TipXenotype>
+  <!-- Layout presets of the player (Dialog_LayoutPresets) -->
+  <RUI.Inspector.UserPresets>Presets&#8230;</RUI.Inspector.UserPresets>
+  <RUI.Inspector.UserPresetsTip>Save the layout of every profile, apply a saved layout, or import a RimHUD layout.</RUI.Inspector.UserPresetsTip>
+  <RUI.Inspector.UserPresetsTitle>Layout presets</RUI.Inspector.UserPresetsTitle>
+  <RUI.Inspector.UserPresetsMine>My presets ({0})</RUI.Inspector.UserPresetsMine>
+  <RUI.Inspector.UserPresetsNone>No preset yet. Name the current layout above and save it.</RUI.Inspector.UserPresetsNone>
+  <RUI.Inspector.UserPresetNameHint>Preset name</RUI.Inspector.UserPresetNameHint>
+  <RUI.Inspector.UserPresetSave>Save layout</RUI.Inspector.UserPresetSave>
+  <RUI.Inspector.UserPresetUpdate>Update preset</RUI.Inspector.UserPresetUpdate>
+  <RUI.Inspector.UserPresetSaveTip>Saves the body and rail of the four profiles (colonist, animal, mechanoid, prisoner). Presets are shared by all your saves.</RUI.Inspector.UserPresetSaveTip>
+  <RUI.Inspector.UserPresetSaved>Preset "{0}" saved.</RUI.Inspector.UserPresetSaved>
+  <RUI.Inspector.UserPresetApply>Apply</RUI.Inspector.UserPresetApply>
+  <RUI.Inspector.UserPresetApplyTip>Replaces the current layout with this preset. A profile the preset does not hold keeps its layout.</RUI.Inspector.UserPresetApplyTip>
+  <RUI.Inspector.UserPresetApplied>Preset "{0}" applied.</RUI.Inspector.UserPresetApplied>
+  <RUI.Inspector.UserPresetOverwriteTip>Replaces this preset with the current layout.</RUI.Inspector.UserPresetOverwriteTip>
+  <RUI.Inspector.UserPresetRename>Rename the preset</RUI.Inspector.UserPresetRename>
+  <RUI.Inspector.UserPresetDelete>Delete the preset</RUI.Inspector.UserPresetDelete>
+  <RUI.Inspector.UserPresetDeleteConfirm>Click again to delete this preset from all your saves</RUI.Inspector.UserPresetDeleteConfirm>
+  <RUI.Inspector.UserPresetDefaultName>Layout</RUI.Inspector.UserPresetDefaultName>
+  <RUI.Inspector.RimHudImport>Import from RimHUD</RUI.Inspector.RimHudImport>
+  <RUI.Inspector.RimHudNone>No RimHUD layout found (Config/RimHUD, RimHUD mod, RimHUD/Presets folders of mods).</RUI.Inspector.RimHudNone>
+  <RUI.Inspector.RimHudCurrent>Current RimHUD layout</RUI.Inspector.RimHudCurrent>
+  <RUI.Inspector.RimHudConfig>RimHUD settings</RUI.Inspector.RimHudConfig>
+  <RUI.Inspector.RimHudMissingMods>needs mods that are not active</RUI.Inspector.RimHudMissingMods>
+  <RUI.Inspector.RimHudImportOne>Import</RUI.Inspector.RimHudImportOne>
+  <RUI.Inspector.RimHudImportTip>Adds this layout to your presets without applying it. Each RimHUD widget becomes the matching Inspector cell; the preset keeps your current rail.</RUI.Inspector.RimHudImportTip>
+  <RUI.Inspector.RimHudImported>"{0}" imported into your presets.</RUI.Inspector.RimHudImported>
+  <RUI.Inspector.RimHudImportedSkipped>"{0}" imported. Left out (no Inspector cell): {1}</RUI.Inspector.RimHudImportedSkipped>
+  <RUI.Inspector.RimHudFailed>Cannot import "{0}": {1}</RUI.Inspector.RimHudFailed>
+  <RUI.Inspector.RimHudEmpty>the layout holds no widget the Inspector can show</RUI.Inspector.RimHudEmpty>
 </LanguageData>

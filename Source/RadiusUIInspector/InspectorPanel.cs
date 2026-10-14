@@ -827,7 +827,7 @@ public static class InspectorPanel
 		return 20f;
 	}
 
-	private static float DrawLineCell(string text, Color ink, float x, float w, float y)
+	private static float DrawLineCell(string text, Color ink, float x, float w, float y, Pawn? pawn = null, int tipId = 0, Func<Pawn, string?>? rich = null)
 	{
 		if (text.NullOrEmpty())
 		{
@@ -835,7 +835,19 @@ public static class InspectorPanel
 		}
 		Rect rect = new Rect(x, y, w, 20f);
 		RadiusFont.Label(rect, text.Truncate(w, truncCache), GameFont.Small, heading: false, ink, TextAnchor.MiddleLeft, wrap: false);
-		TooltipHandler.TipRegion(rect, text);
+		if (rich == null)
+		{
+			TooltipHandler.TipRegion(rect, text);
+		}
+		else if (Mouse.IsOver(rect))
+		{
+			// The line is truncated: its full text leads the tooltip, then the detail.
+			RichTips.Region(rect, pawn, tipId, delegate(Pawn p)
+			{
+				string text2 = rich(p);
+				return text2.NullOrEmpty() ? text : (text + "\n\n" + text2);
+			});
+		}
 		return 20f;
 	}
 
@@ -865,7 +877,7 @@ public static class InspectorPanel
 		return 20f;
 	}
 
-	private static float DrawCapacityCell(in CellSpec spec, float x, float w, float y)
+	private static float DrawCapacityCell(Pawn pawn, in CellSpec spec, float x, float w, float y)
 	{
 		List<PawnSnapshot.CapLine> capacities = Snap.Capacities;
 		for (int i = 0; i < capacities.Count; i++)
@@ -877,18 +889,31 @@ public static class InspectorPanel
 				Rect bar = new Rect(x, y, w, 15f);
 				SuiteBar(bar, Mathf.Clamp01(capLine.Value), col, -1f, -1f);
 				BarInnerLabels(bar, capLine.Label, capLine.Pct, Mathf.Clamp01(capLine.Value));
+				PawnCapacityDef capDef = capLine.Def;
+				if (capDef != null && Mouse.IsOver(bar))
+				{
+					RichTips.Region(bar, pawn, RichTips.CapacityId(capDef), (Pawn p) => RichTips.Capacity(p, capDef));
+				}
 				return 15f;
 			}
 		}
 		return 0f;
 	}
 
-	private static float DrawActivityCell(float x, float w, float y)
+	private static float DrawActivityCell(Pawn pawn, float x, float w, float y)
 	{
 		IconSet.Get("Action/Play").Draw(new Rect(x, y + 4f, 12f, 12f), Palette.TextDim);
 		Rect rect = new Rect(x + 16f, y, w - 16f, 20f);
 		RadiusFont.Label(rect, Snap.Activity.Truncate(rect.width, truncCache), GameFont.Small, heading: false, Palette.Ink, TextAnchor.MiddleLeft, wrap: false);
-		TooltipHandler.TipRegion(rect, Snap.Activity);
+		if (Mouse.IsOver(rect))
+		{
+			string activity = Snap.Activity;
+			RichTips.Region(rect, pawn, RichTips.ActivityId, delegate(Pawn p)
+			{
+				string text = RichTips.Activity(p);
+				return text.NullOrEmpty() ? activity : (activity + "\n\n" + text);
+			});
+		}
 		return 20f;
 	}
 
@@ -1808,7 +1833,7 @@ public static class InspectorPanel
 		case CellKind.Training:
 		{
 			float num5 = ControlsPanel.DrawTraining(pawn, x, w, y);
-			TabJump(pane, new Rect(x, y, w, num5), typeof(ITab_Pawn_Training), "TabTraining", WTraining);
+			TabJump(pane, new Rect(x, y, w, num5), typeof(ITab_Pawn_Training), "TabTraining", WTraining, pawn, RichTips.AnimalId, RichTips.Animal);
 			return num5;
 		}
 		case CellKind.Master:
@@ -1820,19 +1845,19 @@ public static class InspectorPanel
 		case CellKind.NameBlock:
 			return DrawNameCell(x, w, y);
 		case CellKind.Activity:
-			return DrawActivityCell(x, w, y);
+			return DrawActivityCell(pawn, x, w, y);
 		case CellKind.Faction:
 			return DrawLineCell(Snap.SubLine, Palette.TextDim, x, w, y);
 		case CellKind.GenderAge:
-			return DrawLineCell(Snap.GenderAge, Palette.TextDim, x, w, y);
+			return DrawLineCell(Snap.GenderAge, Palette.TextDim, x, w, y, pawn, RichTips.BioId, RichTips.Bio);
 		case CellKind.Traits:
-			return DrawLineCell(Snap.TraitsLine, Palette.Ink, x, w, y);
+			return DrawLineCell(Snap.TraitsLine, Palette.Ink, x, w, y, pawn, RichTips.TraitsId, RichTips.Traits);
 		case CellKind.Carrying:
 			return DrawLineCell(Snap.Carrying, Palette.TextDim, x, w, y);
 		case CellKind.Queued:
 			return DrawLineCell(Snap.Queued, Palette.TextDim, x, w, y);
 		case CellKind.Mental:
-			return DrawLineCell(Snap.MentalLine, Snap.MentalBad ? Palette.Warn : RadiusTheme.Accent, x, w, y);
+			return DrawLineCell(Snap.MentalLine, Snap.MentalBad ? Palette.Warn : RadiusTheme.Accent, x, w, y, pawn, RichTips.MoodId, RichTips.Mood);
 		case CellKind.Stat:
 		{
 			int num7 = FindValueLine(Snap.StatLines, spec.StatDef);
@@ -1852,7 +1877,7 @@ public static class InspectorPanel
 			return 0f;
 		}
 		case CellKind.Capacity:
-			return DrawCapacityCell(in spec, x, w, y);
+			return DrawCapacityCell(pawn, in spec, x, w, y);
 		case CellKind.Inspect:
 			return ControlsPanel.DrawInspect(pawn, x, w, y, cullEnabled ? scroll.y : 0f, cullEnabled ? lastViewH : 99999f);
 		case CellKind.Header:
@@ -1862,29 +1887,33 @@ public static class InspectorPanel
 		case CellKind.Mood:
 		{
 			float num4 = DrawMoodCell(pawn, x, w, y);
-			TabJump(pane, new Rect(x, y, w, num4), typeof(ITab_Pawn_Needs), "TabNeeds", JumpNeeds);
+			TabJump(pane, new Rect(x, y, w, num4), typeof(ITab_Pawn_Needs), "TabNeeds", JumpNeeds, pawn, RichTips.MoodId, RichTips.Mood);
 			return num4;
 		}
 		case CellKind.Need:
 		{
 			float num3 = DrawNeedCell(pawn, spec, x, w, y);
-			TabJump(pane, new Rect(x, y, w, num3), typeof(ITab_Pawn_Needs), "TabNeeds", JumpNeeds);
+			NeedDef needDef = spec.NeedDef;
+			Rect rect = new Rect(x, y, w, num3);
+			TabJump(pane, rect, typeof(ITab_Pawn_Needs), "TabNeeds", JumpNeeds, pawn, (needDef != null) ? RichTips.NeedId(needDef) : 0, (needDef != null && Mouse.IsOver(rect)) ? ((Func<Pawn, string?>)((Pawn p) => RichTips.Need(p, needDef))) : null);
 			return num3;
 		}
 		case CellKind.Skill:
 		{
-			float num2 = DrawSkillCell(spec, x, w, y);
-			TabJump(pane, new Rect(x, y, w, num2), typeof(ITab_Pawn_Character), "TabCharacter", JumpSkills);
+			float num2 = DrawSkillCell(pawn, spec, x, w, y, out string passion);
+			SkillDef skillDef = spec.SkillDef;
+			Rect rect2 = new Rect(x, y, w, num2);
+			TabJump(pane, rect2, typeof(ITab_Pawn_Character), "TabCharacter", JumpSkills, pawn, (skillDef != null) ? RichTips.SkillId(skillDef) : 0, (skillDef != null && Mouse.IsOver(rect2)) ? ((Func<Pawn, string?>)((Pawn p) => RichTips.Skill(p, skillDef, passion))) : null);
 			return num2;
 		}
 		case CellKind.SkillsGrid:
-			return DrawSkillsGrid(x, w, y);
+			return DrawSkillsGrid(pawn, x, w, y);
 		case CellKind.Health:
-			return DrawHealthCell(x, w, y);
+			return DrawHealthCell(pawn, x, w, y);
 		case CellKind.HealthBar:
 		{
 			float num = DrawHealthBarCell(pawn, x, w, y);
-			TabJump(pane, new Rect(x, y, w, num), typeof(ITab_Pawn_Health), "TabHealth", JumpHealth);
+			TabJump(pane, new Rect(x, y, w, num), typeof(ITab_Pawn_Health), "TabHealth", JumpHealth, pawn, RichTips.HealthId, HealthTip);
 			return num;
 		}
 		case CellKind.Equip:
@@ -1956,14 +1985,19 @@ public static class InspectorPanel
 		return num - y - 4f;
 	}
 
-	private static void TabJump(IInspectPane pane, Rect r, Type vanillaType, string labelKey, string tip)
+	// rich: detailed tooltip (RichTips), shown above the jump hint; without a pane only the detail remains.
+	private static void TabJump(IInspectPane pane, Rect r, Type vanillaType, string labelKey, string tip, Pawn? pawn = null, int tipId = 0, Func<Pawn, string?>? rich = null)
 	{
+		if (pane == null)
+		{
+			RichTips.Region(r, pawn, tipId, rich);
+		}
 		if (pane != null)
 		{
 			if (Mouse.IsOver(r))
 			{
 				CardChrome.Hover(r, 8f);
-				TooltipHandler.TipRegion(r, tip);
+				RichTips.Region(r, pawn, tipId, rich, tip);
 			}
 			if (Widgets.ButtonInvisible(r))
 			{
@@ -2019,22 +2053,32 @@ public static class InspectorPanel
 		return 0f;
 	}
 
-	private static float DrawSkillCell(CellSpec spec, float x, float w, float y)
+	private static float DrawSkillCell(Pawn pawn, CellSpec spec, float x, float w, float y, out string passion)
 	{
+		passion = "";
 		for (int i = 0; i < Snap.Skills.Count; i++)
 		{
 			PawnSnapshot.SkillLine sk = Snap.Skills[i];
 			if (sk.Def == spec.SkillDef)
 			{
-				DrawSkillRow(sk, x, w, y);
+				DrawSkillRow(null, sk, x, w, y);
+				passion = sk.PassionLabel;
 				return 22f;
 			}
 		}
 		return 0f;
 	}
 
-	private static void DrawSkillRow(PawnSnapshot.SkillLine sk, float x, float w, float y)
+	// pawn: draw the row's detailed tooltip (skills grid); null when the caller owns the tooltip.
+	private static void DrawSkillRow(Pawn? pawn, PawnSnapshot.SkillLine sk, float x, float w, float y)
 	{
+		Rect rect0 = new Rect(x, y, w, 22f);
+		if (pawn != null && sk.Def != null && Mouse.IsOver(rect0))
+		{
+			SkillDef def = sk.Def;
+			string passion = sk.PassionLabel;
+			RichTips.Region(rect0, pawn, RichTips.SkillId(def), (Pawn p) => RichTips.Skill(p, def, passion));
+		}
 		float num = w * 0.44f;
 		Color value = (sk.Disabled ? Palette.TextFaint : Palette.TextDim);
 		RadiusFont.Label(new Rect(x + 2f, y, num - 2f, 22f), sk.Label, GameFont.Small, heading: false, value, TextAnchor.MiddleLeft, wrap: false);
@@ -2045,10 +2089,6 @@ public static class InspectorPanel
 			Rect rect = new Rect(num2, y + 3f, 16f, 16f);
 			GUI.color = Color.white;
 			GUI.DrawTexture(rect, image);
-			if (!sk.PassionLabel.NullOrEmpty())
-			{
-				TooltipHandler.TipRegion(rect, sk.PassionLabel);
-			}
 		}
 		num2 += 18f;
 		RadiusFont.Label(new Rect(num2, y, 24f, 22f), sk.Level, GameFont.Small, !sk.Disabled, sk.Disabled ? Palette.TextFaint : Palette.Ink, TextAnchor.MiddleRight, wrap: false);
@@ -2059,7 +2099,7 @@ public static class InspectorPanel
 		}
 	}
 
-	private static float DrawSkillsGrid(float x, float w, float y)
+	private static float DrawSkillsGrid(Pawn pawn, float x, float w, float y)
 	{
 		InspectorSettings settings = InspectorMod.Settings;
 		int num = ((!(w > 340f)) ? 1 : 2);
@@ -2074,7 +2114,7 @@ public static class InspectorPanel
 			{
 				if (!cullEnabled || ViewCull.Visible(num4, 22f, scroll.y, lastViewH))
 				{
-					DrawSkillRow(sk, x + (float)num3 * (num2 + 10f), num2, num4);
+					DrawSkillRow(pawn, sk, x + (float)num3 * (num2 + 10f), num2, num4);
 				}
 				num5++;
 				num3++;
@@ -2107,14 +2147,21 @@ public static class InspectorPanel
 		Rect rect = new Rect(x, y, w, 15f);
 		SuiteBar(rect, healthPct, col, -1f, -1f);
 		BarInnerLabels(rect, Snap.HealthCondition, Snap.HealthPctStr, healthPct);
-		if (Snap.Bleeding && !Snap.BleedLabel.NullOrEmpty())
-		{
-			TooltipHandler.TipRegion(rect, Snap.BleedLabel);
-		}
 		return 15f;
 	}
 
-	private static float DrawHealthCell(float x, float w, float y)
+	// Health tooltip, led by the bleeding line the bar used to show on its own.
+	private static string? HealthTip(Pawn pawn)
+	{
+		string text = RichTips.Health(pawn);
+		if (!Snap.Bleeding || Snap.BleedLabel.NullOrEmpty())
+		{
+			return text;
+		}
+		return Snap.BleedLabel.Colorize(Palette.Bad) + (text.NullOrEmpty() ? "" : ("\n\n" + text));
+	}
+
+	private static float DrawHealthCell(Pawn pawn, float x, float w, float y)
 	{
 		InspectorSettings settings = InspectorMod.Settings;
 		float num = y;
@@ -2149,6 +2196,7 @@ public static class InspectorPanel
 			}
 			y += 23f;
 		}
+		RichTips.Region(new Rect(x, num, w, y - num), pawn, RichTips.HealthId, HealthTip);
 		return y - num;
 	}
 

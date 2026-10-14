@@ -28,6 +28,9 @@
     <Reference Include="System.Core">
       <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/System.Core.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/System.Xml.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>../../../../../../../Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed/UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>

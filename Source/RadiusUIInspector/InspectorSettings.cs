@@ -48,6 +48,8 @@ public class InspectorSettings : ModSettings
 
 	public List<StorageBookmark> storageBookmarks = new List<StorageBookmark>();
 
+	public List<LayoutUserPreset> layoutPresets = new List<LayoutUserPreset>();
+
 	// What the "useless" apparel and weapon filters refuse (UselessRules): any one condition is enough.
 	public FloatRange uselessHitPoints = DefaultUselessHitPoints;
 
@@ -292,6 +294,12 @@ public class InspectorSettings : ModSettings
 			storageBookmarks = new List<StorageBookmark>();
 		}
 		storageBookmarks.RemoveAll((StorageBookmark b) => b == null);
+		Scribe_Collections.Look(ref layoutPresets, "layoutPresets", LookMode.Deep);
+		if (layoutPresets == null)
+		{
+			layoutPresets = new List<LayoutUserPreset>();
+		}
+		layoutPresets.RemoveAll((LayoutUserPreset p) => p == null);
 		Scribe_Values.Look(ref uselessHitPoints, "uselessHitPoints", DefaultUselessHitPoints);
 		Scribe_Values.Look(ref uselessQuality, "uselessQuality", DefaultUselessQuality);
 		Scribe_Values.Look(ref uselessTainted, "uselessTainted", defaultValue: true);

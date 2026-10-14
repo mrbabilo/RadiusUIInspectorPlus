@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Taken over from No Quality Filter (rabiosus.noqualityfilter): same defNames and saveKeys, so saves keep their settings. -->
+<Defs>
+  <SpecialThingFilterDef>
+    <defName>NoQuality_Weapons</defName>
+    <label>Allow non-quality</label>
+    <description>Allows weapons that have no quality rating.</description>
+    <parentCategory>Weapons</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>allowNoQuality_Weapons</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NoQuality</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>NoQuality_Apparels</defName>
+    <label>Allow non-quality</label>
+    <description>Allows apparels that have no quality rating.</description>
+    <parentCategory>Apparel</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>allowNoQuality_Apparels</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NoQuality</workerClass>
+  </SpecialThingFilterDef>
+</Defs>

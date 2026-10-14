@@ -22,7 +22,9 @@ A fork of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3786131805
 [*][b]Invert[/b]: one button allows every refused item and refuses every allowed one.
 [*][b]Materials[/b]: refuse steel, wood, a leather or any other material to refuse everything made of it. One row per material the storage can take, with its icon, in a section of its own. Bills, apparel policies and the vanilla storage tab get a "Materials" button above their filter. Replaces Material Filter.
 [*][b]More special filters[/b]: with or without quality, deteriorating or not, rotting or not, flammable or not, with or without hit points, stackable or not, colony or other animal corpses (from Useful Filters), useless or useful apparel and weapons, with the conditions set in the mod settings (from Useless Filter). Special filters are laid out one row per set of choices (fresh / rotten, smeltable / non-smeltable, every skill book…), each choice a coloured chip, with an "All" chip that allows the whole row. Special filters that do exactly the same thing on a storage are shown once.
-[*]Replaces [b]Useful Filters[/b], [b]Useless Filter[/b] and [b]Material Filter[/b]: disable them. A save that used them keeps what its storages refused; the useless conditions are copied from Useless Filter's settings file on first start.
+[*]Replaces [b]Useful Filters[/b], [b]Useless Filter[/b] and [b]Material Filter[/b]: disable them. A save that used them keeps what its storages refused; the useless conditions are copied from Useless Filter's settings file on first start. [b]No Quality Filter[/b] is replaced too: its two filters keep their place in saves.
+[*][b]Detailed pawn tooltips[/b] (after RimHUD): health by body part, thoughts and their mood effect, bio, trait descriptions, stats behind needs and skills.
+[*][b]Layout presets[/b]: save the layout of every pawn profile under a name, apply it later in any save, and import RimHUD layouts (its own presets, your RimHUD layout, presets shipped by mods).
 [*]Works alongside [b][UR] Better Filter[/b] (an "Advanced" button opens its advanced filter; its placeholder items stay out of the tree) and [b]Storage Sorting[/b] (a gear on each row opens its fine-tuning).
 [/list]
 Plus is maintained by mrbabilo. Everything below comes from the original Inspector by astryl.
@@ -114,5 +116,6 @@ The overview is a grid you arrange, not a fixed list somebody else picked.
     <li>kentotsu.usefulfilters</li>
     <li>Mlie.UselessFilter</li>
     <li>CheaterEater.MaterialFilter</li>
+    <li>rabiosus.noqualityfilter</li>
   </incompatibleWith>
 </ModMetaData>

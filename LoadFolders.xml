@@ -6,5 +6,6 @@
     <li IfModNotActive="kentotsu.usefulfilters">Integrations/UsefulFilters</li>
     <li IfModNotActive="Mlie.UselessFilter">Integrations/UselessFilter</li>
     <li IfModNotActive="uranv.betterfilter">Integrations/PropertyPairs</li>
+    <li IfModNotActive="rabiosus.noqualityfilter">Integrations/NoQualityFilter</li>
   </v1.6>
 </LoadFolders>

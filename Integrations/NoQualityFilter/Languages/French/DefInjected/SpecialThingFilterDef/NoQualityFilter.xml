@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <NoQuality_Weapons.label>autoriser sans qualité</NoQuality_Weapons.label>
+  <NoQuality_Weapons.description>Autorise les armes qui n'ont pas de niveau de qualité.</NoQuality_Weapons.description>
+  <NoQuality_Apparels.label>autoriser sans qualité</NoQuality_Apparels.label>
+  <NoQuality_Apparels.description>Autorise les vêtements qui n'ont pas de niveau de qualité.</NoQuality_Apparels.description>
+</LanguageData>
