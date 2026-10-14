@@ -47,6 +47,8 @@ Inspector Plus reprend **Useful Filters**, **Useless Filter** et **Material Filt
 
 Avec **[UR] Better Filter**, un bouton « Avancé » ouvre son filtre avancé, ses objets factices restent hors de l'arbre, et ses filtres sont traduits en français. Avec **Storage Sorting**, une roue dentée sur chaque ligne ouvre son réglage fin.
 
+Les onglets du jeu et des autres mods (équipement, santé, dressage…) s'affichent dans l'Inspector et prennent toute sa largeur. Avec **Radius UI - Health Tab**, l'onglet santé retrouve sa taille d'origine quand on repasse de l'onglet Radius à celui du jeu ou de **Nice Health Tab**, au lieu de rester déformé.
+
 Le mod écrit ces filtres dans les sauvegardes. Le retirer en cours de partie fait apparaître des avertissements au chargement, et ces réglages sont perdus.
 
 ## Compiler

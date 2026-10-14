@@ -193,9 +193,9 @@ public static class InspectorCore
 		float hostedContentTop = HostedContentTop;
 		float num2 = CurrentPaneWidth - num * 2f;
 		float num3 = CurrentPaneHeight - 6f - 6f - hostedContentTop;
-		float b = ((HostedTabSize.x > 0f) ? Mathf.Min(HostedTabSize.x, num2) : num2);
-		float b2 = ((HostedTabSize.y > 0f) ? Mathf.Min(HostedTabSize.y, num3) : num3);
-		return new Rect(num, hostedContentTop, Mathf.Max(0f, b), Mathf.Max(0f, b2));
+		// The hosted tab fills the whole area: a tab narrower than the pane (gear, training, visitor) used to leave
+		// an empty strip. TabPlumbing.Stretch gives the tab this size so its own layout spreads over it.
+		return new Rect(num, hostedContentTop, Mathf.Max(0f, num2), Mathf.Max(0f, num3));
 	}
 
 	public static Rect HostedCardHole()

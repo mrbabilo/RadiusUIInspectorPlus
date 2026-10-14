@@ -7,7 +7,7 @@ namespace RadiusUIInspector;
 [HarmonyPatch(typeof(InspectTabBase), "TabRect", MethodType.Getter)]
 public static class Patch_InspectTabBase_TabRect
 {
-	public static void Postfix(ref Rect __result)
+	public static void Postfix(InspectTabBase __instance, ref Rect __result)
 	{
 		if (InspectorCore.Active && !InspectorMod.Settings.showVanillaTabs)
 		{
@@ -19,9 +19,11 @@ public static class Patch_InspectTabBase_TabRect
 				__result.y = num + rect.y;
 				__result.width = rect.width;
 				__result.height = rect.height;
+				TabPlumbing.Stretch(__instance, rect.size);
 			}
 			else
 			{
+				TabPlumbing.Unstretch(null);
 				__result.y += 30f;
 			}
 		}

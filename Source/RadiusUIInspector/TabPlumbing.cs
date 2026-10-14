@@ -35,11 +35,20 @@ public static class TabPlumbing
 
 	private static readonly AccessTools.FieldRef<InspectTabBase, Vector2>? SizeOf = Bind(() => AccessTools.FieldRefAccess<InspectTabBase, Vector2>("size"));
 
+	// A hosted tab is stretched to the pane, since its size drives FillTab's layout. The size the tab asks for is
+	// kept here so the pane is still sized from it, and given back once the tab is no longer hosted.
+	private static readonly Dictionary<InspectTabBase, Vector2> naturalSize = new Dictionary<InspectTabBase, Vector2>();
+
+	private static readonly Dictionary<InspectTabBase, Vector2> stretchedTo = new Dictionary<InspectTabBase, Vector2>();
+
+	private static readonly List<InspectTabBase> unstretchScratch = new List<InspectTabBase>();
+
 	internal static bool HostedTabPainted { get; private set; }
 
 	public static void DrawOpenTab(IInspectPane pane)
 	{
 		InspectTabBase inspectTabBase = FindOpenTab(pane);
+		Unstretch(InspectorCore.HostingTab ? inspectTabBase : null);
 		if (inspectTabBase == null)
 		{
 			shownType = null;
@@ -161,12 +170,78 @@ public static class TabPlumbing
 		try
 		{
 			UpdateSizeOf?.Invoke(tab);
-			return SizeOf(tab);
+			return Natural(tab, SizeOf(tab));
 		}
 		catch (Exception ex2)
 		{
 			Log.ErrorOnce("[Radius UI - Inspector] Tab size read failed: " + ex2.Message, 5351397);
 			return Vector2.zero;
+		}
+	}
+
+	// The size the tab asks for, axis by axis: an axis still equal to what Stretch wrote was not recomputed by the
+	// tab (most set their size once in the constructor; Nice Health Tab recomputes the width alone), so the kept
+	// natural value stands for it.
+	private static Vector2 Natural(InspectTabBase tab, Vector2 current)
+	{
+		if (!stretchedTo.TryGetValue(tab, out var value) || !naturalSize.TryGetValue(tab, out var value2))
+		{
+			return current;
+		}
+		return new Vector2(Mathf.Approximately(current.x, value.x) ? value2.x : current.x, Mathf.Approximately(current.y, value.y) ? value2.y : current.y);
+	}
+
+	// Called from the TabRect getter, after the tab's own UpdateSize, while the tab is hosted.
+	internal static void Stretch(InspectTabBase tab, Vector2 to)
+	{
+		if (SizeOf == null || tab == null || to.x <= 0f || to.y <= 0f)
+		{
+			return;
+		}
+		try
+		{
+			Vector2 value = Natural(tab, SizeOf(tab));
+			naturalSize[tab] = value;
+			stretchedTo[tab] = to;
+			SizeOf(tab) = to;
+		}
+		catch (Exception ex)
+		{
+			Log.ErrorOnce("[Radius UI - Inspector] Tab stretch failed: " + ex.Message, 5351399);
+		}
+	}
+
+	// Gives every stretched tab but keep its own size back, so it draws as designed outside the pane.
+	internal static void Unstretch(InspectTabBase? keep)
+	{
+		if (stretchedTo.Count == 0 || SizeOf == null)
+		{
+			return;
+		}
+		unstretchScratch.Clear();
+		foreach (InspectTabBase key in stretchedTo.Keys)
+		{
+			if (key != keep)
+			{
+				unstretchScratch.Add(key);
+			}
+		}
+		for (int i = 0; i < unstretchScratch.Count; i++)
+		{
+			InspectTabBase inspectTabBase = unstretchScratch[i];
+			try
+			{
+				if (SizeOf(inspectTabBase) == stretchedTo[inspectTabBase] && naturalSize.TryGetValue(inspectTabBase, out var value))
+				{
+					SizeOf(inspectTabBase) = value;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.ErrorOnce("[Radius UI - Inspector] Tab unstretch failed: " + ex.Message, 5351400);
+			}
+			stretchedTo.Remove(inspectTabBase);
+			naturalSize.Remove(inspectTabBase);
 		}
 	}
 

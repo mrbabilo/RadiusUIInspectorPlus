@@ -6,6 +6,8 @@ Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les
 
 ### Corrections
 
+- **Onglets du jeu dans l'Inspector** : un onglet plus étroit que le panneau (équipement, dressage, visiteur…) prend maintenant toute la place au lieu de laisser une bande vide à droite. L'onglet retrouve sa propre taille dès qu'il n'est plus affiché dans l'Inspector.
+- **Radius UI - Health Tab et Nice Health Tab** : après être passé de l'onglet santé Radius à l'onglet du jeu (ou de Nice Health Tab), la carte de santé n'est plus déformée. Radius laissait sa hauteur en place ; la taille d'origine de l'onglet est maintenant rétablie au changement.
 - **Filtres spéciaux** : sur une ligne à un seul choix (« Qualité », armes ou vêtements sans qualité), la catégorie s'aligne avec celles des autres lignes au lieu de coller au bord droit.
 
 ## 1.2.1 — 2026-10-14
