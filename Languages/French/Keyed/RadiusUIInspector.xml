@@ -230,7 +230,7 @@
   <RUI.Inspector.BookmarkOverwrite>Écraser</RUI.Inspector.BookmarkOverwrite>
   <RUI.Inspector.BookmarkOverwriteTip>Remplacer le contenu de ce filtre enregistré par le filtre actuel de ce stockage (et le renommer si un nom est saisi).</RUI.Inspector.BookmarkOverwriteTip>
   <RUI.Inspector.StoragePartlyRefused>Certains peuvent être refusés : le filtre spécial « {0} » est désactivé.</RUI.Inspector.StoragePartlyRefused>
-  <RUI.Inspector.StoragePerishable>Périssable : commence à se gâter après {0} jours, sauf s'il est congelé.</RUI.Inspector.StoragePerishable>
+  <RUI.Inspector.StoragePerishable>Produit frais : à réfrigérer, commence à se gâter après {0} jours sauf s'il est congelé.</RUI.Inspector.StoragePerishable>
   <RUI.Inspector.StorageBurnable>Incinérable : peut être détruit par une recette d'incinération (crématorium, feu de camp).</RUI.Inspector.StorageBurnable>
   <RUI.Inspector.StorageBurnableStuff>Incinérable selon le matériau : seuls certains peuvent être détruits par une recette d'incinération.</RUI.Inspector.StorageBurnableStuff>
   <RUI.Inspector.StorageSmeltable>Recyclable : peut être fondu à la fonderie.</RUI.Inspector.StorageSmeltable>
@@ -254,7 +254,7 @@
   <RUI.Inspector.StorageTraitInsect>Viande d'insecte</RUI.Inspector.StorageTraitInsect>
   <RUI.Inspector.StorageTraitHuman>Viande humaine</RUI.Inspector.StorageTraitHuman>
   <RUI.Inspector.StorageTraitToxic>Toxique</RUI.Inspector.StorageTraitToxic>
-  <RUI.Inspector.StorageTraitPerishable>Périssable</RUI.Inspector.StorageTraitPerishable>
+  <RUI.Inspector.StorageTraitPerishable>Produits frais</RUI.Inspector.StorageTraitPerishable>
   <RUI.Inspector.StorageTraitBurnable>Incinérable</RUI.Inspector.StorageTraitBurnable>
   <RUI.Inspector.StorageTraitSmeltable>Recyclable</RUI.Inspector.StorageTraitSmeltable>
   <RUI.Inspector.StorageTraitChild>Vêtement pour enfants</RUI.Inspector.StorageTraitChild>

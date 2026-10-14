@@ -15,7 +15,7 @@ A fork of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3786131805
 [*][b]Stock in the tree[/b]: each item row shows how many are stored here, and turns orange when the settings refuse them. A message warns when a change makes stored things leave.
 [*][b]Special filters that act on the tree[/b]: refusing "fresh", "smeltable" and the like unticks the items it refuses outright; filters that depend on each thing (rotten, tainted) mark the rows they can still turn away.
 [*][b]Colours[/b]: each top-level category has its colour; special filters are green or red depending on what they let in.
-[*][b]Item badges[/b]: small icons on each item row show its properties, with a tooltip for each: diet (plant, animal product, meat, insect meat, human meat), toxic (drug, addictive drug, toxic waste, tox gas, poisoning food), perishable with its days to rot, burnable, smeltable, and apparel restricted to children, men or women. A faded badge means it depends on the material.
+[*][b]Item badges[/b]: small icons on each item row show its properties, with a tooltip for each: diet (plant, animal product, meat, insect meat, human meat), toxic (drug, addictive drug, toxic waste, tox gas, poisoning food), fresh produce that needs refrigeration with its days to rot, burnable, smeltable, and apparel restricted to children, men or women. A faded badge means it depends on the material.
 [*][b]Search that stands out[/b]: the tree's search field has a magnifier and an accent outline, solid while you type.
 [*][b]Collapse all / Expand all[/b]: one button does both, following the tree on screen. It rests during a search, which already unfolds every match.
 [*][b]Larger item icons[/b], cropped to the visible art, and a Storage panel height setting.

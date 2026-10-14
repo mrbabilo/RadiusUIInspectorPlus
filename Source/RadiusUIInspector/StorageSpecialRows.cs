@@ -20,42 +20,51 @@ public static partial class StoragePanel
 
 		public string? scope;
 
+		public string key = "";
+
+		// The choices share out every thing of the defs they can match: refusing them all refuses those defs.
+		public bool partition;
+
 		public readonly List<SpecialThingFilterDef> choices = new List<SpecialThingFilterDef>();
 	}
 
 	// Known sets, in the order of their choices. Apparel and weapons versions are separate sets: the scope
-	// (category) shows at the end of the row.
-	private static readonly (string title, string[] defNames)[] SpecialSets = new (string, string[])[]
+	// (category) shows at the end of the row. A set marked P is a partition: every thing of a def one of its
+	// choices can match is matched by one of them (checked against the vanilla workers), so refusing all of
+	// them refuses the def itself.
+	private const bool P = true;
+
+	private static readonly (string title, string[] defNames, bool partition)[] SpecialSets = new (string, string[], bool)[]
 	{
-		("State", new string[] { "AllowFresh", "AllowRotten" }),
-		("Taint", new string[] { "AllowNonDeadmansApparel", "AllowDeadmansApparel" }),
-		("Usefulness", new string[] { "NonUselessApparelFilter", "UselessApparelFilter" }),
-		("Usefulness", new string[] { "NonUselessWeaponFilter", "UselessWeaponFilter" }),
-		("Biocoding", new string[] { "AllowNonBiocodedApparel", "AllowBiocodedApparel" }),
-		("Biocoding", new string[] { "AllowNonBiocodedWeapons", "AllowBiocodedWeapons" }),
-		("Smelting", new string[] { "AllowSmeltableApparel", "AllowNonSmeltableApparel" }),
-		("Smelting", new string[] { "AllowSmeltable", "AllowNonSmeltableWeapons" }),
-		("Burning", new string[] { "AllowBurnableApparel", "AllowNonBurnableApparel" }),
-		("Burning", new string[] { "AllowBurnableWeapons", "AllowNonBurnableWeapons" }),
-		("Age", new string[] { "AllowAdultOnlyApparel", "AllowChildOnlyApparel" }),
-		("Sex", new string[] { "AllowMaleGender", "AllowFemaleGender" }),
-		("HumanCorpses", new string[] { "AllowCorpsesColonist", "AllowCorpsesSlave", "AllowCorpsesStranger", "AllowCorpsesUnnatural" }),
-		("MechCorpses", new string[] { "AllowCorpsesMechFriendly", "AllowCorpsesMechEnemy" }),
-		("AnimalCorpses", new string[] { "UsefulFilters_AllowCorpsesColonyAnimal", "UsefulFilters_AllowCorpsesNonColonyAnimal" }),
-		("Diet", new string[] { "AllowVegetarian", "AllowCarnivore", "AllowInsectMeat", "AllowCannibal" }),
-		("Research", new string[] { "AllowMainResearch", "AllowAnomalyResearch" }),
-		("Skills", new string[] { "AllowBookShooting", "AllowBookMelee", "AllowBookConstruction", "AllowBookMining", "AllowBookCooking", "AllowBookPlants", "AllowBookAnimals", "AllowBookCrafting", "AllowBookArtistic", "AllowBookMedicine", "AllowBookSocial", "AllowBookIntellectual" }),
-		("Quality", new string[] { "UsefulFilters_AllowHasQuality", "UsefulFilters_AllowNoQuality" }),
-		("Quality", new string[] { "UR_AllowQuality", "UR_AllowNoQuality" }),
-		("Deterioration", new string[] { "UsefulFilters_AllowNonDeteriorable", "UsefulFilters_AllowDeteriorable" }),
-		("Deterioration", new string[] { "UR_AllowNotDeteriorating", "UR_AllowDeteriorating" }),
-		("Rot", new string[] { "UsefulFilters_AllowNonRottable", "UsefulFilters_AllowRottable" }),
-		("Rot", new string[] { "UR_AllowNotPerishable", "UR_AllowPerishable" }),
-		("Flammability", new string[] { "UsefulFilters_AllowNonFlammable", "UsefulFilters_AllowFlammable" }),
-		("HitPoints", new string[] { "RUI_AllowHasHitPoints", "RUI_AllowNoHitPoints" }),
-		("HitPoints", new string[] { "UR_AllowHitPoints", "UR_AllowNoHitPoints" }),
-		("Stacking", new string[] { "RUI_AllowStackable", "RUI_AllowNonStackable" }),
-		("Stacking", new string[] { "UR_AllowStackable", "UR_AllowNonStackable" })
+		("State", new string[] { "AllowFresh", "AllowRotten" }, P),
+		("Taint", new string[] { "AllowNonDeadmansApparel", "AllowDeadmansApparel" }, P),
+		("Usefulness", new string[] { "NonUselessApparelFilter", "UselessApparelFilter" }, P),
+		("Usefulness", new string[] { "NonUselessWeaponFilter", "UselessWeaponFilter" }, P),
+		("Biocoding", new string[] { "AllowNonBiocodedApparel", "AllowBiocodedApparel" }, P),
+		("Biocoding", new string[] { "AllowNonBiocodedWeapons", "AllowBiocodedWeapons" }, P),
+		("Smelting", new string[] { "AllowSmeltableApparel", "AllowNonSmeltableApparel" }, P),
+		("Smelting", new string[] { "AllowSmeltable", "AllowNonSmeltableWeapons" }, P),
+		("Burning", new string[] { "AllowBurnableApparel", "AllowNonBurnableApparel" }, P),
+		("Burning", new string[] { "AllowBurnableWeapons", "AllowNonBurnableWeapons" }, P),
+		("Age", new string[] { "AllowAdultOnlyApparel", "AllowChildOnlyApparel" }, P),
+		("Sex", new string[] { "AllowMaleGender", "AllowFemaleGender" }, false),
+		("HumanCorpses", new string[] { "AllowCorpsesColonist", "AllowCorpsesSlave", "AllowCorpsesStranger", "AllowCorpsesUnnatural" }, P),
+		("MechCorpses", new string[] { "AllowCorpsesMechFriendly", "AllowCorpsesMechEnemy" }, false),
+		("AnimalCorpses", new string[] { "UsefulFilters_AllowCorpsesColonyAnimal", "UsefulFilters_AllowCorpsesNonColonyAnimal" }, P),
+		("Diet", new string[] { "AllowVegetarian", "AllowCarnivore", "AllowInsectMeat", "AllowCannibal" }, false),
+		("Research", new string[] { "AllowMainResearch", "AllowAnomalyResearch" }, false),
+		("Skills", new string[] { "AllowBookShooting", "AllowBookMelee", "AllowBookConstruction", "AllowBookMining", "AllowBookCooking", "AllowBookPlants", "AllowBookAnimals", "AllowBookCrafting", "AllowBookArtistic", "AllowBookMedicine", "AllowBookSocial", "AllowBookIntellectual" }, false),
+		("Quality", new string[] { "UsefulFilters_AllowHasQuality", "UsefulFilters_AllowNoQuality" }, P),
+		("Quality", new string[] { "UR_AllowQuality", "UR_AllowNoQuality" }, P),
+		("Deterioration", new string[] { "UsefulFilters_AllowNonDeteriorable", "UsefulFilters_AllowDeteriorable" }, P),
+		("Deterioration", new string[] { "UR_AllowNotDeteriorating", "UR_AllowDeteriorating" }, P),
+		("Rot", new string[] { "UsefulFilters_AllowNonRottable", "UsefulFilters_AllowRottable" }, P),
+		("Rot", new string[] { "UR_AllowNotPerishable", "UR_AllowPerishable" }, P),
+		("Flammability", new string[] { "UsefulFilters_AllowNonFlammable", "UsefulFilters_AllowFlammable" }, P),
+		("HitPoints", new string[] { "RUI_AllowHasHitPoints", "RUI_AllowNoHitPoints" }, P),
+		("HitPoints", new string[] { "UR_AllowHitPoints", "UR_AllowNoHitPoints" }, P),
+		("Stacking", new string[] { "RUI_AllowStackable", "RUI_AllowNonStackable" }, P),
+		("Stacking", new string[] { "UR_AllowStackable", "UR_AllowNonStackable" }, P)
 	};
 
 	private static Dictionary<string, int>? setOfDefName;
@@ -94,10 +103,12 @@ public static partial class StoragePanel
 			SpecialThingFilterDef sf = specialCache[i];
 			string key;
 			string? title = null;
+			bool partition = false;
 			if (setOfDefName.TryGetValue(sf.defName, out var set))
 			{
 				key = "set:" + set;
 				title = ("RUI.Inspector.SpecialSet" + SpecialSets[set].title).Translate();
+				partition = SpecialSets[set].partition;
 			}
 			else
 			{
@@ -107,6 +118,8 @@ public static partial class StoragePanel
 			{
 				row = new SpecialRow
 				{
+					key = key,
+					partition = partition,
 					title = title,
 					scope = (sf.parentCategory != null && sf.parentCategory != root && sf.parentCategory != ThingCategoryDefOf.Root) ? sf.parentCategory.LabelCap.ToString() : null
 				};
@@ -263,6 +276,7 @@ public static partial class StoragePanel
 				{
 					filter.SetAllow(sf, paintAllow);
 					SyncSpecialDefs(sf, paintAllow, filter, parentFilter);
+					SyncRowDefs(row, filter, parentFilter);
 					memoDirty = true;
 					InspectorCore.Poke();
 				}
@@ -296,11 +310,83 @@ public static partial class StoragePanel
 							SyncSpecialDefs(row.choices[i], paintAllow, filter, parentFilter);
 						}
 					}
+					SyncRowDefs(row, filter, parentFilter);
 					memoDirty = true;
 					InspectorCore.Poke();
 				}
 			}
 			cy += rowH;
+		}
+	}
+
+	// Defs a partition row unticked because all its choices were refused, per filter and row: allowing a
+	// choice again reticks them, and only them.
+	private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<ThingFilter, Dictionary<string, List<ThingDef>>> rowOff = new System.Runtime.CompilerServices.ConditionalWeakTable<ThingFilter, Dictionary<string, List<ThingDef>>>();
+
+	// A partition row turns the item rows it covers off once every choice that applies to them is refused, and
+	// back on once one is allowed again. A def no choice of the row applies to is left alone.
+	private static void SyncRowDefs(SpecialRow row, ThingFilter filter, ThingFilter? parentFilter)
+	{
+		if (!row.partition || specialRoot == null)
+		{
+			return;
+		}
+		try
+		{
+			Dictionary<string, List<ThingDef>> memo = rowOff.GetOrCreateValue(filter);
+			memo.TryGetValue(row.key, out var off);
+			HashSet<ThingDef> seen = new HashSet<ThingDef>();
+			foreach (ThingDef def in specialRoot.DescendantThingDefs)
+			{
+				if (!seen.Add(def) || !Visible(def, parentFilter))
+				{
+					continue;
+				}
+				bool covered = false;
+				bool anyAllowed = false;
+				for (int i = 0; i < row.choices.Count; i++)
+				{
+					SpecialThingFilterDef sf = row.choices[i];
+					if ((sf.parentCategory != null && !def.IsWithinCategory(sf.parentCategory)) || sf.Worker == null || !sf.Worker.CanEverMatch(def))
+					{
+						continue;
+					}
+					covered = true;
+					if (filter.Allows(sf))
+					{
+						anyAllowed = true;
+						break;
+					}
+				}
+				if (!covered)
+				{
+					continue;
+				}
+				if (!anyAllowed)
+				{
+					if (filter.Allows(def))
+					{
+						filter.SetAllow(def, allow: false);
+						(off ??= new List<ThingDef>()).Add(def);
+					}
+				}
+				else if (off != null && off.Remove(def))
+				{
+					filter.SetAllow(def, allow: true);
+				}
+			}
+			if (off != null && off.Count > 0)
+			{
+				memo[row.key] = off;
+			}
+			else
+			{
+				memo.Remove(row.key);
+			}
+		}
+		catch (Exception ex)
+		{
+			Log.ErrorOnce("[Radius UI - Inspector] special row sync failed: " + ex.Message, 5351413);
 		}
 	}
 

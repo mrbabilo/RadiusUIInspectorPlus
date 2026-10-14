@@ -14,6 +14,8 @@ Trois mods de filtres sont intégrés au panneau Stockage : Useful Filters (kent
 - **Bouton « Inverser »** : autorise chaque objet refusé et refuse chaque objet autorisé. Les filtres spéciaux gardent leur état.
 - **Compatibilité [UR] Better Filter** : un bouton « Avancé » ouvre son filtre avancé. Ses deux objets factices (« advanced filter », « apply filter ») ne s'affichent plus comme des objets cochables.
 - **Compatibilité Storage Sorting** : une roue dentée sur chaque ligne ouvre son réglage fin. Elle reste allumée sur les lignes réglées.
+- **Repère « produits frais »** : l'ancien repère « périssable » prend ce nom. Il marque ce qui doit être réfrigéré, avec le nombre de jours avant de se gâter.
+- **Lignes exclusives reliées à l'arbre** : quand tous les choix d'une ligne qui se partage tous les objets qu'elle concerne sont refusés (frais et pourri, contaminé et propre, biocodé et non biocodé, recyclable et non recyclable, incinérable et non, corps de colons, d'esclaves, d'étrangers et anormaux, nos animaux et les autres, les paires de propriétés…), ces objets sont décochés dans l'arbre, puisque le stockage ne peut plus en prendre aucun. Autoriser de nouveau un choix les recoche, et seulement ceux-là. Les lignes qui ne se partagent pas tout (sexe, régime, livres, cadavres de mechs) ne touchent pas l'arbre.
 
 ### Modifications
 

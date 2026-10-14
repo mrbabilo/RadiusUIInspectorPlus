@@ -230,7 +230,7 @@
   <RUI.Inspector.BookmarkOverwrite>Overwrite</RUI.Inspector.BookmarkOverwrite>
   <RUI.Inspector.BookmarkOverwriteTip>Replace this saved filter's content with this storage's current filter (and rename it if a name is typed).</RUI.Inspector.BookmarkOverwriteTip>
   <RUI.Inspector.StoragePartlyRefused>Some of these may be refused: special filter "{0}" is off.</RUI.Inspector.StoragePartlyRefused>
-  <RUI.Inspector.StoragePerishable>Perishable: starts to rot after {0} days unless frozen.</RUI.Inspector.StoragePerishable>
+  <RUI.Inspector.StoragePerishable>Fresh produce: needs refrigeration, starts to spoil after {0} days unless frozen.</RUI.Inspector.StoragePerishable>
   <RUI.Inspector.StorageBurnable>Burnable: can be destroyed by a burn bill (crematorium, campfire).</RUI.Inspector.StorageBurnable>
   <RUI.Inspector.StorageBurnableStuff>Burnable depending on the material: only some can be destroyed by a burn bill.</RUI.Inspector.StorageBurnableStuff>
   <RUI.Inspector.StorageSmeltable>Smeltable: can be melted down at a smelter.</RUI.Inspector.StorageSmeltable>
@@ -254,7 +254,7 @@
   <RUI.Inspector.StorageTraitInsect>Insect meat</RUI.Inspector.StorageTraitInsect>
   <RUI.Inspector.StorageTraitHuman>Human meat</RUI.Inspector.StorageTraitHuman>
   <RUI.Inspector.StorageTraitToxic>Toxic</RUI.Inspector.StorageTraitToxic>
-  <RUI.Inspector.StorageTraitPerishable>Perishable</RUI.Inspector.StorageTraitPerishable>
+  <RUI.Inspector.StorageTraitPerishable>Fresh produce</RUI.Inspector.StorageTraitPerishable>
   <RUI.Inspector.StorageTraitBurnable>Burnable</RUI.Inspector.StorageTraitBurnable>
   <RUI.Inspector.StorageTraitSmeltable>Smeltable</RUI.Inspector.StorageTraitSmeltable>
   <RUI.Inspector.StorageTraitChild>Child-only apparel</RUI.Inspector.StorageTraitChild>

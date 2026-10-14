@@ -18,7 +18,7 @@ C'est un fork de **Radius UI - Inspector** (astryl), dans lequel **RimKeeper Sto
 - **Repères d'objets** : chaque ligne d'objet porte de petites icônes pour ses propriétés. Une infobulle donne le détail de chacune :
   - type d'aliment : végétal, produit animal, viande, viande d'insecte, viande humaine ;
   - toxique : drogue (addictive ou non), déchet toxique, gaz toxique, aliment qui intoxique ;
-  - périssable, avec le nombre de jours avant de se gâter ;
+  - produit frais (à réfrigérer), avec le nombre de jours avant de se gâter ;
   - incinérable ;
   - recyclable ;
   - vêtement réservé aux enfants, aux hommes ou aux femmes.
