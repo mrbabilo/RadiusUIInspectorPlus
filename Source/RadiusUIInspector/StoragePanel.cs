@@ -2177,6 +2177,17 @@ public static partial class StoragePanel
 		specialCache.RemoveAll(drop.Contains);
 	}
 
+	// Workers known to judge a thing by its def alone without saying so through AlwaysMatches: the def
+	// matches when CanEverMatch says it can. [UR] Better Filter's pairs (quality, perishable, deteriorating,
+	// hit points, stackable) are such, and twin the filters of this mod.
+	private static readonly string[] DefOnlyWorkerNamespaces = new string[] { "BetterFilter.Contents.SpecialThingFilterWorker" };
+
+	private static bool IsDefOnlyWorker(SpecialThingFilterWorker worker)
+	{
+		string? ns = worker.GetType().Namespace;
+		return ns != null && Array.IndexOf(DefOnlyWorkerNamespaces, ns) >= 0;
+	}
+
 	// Indices in defs of the defs the filter matches, or null when some def depends on each thing.
 	private static List<int>? MatchedDefs(SpecialThingFilterDef sf, List<ThingDef> defs)
 	{
@@ -2187,6 +2198,7 @@ public static partial class StoragePanel
 			{
 				return null;
 			}
+			bool defOnly = IsDefOnlyWorker(worker);
 			List<int> matched = new List<int>();
 			for (int i = 0; i < defs.Count; i++)
 			{
@@ -2195,7 +2207,7 @@ public static partial class StoragePanel
 				{
 					continue;
 				}
-				bool always = worker.AlwaysMatches(def);
+				bool always = defOnly ? worker.CanEverMatch(def) : worker.AlwaysMatches(def);
 				if (!always && worker.CanEverMatch(def))
 				{
 					return null;

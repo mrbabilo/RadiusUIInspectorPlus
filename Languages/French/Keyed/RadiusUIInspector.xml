@@ -329,5 +329,6 @@
   <RUI.Inspector.SpecialSetStacking>Empilement</RUI.Inspector.SpecialSetStacking>
   <RUI.Inspector.SpecialVerbPrefixes>autoriser |autor. |allow </RUI.Inspector.SpecialVerbPrefixes>
   <RUI.Inspector.SpecialAll>Tout</RUI.Inspector.SpecialAll>
-  <RUI.Inspector.SpecialAllTip>Autorise tous les choix de cette ligne.</RUI.Inspector.SpecialAllTip>
+  <RUI.Inspector.SpecialAllTip>Autorise tous les choix de cette ligne. Glissez sur d'autres cases « Tout » pour faire de même.</RUI.Inspector.SpecialAllTip>
+  <RUI.Inspector.SpecialNoneTip>Refuse tous les choix de cette ligne. Glissez sur d'autres cases « Tout » pour faire de même.</RUI.Inspector.SpecialNoneTip>
 </LanguageData>

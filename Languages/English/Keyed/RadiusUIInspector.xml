@@ -329,5 +329,6 @@
   <RUI.Inspector.SpecialSetStacking>Stacking</RUI.Inspector.SpecialSetStacking>
   <RUI.Inspector.SpecialVerbPrefixes>allow |</RUI.Inspector.SpecialVerbPrefixes>
   <RUI.Inspector.SpecialAll>All</RUI.Inspector.SpecialAll>
-  <RUI.Inspector.SpecialAllTip>Allow every choice of this row.</RUI.Inspector.SpecialAllTip>
+  <RUI.Inspector.SpecialAllTip>Allow every choice of this row. Drag over other "All" boxes to do the same.</RUI.Inspector.SpecialAllTip>
+  <RUI.Inspector.SpecialNoneTip>Refuse every choice of this row. Drag over other "All" boxes to do the same.</RUI.Inspector.SpecialNoneTip>
 </LanguageData>

@@ -68,7 +68,8 @@ public static partial class StoragePanel
 
 	private const float ChipLineH = 24f;
 
-	private const float TitleW = 104f;
+	// Width of the title column: the longest title of the rows built, within bounds.
+	private static float titleW = 104f;
 
 	// Unknown sets from other mods: "AllowNonFoo" or "AllowNotFoo" pairs with "AllowFoo".
 	private static readonly Regex Negation = new Regex("(Non|Not)(?=[A-Z])");
@@ -114,6 +115,28 @@ public static partial class StoragePanel
 			}
 			row.choices.Add(sf);
 		}
+		// The scope (Apparel, Weapons) tells apart two rows of the same title only; elsewhere the title says it.
+		Dictionary<string, int> titleCount = new Dictionary<string, int>();
+		foreach (SpecialRow row in specialRows)
+		{
+			if (row.title != null)
+			{
+				titleCount[row.title] = (titleCount.TryGetValue(row.title, out var n) ? n : 0) + 1;
+			}
+		}
+		titleW = 80f;
+		foreach (SpecialRow row in specialRows)
+		{
+			if (row.title != null)
+			{
+				if (titleCount[row.title] < 2)
+				{
+					row.scope = null;
+				}
+				titleW = Mathf.Max(titleW, RadiusFont.Width(row.title, GameFont.Small, bold: false) + 14f);
+			}
+		}
+		titleW = Mathf.Min(titleW, 170f);
 		// Choices of a known set follow the set's order, whatever order the defs came in.
 		foreach (SpecialRow row in specialRows)
 		{
@@ -179,7 +202,7 @@ public static partial class StoragePanel
 				continue;
 			}
 			bool multi = row.choices.Count > 1;
-			float left = Indent + 6f + ((row.title != null) ? TitleW : 0f);
+			float left = Indent + 6f + ((row.title != null) ? titleW : 0f);
 			float scopeW = (row.scope != null) ? (RadiusFont.Width(row.scope, GameFont.Tiny, bold: false) + 8f) : 0f;
 			float right = vw - 4f - (multi ? (allW + 4f) : 0f) - scopeW;
 			// Flow the chips: a new line when the next one does not fit.
@@ -207,7 +230,7 @@ public static partial class StoragePanel
 				}
 				if (row.title != null)
 				{
-					RadiusFont.Label(new Rect(Indent + 6f, cy, TitleW - 6f, ChipLineH), row.title, GameFont.Small, heading: false, Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+					RadiusFont.Label(new Rect(Indent + 6f, cy, titleW - 6f, ChipLineH), row.title, GameFont.Small, heading: false, Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
 				}
 				if (row.scope != null)
 				{
@@ -245,30 +268,34 @@ public static partial class StoragePanel
 				}
 				x += w + 4f;
 			}
+			// "All" works as a box: on when every choice is allowed. Press it, or drag over several, to allow or
+			// refuse every choice of the rows passed.
 			if (multi)
 			{
 				Rect allRect = new Rect(vw - 4f - allW, cy + (ChipLineH - ChipH) * 0.5f, allW, ChipH);
 				bool full = allowed >= row.choices.Count;
 				if (visible)
 				{
-					bool hot = !full && Mouse.IsOver(allRect);
-					CardChrome.Rounded(allRect, full ? Palette.WithAlpha(RadiusTheme.Accent, 0.35f) : (hot ? Palette.Surface3 : Palette.Surface2), ChipH * 0.5f);
-					CardChrome.Outline(allRect, full ? RadiusTheme.Accent : Palette.Border, 1f, ChipH * 0.5f);
-					RadiusFont.Label(allRect, all, GameFont.Tiny, heading: false, full ? Palette.Ink : (hot ? Palette.Ink : Palette.TextDim), TextAnchor.MiddleCenter, wrap: false);
-					TooltipHandler.TipRegion(allRect, "RUI.Inspector.SpecialAllTip".Translate());
+					bool hot = Mouse.IsOver(allRect);
+					Color fill = full ? Palette.WithAlpha(RadiusTheme.Accent, hot ? 0.5f : 0.35f) : (hot ? Palette.Surface3 : Palette.Surface2);
+					CardChrome.Rounded(allRect, fill, ChipH * 0.5f);
+					CardChrome.Outline(allRect, (full || hot) ? RadiusTheme.Accent : Palette.Border, 1f, ChipH * 0.5f);
+					RadiusFont.Label(allRect, all, GameFont.Tiny, heading: false, (full || hot) ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleCenter, wrap: false);
+					if (hot)
+					{
+						TooltipHandler.TipRegion(allRect, (full ? "RUI.Inspector.SpecialNoneTip" : "RUI.Inspector.SpecialAllTip").Translate());
+					}
 				}
-				if (!full && Widgets.ButtonInvisible(allRect))
+				if (PaintHit(allRect, full, allowed > 0))
 				{
-					BeginEvictWatch();
 					for (int i = 0; i < row.choices.Count; i++)
 					{
-						if (!filter.Allows(row.choices[i]))
+						if (filter.Allows(row.choices[i]) != paintAllow)
 						{
-							filter.SetAllow(row.choices[i], allow: true);
-							SyncSpecialDefs(row.choices[i], allow: true, filter, parentFilter);
+							filter.SetAllow(row.choices[i], paintAllow);
+							SyncSpecialDefs(row.choices[i], paintAllow, filter, parentFilter);
 						}
 					}
-					EndEvictWatch();
 					memoDirty = true;
 					InspectorCore.Poke();
 				}
