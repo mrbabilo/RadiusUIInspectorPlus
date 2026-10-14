@@ -7,6 +7,12 @@ namespace RadiusUIInspector;
 [HarmonyPatch(typeof(InspectTabBase), "TabRect", MethodType.Getter)]
 public static class Patch_InspectTabBase_TabRect
 {
+	// The getter calls UpdateSize first: the tab must see its own size there, not the stretched one.
+	public static void Prefix(InspectTabBase __instance)
+	{
+		TabPlumbing.Restore(__instance);
+	}
+
 	public static void Postfix(InspectTabBase __instance, ref Rect __result)
 	{
 		if (InspectorCore.Active && !InspectorMod.Settings.showVanillaTabs)

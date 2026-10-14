@@ -169,8 +169,15 @@ public static class TabPlumbing
 		}
 		try
 		{
+			Restore(tab);
 			UpdateSizeOf?.Invoke(tab);
-			return Natural(tab, SizeOf(tab));
+			Vector2 result = SizeOf(tab);
+			// FillTab runs later, when the window stack draws the tab: the tab must be left stretched.
+			if (stretchedTo.TryGetValue(tab, out var value))
+			{
+				Stretch(tab, value);
+			}
+			return result;
 		}
 		catch (Exception ex2)
 		{
@@ -179,19 +186,30 @@ public static class TabPlumbing
 		}
 	}
 
-	// The size the tab asks for, axis by axis: an axis still equal to what Stretch wrote was not recomputed by the
-	// tab (most set their size once in the constructor; Nice Health Tab recomputes the width alone), so the kept
-	// natural value stands for it.
-	private static Vector2 Natural(InspectTabBase tab, Vector2 current)
+	// Puts the size the tab asked for back before its UpdateSize runs, so what UpdateSize leaves is the tab's own size:
+	// most tabs set it once in the constructor, others recompute one axis (Nice Health Tab) or both (Modern Bio Tab).
+	// Guessing it afterwards from the stretched value failed when the tab asked for exactly the pane width (Modern Bio
+	// Tab at 1100): the old size came back, the pane shrank, and it grew again on the next frame.
+	internal static void Restore(InspectTabBase tab)
 	{
-		if (!stretchedTo.TryGetValue(tab, out var value) || !naturalSize.TryGetValue(tab, out var value2))
+		if (SizeOf == null || tab == null || !stretchedTo.TryGetValue(tab, out var value))
 		{
-			return current;
+			return;
 		}
-		return new Vector2(Mathf.Approximately(current.x, value.x) ? value2.x : current.x, Mathf.Approximately(current.y, value.y) ? value2.y : current.y);
+		try
+		{
+			if (SizeOf(tab) == value && naturalSize.TryGetValue(tab, out var value2))
+			{
+				SizeOf(tab) = value2;
+			}
+		}
+		catch (Exception ex)
+		{
+			Log.ErrorOnce("[Radius UI - Inspector] Tab size restore failed: " + ex.Message, 5351402);
+		}
 	}
 
-	// Called from the TabRect getter, after the tab's own UpdateSize, while the tab is hosted.
+	// Called from the TabRect getter, after Restore and the tab's own UpdateSize, while the tab is hosted.
 	internal static void Stretch(InspectTabBase tab, Vector2 to)
 	{
 		if (SizeOf == null || tab == null || to.x <= 0f || to.y <= 0f)
@@ -200,8 +218,7 @@ public static class TabPlumbing
 		}
 		try
 		{
-			Vector2 value = Natural(tab, SizeOf(tab));
-			naturalSize[tab] = value;
+			naturalSize[tab] = SizeOf(tab);
 			stretchedTo[tab] = to;
 			SizeOf(tab) = to;
 		}
