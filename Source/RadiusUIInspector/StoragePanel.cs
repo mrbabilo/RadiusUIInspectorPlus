@@ -47,6 +47,11 @@ public static class StoragePanel
 
 	private static readonly List<SpecialThingFilterDef> specialCache = new List<SpecialThingFilterDef>();
 
+	// Material filters get their own section: there is one per material, too many for the special filters.
+	private static readonly List<SpecialThingFilterDef> materialCache = new List<SpecialThingFilterDef>();
+
+	private static bool materialOpen;
+
 	private static ThingCategoryDef? specialRoot;
 
 	private static ThingFilter? specialParent;
@@ -318,19 +323,41 @@ public static class StoragePanel
 		{
 			y = DrawPriority(area.x, y, width, storeSettings);
 		}
-		Rect r = new Rect(area.x, y, width * 0.5f - 2f, 24f);
-		Rect r2 = new Rect(area.x + width * 0.5f + 2f, y, width * 0.5f - 2f, 24f);
+		// Allow all, invert, clear all; [UR] Better Filter's advanced dialog takes a fourth slot when it can open.
+		int slots = BetterFilterCompat.CanOpenAdvanced ? 4 : 3;
+		float slotW = (width - 4f * (slots - 1)) / slots;
+		Rect r = new Rect(area.x, y, slotW, 24f);
+		Rect rInvert = new Rect(r.xMax + 4f, y, slotW, 24f);
+		Rect r2 = new Rect(rInvert.xMax + 4f, y, slotW, 24f);
 		if (SmallButton(r, "RUI.Inspector.AllowAll".Translate()))
 		{
 			filter.SetAllowAll(parentFilter);
 			memoDirty = true;
 		}
+		if (SmallButton(rInvert, "RUI.Inspector.StorageInvert".Translate(), true, "Action/Swap"))
+		{
+			BeginEvictWatch();
+			InvertDefs(filter, parentFilter);
+			memoDirty = true;
+			EndEvictWatch();
+		}
+		TooltipHandler.TipRegion(rInvert, "RUI.Inspector.StorageInvertTip".Translate());
 		if (SmallButton(r2, "RUI.Inspector.ClearAll".Translate()))
 		{
 			BeginEvictWatch();
 			filter.SetDisallowAll();
 			memoDirty = true;
 			EndEvictWatch();
+		}
+		if (slots == 4)
+		{
+			Rect rAdvanced = new Rect(r2.xMax + 4f, y, slotW, 24f);
+			if (SmallButton(rAdvanced, "RUI.Inspector.StorageAdvanced".Translate(), true, "Action/Popout"))
+			{
+				BetterFilterCompat.OpenAdvanced(filter, parentFilter);
+				memoDirty = true;
+			}
+			TooltipHandler.TipRegion(rAdvanced, "RUI.Inspector.StorageAdvancedTip".Translate());
 		}
 		y += 28f;
 		y = DrawBookmarks(area.x, y, width, area.yMax, filter, parentFilter);
@@ -349,7 +376,8 @@ public static class StoragePanel
 			}
 			y += 32f;
 		}
-		if (filter.allowedQualitiesConfigurable && ModsConfig.RoyaltyActive)
+		// Vanilla offers the quality range whatever the DLC; it once required Royalty here.
+		if (filter.allowedQualitiesConfigurable)
 		{
 			QualityRange range2 = filter.AllowedQualityLevels;
 			Widgets.QualityRange(new Rect(area.x, y, width, 28f), 5309602, ref range2);
@@ -365,6 +393,46 @@ public static class StoragePanel
 		if (!(area2.height < 40f))
 		{
 			DrawTree(area2, filter, parentFilter);
+		}
+	}
+
+	// Flips every item row this storage can take. Special filters keep their state.
+	private static void InvertDefs(ThingFilter filter, ThingFilter? parentFilter)
+	{
+		TreeNode_ThingCategory? root = RootFor(filter, parentFilter);
+		if (root == null)
+		{
+			return;
+		}
+		// A def listed under two categories comes up twice: flip it once.
+		HashSet<ThingDef> seen = new HashSet<ThingDef>();
+		foreach (ThingDef def in root.catDef.DescendantThingDefs)
+		{
+			if (seen.Add(def) && Visible(def, parentFilter))
+			{
+				filter.SetAllow(def, !filter.Allows(def));
+			}
+		}
+	}
+
+	// Storage Sorting's gear, drawn at the right end of a row: bright while the row has its own tuning.
+	private static void DrawSortingGear(Rect row, string defName, string label)
+	{
+		IStoreSettingsParent? parent = lastParent;
+		if (parent == null)
+		{
+			return;
+		}
+		Rect gear = new Rect(row.xMax - 18f, row.y + (row.height - 14f) * 0.5f, 14f, 14f);
+		bool hot = Mouse.IsOver(gear);
+		if (hot || Mouse.IsOver(row) || StorageSortingCompat.IsTuned(parent, defName))
+		{
+			IconSet.Get("Action/Settings").Draw(gear, hot ? RadiusTheme.Accent : Palette.TextDim);
+		}
+		TooltipHandler.TipRegion(gear, "RUI.Inspector.StorageSortingTip".Translate());
+		if (Widgets.ButtonInvisible(gear.ExpandedBy(3f)))
+		{
+			StorageSortingCompat.Open(parent, defName, label);
 		}
 	}
 
@@ -809,7 +877,7 @@ public static class StoragePanel
 
 	private static readonly Dictionary<ThingDef, IconInfo> iconMemo = new Dictionary<ThingDef, IconInfo>();
 
-	private static void ItemIcon(Rect tile, ThingDef def, bool allowed)
+	internal static void ItemIcon(Rect tile, ThingDef def, bool allowed)
 	{
 		CardChrome.Rounded(tile, allowed ? Palette.Surface3 : Palette.Surface2, 6f);
 		if (!iconMemo.TryGetValue(def, out var info))
@@ -1012,11 +1080,13 @@ public static class StoragePanel
 			{
 				expanded.Clear();
 				specialOpen = false;
+				materialOpen = false;
 			}
 			else if (root != null)
 			{
 				ExpandBranch(root);
 				specialOpen = true;
+				materialOpen = true;
 			}
 			scroll = Vector2.zero;
 		}
@@ -1027,7 +1097,7 @@ public static class StoragePanel
 	// The expanded set outlives a storage switch, so only this tree's top-level rows say whether it shows open.
 	private static bool AnyBranchOpen(ThingCategoryDef? root)
 	{
-		if (specialOpen)
+		if (specialOpen || (materialOpen && materialCache.Count > 0))
 		{
 			return true;
 		}
@@ -1063,7 +1133,7 @@ public static class StoragePanel
 
 	// Any other button disarms a pending bookmark delete. hot: the pointer may click here (false outside a
 	// scrolled list). enabled: false greys the button out. An icon, when given, leads the label.
-	private static bool SmallButton(Rect r, string label, bool hot = true, string? icon = null, bool enabled = true)
+	internal static bool SmallButton(Rect r, string label, bool hot = true, string? icon = null, bool enabled = true)
 	{
 		hot = hot && enabled;
 		bool flag = enabled && Mouse.IsOver(r);
@@ -1119,7 +1189,7 @@ public static class StoragePanel
 		{
 			specialRoot = treeNode_ThingCategory.catDef;
 			specialParent = parentFilter;
-			RebuildSpecials(treeNode_ThingCategory.catDef, parentFilter);
+			RebuildSpecials(treeNode_ThingCategory.catDef, filter, parentFilter);
 		}
 		string text = query.Trim();
 		if (text != matchText || badgeMask != matchMask)
@@ -1233,6 +1303,7 @@ public static class StoragePanel
 				CardChrome.Fill(new Rect(0f, cy, num, 1f), Palette.Border);
 				cy += 6f;
 			}
+			DrawMaterials(filter, num, ref cy, text2);
 			revealY = -1f;
 			DrawNode(treeNode_ThingCategory.catDef, filter, parentFilter, 0, num, ref cy, text2, Color.clear);
 			lastContentH = Mathf.Max(cy, 10f);
@@ -1296,8 +1367,13 @@ public static class StoragePanel
 					}
 					labelX = tile.xMax + 6f;
 				}
-				RadiusFont.Label(new Rect(labelX, rect.y, rect.xMax - 56f - labelX, 24f), cat.LabelCap, GameFont.Small, depth == 1, (num > 0) ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
-				RadiusFont.Label(new Rect(rect.xMax - 52f, rect.y, 48f, 24f), num + "/" + num2, GameFont.Tiny, heading: false, Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
+				float gearW = StorageSortingCompat.Active ? 20f : 0f;
+				RadiusFont.Label(new Rect(labelX, rect.y, rect.xMax - 56f - gearW - labelX, 24f), cat.LabelCap, GameFont.Small, depth == 1, (num > 0) ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+				RadiusFont.Label(new Rect(rect.xMax - 52f - gearW, rect.y, 48f, 24f), num + "/" + num2, GameFont.Tiny, heading: false, Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
+				if (gearW > 0f)
+				{
+					DrawSortingGear(rect, cat.defName, cat.LabelCap);
+				}
 			}
 			if (PaintHit(new Rect(rect.x + 16f, rect.y, 20f, 24f), num >= num2, num > 0))
 			{
@@ -1355,6 +1431,8 @@ public static class StoragePanel
 				DrawTriState(new Rect(rect2.x + 18f, rect2.y + 7f, 14f, 14f), flag4 ? 1 : 0, 1);
 				ItemIcon(new Rect(rect2.x + 37f, rect2.y + 1f, 26f, 26f), thingDef, flag4);
 				float labelW = rect2.width - 73f;
+				float gearW = StorageSortingCompat.Active ? 20f : 0f;
+				labelW -= gearW;
 				bool hasStored = storedCount.TryGetValue(thingDef, out var stored);
 				// The stock column stays on every row once the storage holds anything, so the badges keep one
 				// column right of the names instead of shifting with each row's stock.
@@ -1383,13 +1461,17 @@ public static class StoragePanel
 				if (hasStored)
 				{
 					leavingCount.TryGetValue(thingDef, out var leaving);
-					RadiusFont.Label(new Rect(rect2.xMax - 48f, rect2.y, 44f, ItemRowH), stored.ToString(), GameFont.Tiny, heading: false, (leaving > 0) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
+					RadiusFont.Label(new Rect(rect2.xMax - 48f - gearW, rect2.y, 44f, ItemRowH), stored.ToString(), GameFont.Tiny, heading: false, (leaving > 0) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
 					if (Mouse.IsOver(rect2) && !Mouse.IsOver(tipFree) && !Mouse.IsOver(badgeZone))
 					{
 						TooltipHandler.TipRegion(rect2, (leaving > 0) ? "RUI.Inspector.StorageLeaving".Translate(thingDef.label, leaving) : "RUI.Inspector.StorageUntickMoves".Translate(thingDef.label, stored));
 					}
 				}
 				RadiusFont.Label(new Rect(rect2.x + 69f, rect2.y, labelW, ItemRowH), thingDef.LabelCap, GameFont.Small, heading: false, flag4 ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+				if (gearW > 0f)
+				{
+					DrawSortingGear(rect2, thingDef.defName, thingDef.LabelCap);
+				}
 			}
 			if (PaintHit(rect2, flag4, flag4))
 			{
@@ -1803,11 +1885,11 @@ public static class StoragePanel
 		{
 			value = 1;
 		}
-		else if (n.Contains("Fresh") || n.Contains("Clean") || n.Contains("NonDeadmans") || n.Contains("NonBiocoded") || n.Contains("NonTainted"))
+		else if (n.Contains("Fresh") || n.Contains("Clean") || n.Contains("NonDeadmans") || n.Contains("NonBiocoded") || n.Contains("NonTainted") || n.Contains("NonUseless"))
 		{
 			value = 1;
 		}
-		else if (n.Contains("Rotten") || n.Contains("Deadmans") || n.Contains("Tainted") || n.Contains("Biocoded") || n.Contains("Cannibal") || n.Contains("InsectMeat") || n.Contains("Unnatural") || n.Contains("Dessicated") || n.Contains("Desiccated"))
+		else if (n.Contains("Rotten") || n.Contains("Deadmans") || n.Contains("Tainted") || n.Contains("Biocoded") || n.Contains("Cannibal") || n.Contains("InsectMeat") || n.Contains("Unnatural") || n.Contains("Dessicated") || n.Contains("Desiccated") || n.Contains("Useless"))
 		{
 			value = -1;
 		}
@@ -1879,9 +1961,10 @@ public static class StoragePanel
 	private static void RebuildPartlyRefused(ThingCategoryDef root, ThingFilter filter, ThingFilter? parentFilter)
 	{
 		partlyRefused.Clear();
-		for (int i = 0; i < specialCache.Count; i++)
+		int count = specialCache.Count + materialCache.Count;
+		for (int i = 0; i < count; i++)
 		{
-			SpecialThingFilterDef sf = specialCache[i];
+			SpecialThingFilterDef sf = (i < specialCache.Count) ? specialCache[i] : materialCache[i - specialCache.Count];
 			if (filter.Allows(sf))
 			{
 				continue;
@@ -1982,7 +2065,7 @@ public static class StoragePanel
 		}
 	}
 
-	private static void DrawTriState(Rect r, int allowed, int total)
+	internal static void DrawTriState(Rect r, int allowed, int total)
 	{
 		if (allowed >= total && total > 0)
 		{
@@ -2021,7 +2104,7 @@ public static class StoragePanel
 		}
 		if (!visibleMemo.TryGetValue(d, out var value))
 		{
-			value = d.PlayerAcquirable && d.virtualDefParent == null && (parentFilter == null || (parentFilter.Allows(d) && !parentFilter.IsAlwaysDisallowedDueToSpecialFilters(d)));
+			value = d.PlayerAcquirable && d.virtualDefParent == null && !BetterFilterCompat.IsDummy(d) && (parentFilter == null || (parentFilter.Allows(d) && !parentFilter.IsAlwaysDisallowedDueToSpecialFilters(d)));
 			visibleMemo[d] = value;
 		}
 		return value;
@@ -2045,9 +2128,51 @@ public static class StoragePanel
 		return sf.LabelCap;
 	}
 
-	private static void RebuildSpecials(ThingCategoryDef cat, ThingFilter? parentFilter)
+	// Pairs of opposite special filters. When this storage can only take one side, the side left decides
+	// every def alike: refusing it would refuse everything. It goes, unless already refused (it must stay
+	// reachable to allow it again).
+	private static readonly string[][] OppositePairs = new string[][]
+	{
+		new string[] { "UsefulFilters_AllowHasQuality", "UsefulFilters_AllowNoQuality" },
+		new string[] { "UsefulFilters_AllowDeteriorable", "UsefulFilters_AllowNonDeteriorable" },
+		new string[] { "UsefulFilters_AllowRottable", "UsefulFilters_AllowNonRottable" },
+		new string[] { "UsefulFilters_AllowFlammable", "UsefulFilters_AllowNonFlammable" },
+		new string[] { "RUI_AllowHasHitPoints", "RUI_AllowNoHitPoints" },
+		new string[] { "RUI_AllowStackable", "RUI_AllowNonStackable" },
+		new string[] { "UR_AllowQuality", "UR_AllowNoQuality" },
+		new string[] { "UR_AllowDeteriorating", "UR_AllowNotDeteriorating" },
+		new string[] { "UR_AllowPerishable", "UR_AllowNotPerishable" },
+		new string[] { "UR_AllowHitPoints", "UR_AllowNoHitPoints" },
+		new string[] { "UR_AllowStackable", "UR_AllowNonStackable" }
+	};
+
+	private static void DropLoneOpposites(ThingFilter filter)
+	{
+		for (int i = 0; i < OppositePairs.Length; i++)
+		{
+			SpecialThingFilterDef? a = DefDatabase<SpecialThingFilterDef>.GetNamedSilentFail(OppositePairs[i][0]);
+			SpecialThingFilterDef? b = DefDatabase<SpecialThingFilterDef>.GetNamedSilentFail(OppositePairs[i][1]);
+			if (a == null || b == null)
+			{
+				continue;
+			}
+			bool hasA = specialCache.Contains(a);
+			bool hasB = specialCache.Contains(b);
+			if (hasA != hasB)
+			{
+				SpecialThingFilterDef lone = hasA ? a : b;
+				if (filter.Allows(lone))
+				{
+					specialCache.Remove(lone);
+				}
+			}
+		}
+	}
+
+	private static void RebuildSpecials(ThingCategoryDef cat, ThingFilter filter, ThingFilter? parentFilter)
 	{
 		specialCache.Clear();
+		materialCache.Clear();
 		specialLabel.Clear();
 		if (cat == null)
 		{
@@ -2070,6 +2195,8 @@ public static class StoragePanel
 			TryAddSpecial(descendantSpecialThingFilterDef, parentFilter);
 		}
 		visibleDefScratch.Clear();
+		DropLoneOpposites(filter);
+		materialCache.SortBy((SpecialThingFilterDef d) => d.label);
 		for (int i = 0; i < specialCache.Count; i++)
 		{
 			SpecialThingFilterDef sf = specialCache[i];
@@ -2086,10 +2213,120 @@ public static class StoragePanel
 
 	private static void TryAddSpecial(SpecialThingFilterDef sf, ThingFilter? parentFilter)
 	{
+		if (sf != null && MaterialFilters.IsMaterial(sf))
+		{
+			if (sf.configurable && !materialCache.Contains(sf) && (parentFilter == null || parentFilter.Allows(sf)) && CanEverMatchSomethingVisible(sf))
+			{
+				materialCache.Add(sf);
+			}
+			return;
+		}
 		if (sf != null && sf.configurable && !specialCache.Contains(sf) && (parentFilter == null || (parentFilter.Allows(sf) && (parentFilter.hiddenSpecialFilters == null || !parentFilter.hiddenSpecialFilters.Contains(sf)))) && !SuppressedInStorageTab(sf) && CanEverMatchSomethingVisible(sf))
 		{
 			specialCache.Add(sf);
 		}
+	}
+
+	// One row per material the storage can take something made of, with the material's icon. The header's box
+	// allows or refuses every material at once. Folded by default, like the special filters.
+	private static void DrawMaterials(ThingFilter filter, float vw, ref float cy, string q)
+	{
+		int shown = 0;
+		int allowed = 0;
+		for (int i = 0; i < materialCache.Count; i++)
+		{
+			if (q.Length == 0 || SpecialMatches(materialCache[i], q))
+			{
+				shown++;
+				if (filter.Allows(materialCache[i]))
+				{
+					allowed++;
+				}
+			}
+		}
+		if (shown == 0)
+		{
+			return;
+		}
+		bool open = materialOpen || q.Length > 0;
+		Rect header = new Rect(0f, cy, vw, 26f);
+		if (ViewCull.Visible(cy, 26f, scroll.y, lastViewH))
+		{
+			CardChrome.Rounded(header, Palette.Surface3, 8f);
+			if (Mouse.IsOver(header))
+			{
+				CardChrome.Hover(header, 8f);
+			}
+			IconSet.Get(open ? "Action/ChevronDown" : "Action/Next").Draw(new Rect(6f, header.y + 7f, 12f, 12f), Palette.TextDim);
+			DrawTriState(new Rect(24f, header.y + 6f, 14f, 14f), allowed, shown);
+			RadiusFont.Label(new Rect(44f, header.y, vw - 104f, 26f), "RUI.Inspector.StorageMaterials".Translate(), GameFont.Small, heading: true, Palette.Ink, TextAnchor.MiddleLeft, wrap: false);
+			RadiusFont.Label(new Rect(vw - 60f, header.y, 52f, 26f), allowed + "/" + shown, GameFont.Tiny, heading: false, (allowed < shown) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
+			TooltipHandler.TipRegion(header, "RUI.Inspector.StorageMaterialsTip".Translate());
+		}
+		if (PaintHit(new Rect(22f, header.y, 20f, 26f), allowed >= shown, allowed > 0))
+		{
+			for (int i = 0; i < materialCache.Count; i++)
+			{
+				if (q.Length == 0 || SpecialMatches(materialCache[i], q))
+				{
+					filter.SetAllow(materialCache[i], paintAllow);
+				}
+			}
+			memoDirty = true;
+			InspectorCore.Poke();
+		}
+		else if (q.Length == 0 && Widgets.ButtonInvisible(header))
+		{
+			materialOpen = !materialOpen;
+			InspectorCore.Poke();
+		}
+		cy += 28f;
+		if (!open)
+		{
+			cy += 6f;
+			return;
+		}
+		for (int j = 0; j < materialCache.Count; j++)
+		{
+			SpecialThingFilterDef sf = materialCache[j];
+			if (q.Length > 0 && !SpecialMatches(sf, q))
+			{
+				continue;
+			}
+			bool flag = filter.Allows(sf);
+			Rect rect = new Rect(Indent, cy, vw - Indent, 24f);
+			if (ViewCull.Visible(cy, 24f, scroll.y, lastViewH))
+			{
+				DrawGuides(1, cy, 24f, Palette.TextDim);
+				if (Mouse.IsOver(rect))
+				{
+					CardChrome.Hover(rect, 8f);
+				}
+				DrawTriState(new Rect(rect.x + 18f, rect.y + 5f, 14f, 14f), flag ? 1 : 0, 1);
+				ThingDef? stuff = MaterialFilters.StuffOf(sf);
+				float labelX = rect.x + 38f;
+				if (stuff != null)
+				{
+					ItemIcon(new Rect(labelX, rect.y + 2f, 20f, 20f), stuff, flag);
+					labelX += 26f;
+				}
+				RadiusFont.Label(new Rect(labelX, rect.y, rect.xMax - labelX - 4f, 24f), sf.LabelCap, GameFont.Small, heading: false, flag ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+				if (Mouse.IsOver(rect))
+				{
+					TooltipHandler.TipRegion(rect, sf.description);
+				}
+			}
+			if (PaintHit(rect, flag, flag))
+			{
+				filter.SetAllow(sf, paintAllow);
+				memoDirty = true;
+				InspectorCore.Poke();
+			}
+			cy += 24f;
+		}
+		cy += 6f;
+		CardChrome.Fill(new Rect(0f, cy, vw, 1f), Palette.Border);
+		cy += 6f;
 	}
 
 	private static bool SuppressedInStorageTab(SpecialThingFilterDef sf)
@@ -2114,9 +2351,10 @@ public static class StoragePanel
 			{
 				return true;
 			}
+			// Only the filter's own category counts: vanilla applies it there and nowhere else.
 			for (int i = 0; i < visibleDefScratch.Count; i++)
 			{
-				if (worker.CanEverMatch(visibleDefScratch[i]))
+				if ((sf.parentCategory == null || visibleDefScratch[i].IsWithinCategory(sf.parentCategory)) && worker.CanEverMatch(visibleDefScratch[i]))
 				{
 					return true;
 				}

@@ -3,7 +3,7 @@
   <name>Radius UI - Inspector Plus</name>
   <packageId>mrbabilo.RadiusUI.InspectorPlus</packageId>
   <author>mrbabilo</author>
-  <modVersion>1.1.0</modVersion>
+  <modVersion>1.2.0</modVersion>
   <description>[h1]◆ Radius UI - Inspector Plus ◆[/h1]
 A fork of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3786131805]Radius UI - Inspector[/url] by astryl, with [url=https://github.com/keepercraft/RimKeeperFilterHelper]RimKeeper Storage and Filters Helper[/url] by Keepercraft merged into its Storage panel. It replaces both mods: disable them.
 
@@ -19,10 +19,15 @@ A fork of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3786131805
 [*][b]Search that stands out[/b]: the tree's search field has a magnifier and an accent outline, solid while you type.
 [*][b]Collapse all / Expand all[/b]: one button does both, following the tree on screen. It rests during a search, which already unfolds every match.
 [*][b]Larger item icons[/b], cropped to the visible art, and a Storage panel height setting.
+[*][b]Invert[/b]: one button allows every refused item and refuses every allowed one.
+[*][b]Materials[/b]: refuse steel, wood, a leather or any other material to refuse everything made of it. One row per material the storage can take, with its icon, in a section of its own. Bills, apparel policies and the vanilla storage tab get a "Materials" button above their filter. Replaces Material Filter.
+[*][b]More special filters[/b]: with or without quality, deteriorating or not, rotting or not, flammable or not, with or without hit points, stackable or not, colony or other animal corpses (from Useful Filters), useless or useful apparel and weapons, with the conditions set in the mod settings (from Useless Filter). A pair the storage can only take one side of is left out.
+[*]Replaces [b]Useful Filters[/b], [b]Useless Filter[/b] and [b]Material Filter[/b]: disable them. A save that used them keeps what its storages refused; the useless conditions are copied from Useless Filter's settings file on first start.
+[*]Works alongside [b][UR] Better Filter[/b] (an "Advanced" button opens its advanced filter; its placeholder items stay out of the tree) and [b]Storage Sorting[/b] (a gear on each row opens its fine-tuning).
 [/list]
 Plus is maintained by mrbabilo. Everything below comes from the original Inspector by astryl.
 
-The inspect pane in the bottom left is the panel you look at more than any other, and vanilla gives it a tan box, a wall of grey text, and tabs that drop a window over your colony every time you open one. Radius UI - Inspector replaces it with a dock: a portrait, the things you actually check, and tab buttons that open their content inside the panel. Same flat, dark, icon led look as the rest of the Radius UI suite. Safe to add or remove whenever you want.
+The inspect pane in the bottom left is the panel you look at more than any other, and vanilla gives it a tan box, a wall of grey text, and tabs that drop a window over your colony every time you open one. Radius UI - Inspector replaces it with a dock: a portrait, the things you actually check, and tab buttons that open their content inside the panel. Same flat, dark, icon led look as the rest of the Radius UI suite. Safe to add whenever you want; see below before removing it.
 
 [h1]✦ Tabs open inside the panel[/h1]
 This is the part to read first. Clicking a tab does not throw a window over your base. The panel grows to fit it in one smooth motion, and the tab draws itself in the space that opened.
@@ -62,7 +67,7 @@ The overview is a grid you arrange, not a fixed list somebody else picked.
 [*][b]RimHUD[/b]: if RimHUD is running, this mod stands aside completely and notes it once in the log. They will not fight over the pane.
 [*][b]A way back[/b]: one setting restores the plain vanilla tab row if you ever want it.
 [*][b]Fails safe[/b]: if drawing ever goes wrong, the pane quietly returns to vanilla instead of flooding your log or spoiling your game.
-[*][b]Nothing in your save[/b]: add it or remove it mid colony.
+[*][b]Almost nothing in your save[/b]: only the extra special filters and material filters of the Storage panel. Removing the mod mid colony makes the game log warnings about them on load and forget those settings; nothing else is lost.
 [/list]
 
 [h1]✦ Requirements[/h1]
@@ -106,5 +111,8 @@ The overview is a grid you arrange, not a fixed list somebody else picked.
     <li>astryl.RadiusUI.Inspector</li>
     <li>Keepercraft.RimKeeperFilterHelper</li>
     <li>astryl.RadiusUI.Inspector.RimKeeperCompat</li>
+    <li>kentotsu.usefulfilters</li>
+    <li>Mlie.UselessFilter</li>
+    <li>CheaterEater.MaterialFilter</li>
   </incompatibleWith>
 </ModMetaData>

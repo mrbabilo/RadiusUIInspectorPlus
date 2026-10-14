@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -46,6 +47,26 @@ public class InspectorSettings : ModSettings
 	public int storagePanelHeight = 430;
 
 	public List<StorageBookmark> storageBookmarks = new List<StorageBookmark>();
+
+	// What the "useless" apparel and weapon filters refuse (UselessRules): any one condition is enough.
+	public FloatRange uselessHitPoints = DefaultUselessHitPoints;
+
+	public QualityRange uselessQuality = DefaultUselessQuality;
+
+	public bool uselessTainted = true;
+
+	public bool uselessClean;
+
+	public bool uselessBiocoded = true;
+
+	public bool uselessNonBiocoded;
+
+	// Set once Useless Filter's own settings were copied in (UselessSettingsImport).
+	public bool uselessImported;
+
+	public static readonly FloatRange DefaultUselessHitPoints = new FloatRange(0f, 0.5f);
+
+	public static readonly QualityRange DefaultUselessQuality = new QualityRange(QualityCategory.Awful, QualityCategory.Poor);
 
 	public List<string> layoutRows = new List<string>();
 
@@ -271,6 +292,13 @@ public class InspectorSettings : ModSettings
 			storageBookmarks = new List<StorageBookmark>();
 		}
 		storageBookmarks.RemoveAll((StorageBookmark b) => b == null);
+		Scribe_Values.Look(ref uselessHitPoints, "uselessHitPoints", DefaultUselessHitPoints);
+		Scribe_Values.Look(ref uselessQuality, "uselessQuality", DefaultUselessQuality);
+		Scribe_Values.Look(ref uselessTainted, "uselessTainted", defaultValue: true);
+		Scribe_Values.Look(ref uselessClean, "uselessClean", defaultValue: false);
+		Scribe_Values.Look(ref uselessBiocoded, "uselessBiocoded", defaultValue: true);
+		Scribe_Values.Look(ref uselessNonBiocoded, "uselessNonBiocoded", defaultValue: false);
+		Scribe_Values.Look(ref uselessImported, "uselessImported", defaultValue: false);
 		if (layoutRows == null)
 		{
 			layoutRows = new List<string>();
@@ -425,6 +453,16 @@ public class InspectorSettings : ModSettings
 		thingRows.Clear();
 		thingRows.AddRange(DefaultThingLayout);
 		LayoutStamp++;
+	}
+
+	public void ResetUselessRules()
+	{
+		uselessHitPoints = DefaultUselessHitPoints;
+		uselessQuality = DefaultUselessQuality;
+		uselessTainted = true;
+		uselessClean = false;
+		uselessBiocoded = true;
+		uselessNonBiocoded = false;
 	}
 
 	public void ResetToDefaults()

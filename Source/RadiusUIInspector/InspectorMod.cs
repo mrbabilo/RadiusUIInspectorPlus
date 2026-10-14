@@ -1,4 +1,5 @@
 using RadiusUI.Framework;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -13,6 +14,9 @@ public class InspectorMod : Mod
 	private Vector2 settingsScroll;
 
 	private float settingsContentH = 520f;
+
+	// Useless Filter's settings file, looked up once per game; empty when there is none.
+	private static string? uselessFile;
 
 	public InspectorMod(ModContentPack content)
 		: base(content)
@@ -77,6 +81,11 @@ public class InspectorMod : Mod
 				Settings.ResetToDefaults();
 			}
 			y += 38f;
+			// Useless Filter's own settings take over while it runs; ours apply to the filters taken from it.
+			if (!ModCompat.IsActive("Mlie.UselessFilter"))
+			{
+				DrawUselessRules(ref y, width);
+			}
 			settingsContentH = Mathf.Max(y, outRect.height);
 		}
 		finally
@@ -87,6 +96,47 @@ public class InspectorMod : Mod
 			Text.WordWrap = true;
 			GUI.color = Color.white;
 		}
+	}
+
+	private static void DrawUselessRules(ref float y, float width)
+	{
+		Heading(ref y, width, "RUI.Inspector.SectionUseless".Translate());
+		RadiusFont.Label(new Rect(0f, y, width, 44f), "RUI.Inspector.UselessHint".Translate(), GameFont.Small, heading: false, Palette.TextDim);
+		y += 48f;
+		float w = Mathf.Min(width, 340f);
+		Widgets.FloatRange(new Rect(0f, y, w, 30f), 5309620, ref Settings.uselessHitPoints, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
+		y += 34f;
+		Widgets.QualityRange(new Rect(0f, y, w, 30f), 5309621, ref Settings.uselessQuality);
+		y += 34f;
+		CheckRow(ref y, width, "RUI.Inspector.UselessTainted".Translate(), ref Settings.uselessTainted, null);
+		CheckRow(ref y, width, "RUI.Inspector.UselessClean".Translate(), ref Settings.uselessClean, null);
+		CheckRow(ref y, width, "RUI.Inspector.UselessBiocoded".Translate(), ref Settings.uselessBiocoded, "RUI.Inspector.UselessBiocodedTip".Translate());
+		CheckRow(ref y, width, "RUI.Inspector.UselessNonBiocoded".Translate(), ref Settings.uselessNonBiocoded, null);
+		y += 4f;
+		Rect rect = new Rect(0f, y, 200f, 30f);
+		CardChrome.Rounded(rect, Mouse.IsOver(rect) ? Palette.Surface3 : Palette.Surface2, 8f);
+		RadiusFont.Label(rect, "RUI.Inspector.UselessReset".Translate(), GameFont.Small, heading: false, Palette.Ink, TextAnchor.MiddleCenter, wrap: false);
+		if (Widgets.ButtonInvisible(rect))
+		{
+			Settings.ResetUselessRules();
+		}
+		// Shown while Useless Filter's own settings file is still there.
+		if (uselessFile == null)
+		{
+			uselessFile = UselessSettingsImport.FindFile() ?? "";
+		}
+		if (uselessFile.Length > 0)
+		{
+			Rect rect2 = new Rect(rect.xMax + 8f, y, 260f, 30f);
+			CardChrome.Rounded(rect2, Mouse.IsOver(rect2) ? Palette.Surface3 : Palette.Surface2, 8f);
+			RadiusFont.Label(rect2, "RUI.Inspector.UselessImport".Translate(), GameFont.Small, heading: false, Palette.Ink, TextAnchor.MiddleCenter, wrap: false);
+			TooltipHandler.TipRegion(rect2, "RUI.Inspector.UselessImportTip".Translate(uselessFile));
+			if (Widgets.ButtonInvisible(rect2))
+			{
+				Messages.Message((UselessSettingsImport.TryImport() ? "RUI.Inspector.UselessImported" : "RUI.Inspector.UselessImportFailed").Translate(), MessageTypeDefOf.NeutralEvent, historical: false);
+			}
+		}
+		y += 38f;
 	}
 
 	private static void Heading(ref float y, float w, string label)

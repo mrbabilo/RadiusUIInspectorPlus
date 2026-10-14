@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <UsefulFilters_AllowHasQuality.label>autoriser les objets avec qualité</UsefulFilters_AllowHasQuality.label>
+  <UsefulFilters_AllowHasQuality.description>Autorise les objets qui ont un niveau de qualité.</UsefulFilters_AllowHasQuality.description>
+  <UsefulFilters_AllowNoQuality.label>autoriser les objets sans qualité</UsefulFilters_AllowNoQuality.label>
+  <UsefulFilters_AllowNoQuality.description>Autorise les objets sans niveau de qualité.</UsefulFilters_AllowNoQuality.description>
+  <UsefulFilters_AllowDeteriorable.label>autoriser ce qui se détériore</UsefulFilters_AllowDeteriorable.label>
+  <UsefulFilters_AllowDeteriorable.description>Autorise les objets qui se détériorent dehors.</UsefulFilters_AllowDeteriorable.description>
+  <UsefulFilters_AllowNonDeteriorable.label>autoriser ce qui ne se détériore pas</UsefulFilters_AllowNonDeteriorable.label>
+  <UsefulFilters_AllowNonDeteriorable.description>Autorise les objets qui ne se détériorent pas dehors.</UsefulFilters_AllowNonDeteriorable.description>
+  <UsefulFilters_AllowRottable.label>autoriser ce qui pourrit</UsefulFilters_AllowRottable.label>
+  <UsefulFilters_AllowRottable.description>Autorise les objets qui pourrissent.</UsefulFilters_AllowRottable.description>
+  <UsefulFilters_AllowNonRottable.label>autoriser ce qui ne pourrit pas</UsefulFilters_AllowNonRottable.label>
+  <UsefulFilters_AllowNonRottable.description>Autorise les objets qui ne pourrissent pas.</UsefulFilters_AllowNonRottable.description>
+  <UsefulFilters_AllowFlammable.label>autoriser l'inflammable</UsefulFilters_AllowFlammable.label>
+  <UsefulFilters_AllowFlammable.description>Autorise les objets qui peuvent brûler.</UsefulFilters_AllowFlammable.description>
+  <UsefulFilters_AllowNonFlammable.label>autoriser l'ininflammable</UsefulFilters_AllowNonFlammable.label>
+  <UsefulFilters_AllowNonFlammable.description>Autorise les objets qui ne peuvent pas brûler.</UsefulFilters_AllowNonFlammable.description>
+  <UsefulFilters_AllowCorpsesColonyAnimal.label>autoriser les cadavres d'animaux de la colonie</UsefulFilters_AllowCorpsesColonyAnimal.label>
+  <UsefulFilters_AllowCorpsesColonyAnimal.description>Autorise les cadavres des animaux qui appartenaient à la colonie.</UsefulFilters_AllowCorpsesColonyAnimal.description>
+  <UsefulFilters_AllowCorpsesNonColonyAnimal.label>autoriser les autres cadavres d'animaux</UsefulFilters_AllowCorpsesNonColonyAnimal.label>
+  <UsefulFilters_AllowCorpsesNonColonyAnimal.description>Autorise les cadavres des animaux qui n'appartenaient pas à la colonie.</UsefulFilters_AllowCorpsesNonColonyAnimal.description>
+</LanguageData>

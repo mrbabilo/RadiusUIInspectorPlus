@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Taken over from Useless Filter (Mlie.UselessFilter): same defNames, so saves keep their settings. -->
+<Defs>
+  <SpecialThingFilterDef>
+    <defName>UselessApparelFilter</defName>
+    <label>allow useless apparel</label>
+    <description>Allow apparel that meets one of the "useless" conditions set in the Inspector Plus settings.</description>
+    <parentCategory>Apparel</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>allowUselessApparelFilter</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_Useless</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>NonUselessApparelFilter</defName>
+    <label>allow non-useless apparel</label>
+    <description>Allow apparel that meets none of the "useless" conditions set in the Inspector Plus settings.</description>
+    <parentCategory>Apparel</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>allowNonUselessApparelFilter</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NonUseless</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UselessWeaponFilter</defName>
+    <label>allow useless weapons</label>
+    <description>Allow weapons that meet one of the "useless" conditions set in the Inspector Plus settings.</description>
+    <parentCategory>Weapons</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>allowUselessWeaponFilter</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_Useless</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>NonUselessWeaponFilter</defName>
+    <label>allow non-useless weapons</label>
+    <description>Allow weapons that meet none of the "useless" conditions set in the Inspector Plus settings.</description>
+    <parentCategory>Weapons</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>allowNonUselessWeaponFilter</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NonUseless</workerClass>
+  </SpecialThingFilterDef>
+</Defs>

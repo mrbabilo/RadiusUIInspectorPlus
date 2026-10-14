@@ -2,6 +2,39 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
+## 1.2.0 — non publiée
+
+Trois mods de filtres sont intégrés au panneau Stockage : Useful Filters (kentotsu), Useless Filter (Mlie) et Material Filter (CheaterEater). Inspector Plus les déclare incompatibles : désactivez-les. Tant que l'un d'eux reste actif, Inspector Plus ne charge pas sa propre version de ces filtres et affiche ceux du mod.
+
+### Ajouts
+
+- **Matériaux.** Un filtre par matériau (acier, bois, chaque cuir, chaque tissu…) : le refuser refuse tout ce qui en est fait. Le panneau les range dans une section « Matériaux » repliable, avec l'icône de chaque matériau, en ne gardant que les matériaux dont le stockage peut prendre un objet. La case de l'en-tête autorise ou refuse tous les matériaux d'un coup. Les factures, les tenues et l'onglet Stockage vanilla ne les mêlent pas à leur arbre : un bouton « Matériaux » au-dessus de leur filtre ouvre une fenêtre avec les matériaux qui les concernent (recherche, icônes, tout autoriser ou tout refuser, cochage par glissement).
+- **Nouveaux filtres spéciaux**, par paires : avec ou sans qualité, se détériore ou non, pourrit ou non, inflammable ou non (repris de Useful Filters) ; avec ou sans points de vie, empilable ou non (repris de [UR] Better Filter, chargés seulement sans lui) ; cadavres d'animaux de la colonie ou des autres.
+- **Vêtements et armes inutiles ou utiles** (repris de Useless Filter). Les conditions se règlent dans les réglages du mod : plage de points de vie, plage de qualité, contaminé, propre, biocodé, non biocodé. Une seule condition remplie suffit.
+- **Bouton « Inverser »** : autorise chaque objet refusé et refuse chaque objet autorisé. Les filtres spéciaux gardent leur état.
+- **Compatibilité [UR] Better Filter** : un bouton « Avancé » ouvre son filtre avancé. Ses deux objets factices (« advanced filter », « apply filter ») ne s'affichent plus comme des objets cochables.
+- **Compatibilité Storage Sorting** : une roue dentée sur chaque ligne ouvre son réglage fin. Elle reste allumée sur les lignes réglées.
+
+### Modifications
+
+- Une paire de filtres opposés dont le stockage ne peut prendre qu'un côté est masquée : refuser le côté restant refuserait tout. Un filtre déjà refusé reste affiché.
+- Un filtre spécial ne s'affiche plus que si sa propre catégorie contient un objet du stockage (« sans qualité (armes) » n'apparaît plus sur une étagère à vêtements).
+- La plage de qualité s'affiche sans Royalty, comme en vanilla.
+
+### Écarts avec les mods repris
+
+- Les sauvegardes gardent leurs réglages : les filtres reprennent les defName d'origine, et les matériaux refusés enregistrés par Material Filter sont relus au chargement.
+- Material Filter refusait une armure ou une arme selon les matériaux de sa recette, et la gardait tant qu'un d'eux restait autorisé. Ici, un filtre de matériau s'applique au matériau dont l'objet est fait, comme tout filtre spécial vanilla. Le bouton de Material Filter dans les factures et les tenues est remplacé par la barre « Matériaux ».
+- Useful Filters disait « tous les cadavres » pour ses deux filtres de cadavres d'animaux : en refuser un refusait tous les cadavres d'animaux. Chaque filtre ne juge plus que l'animal de chaque cadavre.
+- Inflammable : Useful Filters jugeait sur le def seul, donc un vêtement en tissu comptait comme ininflammable. Le matériau de chaque objet décide désormais.
+- Useless Filter ne jugeait une arme biocodée inutile que si elle était codée pour un de vos colons. Une arme ou un vêtement biocodé est désormais inutile s'il est codé pour quelqu'un d'autre qu'un de vos colons. Les armes à persona ne comptent pas.
+- Les réglages par filtre de Useful Filters (afficher ou masquer chacun) ne sont pas repris.
+- Les conditions « inutile » de Useless Filter sont des réglages du mod, pas des données de partie. Au premier lancement qui trouve son fichier de réglages (`Config/Mod_<dossier>_UselessFilterMod.xml`), Inspector Plus les recopie dans ses propres réglages. Tant que ce fichier existe, un bouton des réglages permet de les reprendre à nouveau. Sans ce fichier, les conditions partent des valeurs par défaut de Useless Filter (points de vie 0–50 %, qualité affreux à médiocre, contaminé, biocodé).
+
+### Sauvegardes
+
+Le mod n'est plus purement visuel : les filtres ajoutés sont écrits dans les sauvegardes. Le retirer en cours de partie fait apparaître des avertissements au chargement et oublie ces réglages.
+
 ## 1.1.0 — 2026-10-14
 
 ### Ajouts

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Filters taken over from other mods load only while that mod is off: the mod keeps its own defs. -->
+<LoadFolders>
+  <v1.6>
+    <li>/</li>
+    <li IfModNotActive="kentotsu.usefulfilters">Integrations/UsefulFilters</li>
+    <li IfModNotActive="Mlie.UselessFilter">Integrations/UselessFilter</li>
+    <li IfModNotActive="uranv.betterfilter">Integrations/PropertyPairs</li>
+  </v1.6>
+</LoadFolders>

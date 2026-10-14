@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Taken over from Useful Filters (kentotsu.usefulfilters): same defNames, so saves keep their settings. -->
+<Defs>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowHasQuality</defName>
+    <label>allow things with quality</label>
+    <description>Allow things that have a quality level.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowHasQuality</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_HasQuality</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowNoQuality</defName>
+    <label>allow things without quality</label>
+    <description>Allow things that do not have a quality level.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowNoQuality</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NoQuality</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowDeteriorable</defName>
+    <label>allow deteriorable</label>
+    <description>Allow things that deteriorate outdoors.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowDeteriorable</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_Deteriorable</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowNonDeteriorable</defName>
+    <label>allow non-deteriorable</label>
+    <description>Allow things that do not deteriorate outdoors.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowNonDeteriorable</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NonDeteriorable</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowRottable</defName>
+    <label>allow rottable</label>
+    <description>Allow things that rot.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowRottable</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_Rottable</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowNonRottable</defName>
+    <label>allow non-rottable</label>
+    <description>Allow things that do not rot.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowNonRottable</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NonRottable</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowFlammable</defName>
+    <label>allow flammable</label>
+    <description>Allow things that can burn.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowFlammable</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_Flammable</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowNonFlammable</defName>
+    <label>allow non-flammable</label>
+    <description>Allow things that cannot burn.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowNonFlammable</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NonFlammable</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowCorpsesColonyAnimal</defName>
+    <label>allow colony animal corpses</label>
+    <description>Allow corpses of animals that belonged to the colony.</description>
+    <parentCategory>CorpsesAnimal</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowCorpsesColonyAnimal</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_CorpsesColonyAnimal</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>UsefulFilters_AllowCorpsesNonColonyAnimal</defName>
+    <label>allow other animal corpses</label>
+    <description>Allow corpses of animals that did not belong to the colony.</description>
+    <parentCategory>CorpsesAnimal</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>UsefulFilters_allowCorpsesNonColonyAnimal</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_CorpsesNonColonyAnimal</workerClass>
+  </SpecialThingFilterDef>
+</Defs>

@@ -286,4 +286,25 @@
   <RUI.Inspector.StorageCollapseAllTip>Fold every category of the tree.</RUI.Inspector.StorageCollapseAllTip>
   <RUI.Inspector.StorageFoldSearchTip>A search already unfolds every match. Clear it to fold or unfold the tree.</RUI.Inspector.StorageFoldSearchTip>
 
+  <RUI.Inspector.StorageInvert>Invert</RUI.Inspector.StorageInvert>
+  <RUI.Inspector.StorageInvertTip>Allow every refused item and refuse every allowed one. Special filters keep their state.</RUI.Inspector.StorageInvertTip>
+  <RUI.Inspector.StorageAdvanced>Advanced</RUI.Inspector.StorageAdvanced>
+  <RUI.Inspector.StorageAdvancedTip>Open the advanced filter of [UR] Better Filter: combine rules by mod, category, mass, value, tech level and more.</RUI.Inspector.StorageAdvancedTip>
+  <RUI.Inspector.StorageSortingTip>Fine-tune this row for this storage (Storage Sorting): hit points, quality, freshness, stack cap, ingredients, priority.</RUI.Inspector.StorageSortingTip>
+  <RUI.Inspector.SectionUseless>Useless apparel and weapons</RUI.Inspector.SectionUseless>
+  <RUI.Inspector.UselessHint>The storage filters "useless apparel" and "useless weapons" take things that meet ANY of these conditions. The "non-useless" filters take the rest.</RUI.Inspector.UselessHint>
+  <RUI.Inspector.UselessTainted>Tainted (worn by a corpse)</RUI.Inspector.UselessTainted>
+  <RUI.Inspector.UselessClean>Clean (not tainted)</RUI.Inspector.UselessClean>
+  <RUI.Inspector.UselessBiocoded>Biocoded</RUI.Inspector.UselessBiocoded>
+  <RUI.Inspector.UselessBiocodedTip>Biocoded to someone who is not one of your colonists. Persona weapons do not count.</RUI.Inspector.UselessBiocodedTip>
+  <RUI.Inspector.UselessNonBiocoded>Not biocoded</RUI.Inspector.UselessNonBiocoded>
+  <RUI.Inspector.UselessReset>Reset these conditions</RUI.Inspector.UselessReset>
+  <RUI.Inspector.MaterialFilterDesc>Allow things made of {0}.</RUI.Inspector.MaterialFilterDesc>
+  <RUI.Inspector.StorageMaterials>Materials</RUI.Inspector.StorageMaterials>
+  <RUI.Inspector.StorageMaterialsTip>Refuse a material to refuse everything made of it. The box on this header allows or refuses every material at once.</RUI.Inspector.StorageMaterialsTip>
+  <RUI.Inspector.UselessImport>Copy Useless Filter's conditions</RUI.Inspector.UselessImport>
+  <RUI.Inspector.UselessImportTip>Replace these conditions with the ones saved by Useless Filter in:
+{0}</RUI.Inspector.UselessImportTip>
+  <RUI.Inspector.UselessImported>Useless Filter's conditions copied.</RUI.Inspector.UselessImported>
+  <RUI.Inspector.UselessImportFailed>Useless Filter's settings could not be read. See the log.</RUI.Inspector.UselessImportFailed>
 </LanguageData>

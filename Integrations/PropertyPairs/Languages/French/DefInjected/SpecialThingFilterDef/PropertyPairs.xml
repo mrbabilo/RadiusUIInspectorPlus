@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RUI_AllowHasHitPoints.label>autoriser les objets avec points de vie</RUI_AllowHasHitPoints.label>
+  <RUI_AllowHasHitPoints.description>Autorise les objets qui ont des points de vie et peuvent être abîmés.</RUI_AllowHasHitPoints.description>
+  <RUI_AllowNoHitPoints.label>autoriser les objets sans points de vie</RUI_AllowNoHitPoints.label>
+  <RUI_AllowNoHitPoints.description>Autorise les objets qui n'ont pas de points de vie.</RUI_AllowNoHitPoints.description>
+  <RUI_AllowStackable.label>autoriser l'empilable</RUI_AllowStackable.label>
+  <RUI_AllowStackable.description>Autorise les objets qui s'empilent (pile de 2 ou plus).</RUI_AllowStackable.description>
+  <RUI_AllowNonStackable.label>autoriser le non-empilable</RUI_AllowNonStackable.label>
+  <RUI_AllowNonStackable.description>Autorise les objets qui ne s'empilent pas (pile de 1).</RUI_AllowNonStackable.description>
+</LanguageData>

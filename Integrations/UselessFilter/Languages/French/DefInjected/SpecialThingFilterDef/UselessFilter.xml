@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <UselessApparelFilter.label>autoriser les vêtements inutiles</UselessApparelFilter.label>
+  <UselessApparelFilter.description>Autorise les vêtements qui remplissent une des conditions « inutile » des réglages d'Inspector Plus.</UselessApparelFilter.description>
+  <NonUselessApparelFilter.label>autoriser les vêtements utiles</NonUselessApparelFilter.label>
+  <NonUselessApparelFilter.description>Autorise les vêtements qui ne remplissent aucune des conditions « inutile » des réglages d'Inspector Plus.</NonUselessApparelFilter.description>
+  <UselessWeaponFilter.label>autoriser les armes inutiles</UselessWeaponFilter.label>
+  <UselessWeaponFilter.description>Autorise les armes qui remplissent une des conditions « inutile » des réglages d'Inspector Plus.</UselessWeaponFilter.description>
+  <NonUselessWeaponFilter.label>autoriser les armes utiles</NonUselessWeaponFilter.label>
+  <NonUselessWeaponFilter.description>Autorise les armes qui ne remplissent aucune des conditions « inutile » des réglages d'Inspector Plus.</NonUselessWeaponFilter.description>
+</LanguageData>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pairs also found in [UR] Better Filter (uranv.betterfilter): loaded only while it is off. -->
+<Defs>
+  <SpecialThingFilterDef>
+    <defName>RUI_AllowHasHitPoints</defName>
+    <label>allow things with hit points</label>
+    <description>Allow things that have hit points and can be damaged.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>RUI_allowHasHitPoints</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_HasHitPoints</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>RUI_AllowNoHitPoints</defName>
+    <label>allow things without hit points</label>
+    <description>Allow things that have no hit points.</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>RUI_allowNoHitPoints</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NoHitPoints</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>RUI_AllowStackable</defName>
+    <label>allow stackable</label>
+    <description>Allow things that stack (stack limit of 2 or more).</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>RUI_allowStackable</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_Stackable</workerClass>
+  </SpecialThingFilterDef>
+  <SpecialThingFilterDef>
+    <defName>RUI_AllowNonStackable</defName>
+    <label>allow non-stackable</label>
+    <description>Allow things that do not stack (stack limit of 1).</description>
+    <parentCategory>Root</parentCategory>
+    <allowedByDefault>true</allowedByDefault>
+    <saveKey>RUI_allowNonStackable</saveKey>
+    <workerClass>RadiusUIInspector.SpecialThingFilterWorker_NonStackable</workerClass>
+  </SpecialThingFilterDef>
+</Defs>
