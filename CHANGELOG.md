@@ -2,6 +2,15 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
+## 1.2.1 — 2026-10-14
+
+### Corrections
+
+- **Barre de l'éditeur de mise en page** : les boutons prennent la largeur de leur libellé et passent à la ligne quand la place manque. « Réinitialiser la mise en page », « Copier depuis… », « Préréglages… » et « Panneau de gauche » ne sont plus coupés.
+- **Filtres de No Quality Filter** : ils se rangent dans une ligne « Qualité », avec Armes ou Vêtements en bout de ligne, au lieu d'une ligne sans titre. Libellés français : « Les armes sans qualité », « Les vêtements sans qualité ».
+- **Better Filter** : sa ligne « périssable » s'intitule « Périssable » et non plus « Pourriture ». Elle compte aussi les objets qui se dissolvent, donc elle ne fait pas double emploi avec la ligne « Pourriture ».
+- **Better Filter en français** : ses dix filtres (périssable, détérioration, qualité, points de vie, empilable) ont un libellé et une description en français, chargés seulement quand Better Filter est actif.
+
 ## 1.2.0 — 2026-10-14
 
 Trois mods de filtres sont intégrés au panneau Stockage : Useful Filters (kentotsu), Useless Filter (Mlie) et Material Filter (CheaterEater). Inspector Plus les déclare incompatibles : désactivez-les. Tant que l'un d'eux reste actif, Inspector Plus ne charge pas sa propre version de ces filtres et affiche ceux du mod.

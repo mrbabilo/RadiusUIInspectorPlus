@@ -45,7 +45,7 @@ Inspector Plus reprend **Useful Filters**, **Useless Filter** et **Material Filt
 
 **No Quality Filter** est aussi repris et déclaré incompatible. Ses deux filtres « sans qualité » (armes, vêtements) gardent leurs noms de sauvegarde : un stockage qui les refusait continue de les refuser.
 
-Avec **[UR] Better Filter**, un bouton « Avancé » ouvre son filtre avancé, et ses objets factices restent hors de l'arbre. Avec **Storage Sorting**, une roue dentée sur chaque ligne ouvre son réglage fin.
+Avec **[UR] Better Filter**, un bouton « Avancé » ouvre son filtre avancé, ses objets factices restent hors de l'arbre, et ses filtres sont traduits en français. Avec **Storage Sorting**, une roue dentée sur chaque ligne ouvre son réglage fin.
 
 Le mod écrit ces filtres dans les sauvegardes. Le retirer en cours de partie fait apparaître des avertissements au chargement, et ces réglages sont perdus.
 

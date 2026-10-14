@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <UR_AllowPerishable.label>autoriser ce qui est périssable</UR_AllowPerishable.label>
+  <UR_AllowPerishable.description>Autorise les objets qui pourrissent ou se dissolvent, et qui doivent être réfrigérés.</UR_AllowPerishable.description>
+  <UR_AllowNotPerishable.label>autoriser ce qui n'est pas périssable</UR_AllowNotPerishable.label>
+  <UR_AllowNotPerishable.description>Autorise les objets qui ne pourrissent pas, ne se dissolvent pas et n'ont pas besoin d'être réfrigérés.</UR_AllowNotPerishable.description>
+  <UR_AllowDeteriorating.label>autoriser ce qui se détériore</UR_AllowDeteriorating.label>
+  <UR_AllowDeteriorating.description>Autorise les objets qui se détériorent dehors.</UR_AllowDeteriorating.description>
+  <UR_AllowNotDeteriorating.label>autoriser ce qui ne se détériore pas</UR_AllowNotDeteriorating.label>
+  <UR_AllowNotDeteriorating.description>Autorise les objets qui ne se détériorent pas dehors.</UR_AllowNotDeteriorating.description>
+  <UR_AllowQuality.label>autoriser les objets avec qualité</UR_AllowQuality.label>
+  <UR_AllowQuality.description>Autorise les objets qui ont un niveau de qualité.</UR_AllowQuality.description>
+  <UR_AllowNoQuality.label>autoriser les objets sans qualité</UR_AllowNoQuality.label>
+  <UR_AllowNoQuality.description>Autorise les objets sans niveau de qualité.</UR_AllowNoQuality.description>
+  <UR_AllowHitPoints.label>autoriser les objets avec points de vie</UR_AllowHitPoints.label>
+  <UR_AllowHitPoints.description>Autorise les objets qui ont des points de vie et peuvent être abîmés.</UR_AllowHitPoints.description>
+  <UR_AllowNoHitPoints.label>autoriser les objets sans points de vie</UR_AllowNoHitPoints.label>
+  <UR_AllowNoHitPoints.description>Autorise les objets qui n'ont pas de points de vie et ne peuvent pas être abîmés.</UR_AllowNoHitPoints.description>
+  <UR_AllowStackable.label>autoriser l'empilable</UR_AllowStackable.label>
+  <UR_AllowStackable.description>Autorise les objets qui s'empilent (pile de 2 ou plus).</UR_AllowStackable.description>
+  <UR_AllowNonStackable.label>autoriser le non-empilable</UR_AllowNonStackable.label>
+  <UR_AllowNonStackable.description>Autorise les objets qui ne s'empilent pas (pile de 1).</UR_AllowNonStackable.description>
+</LanguageData>

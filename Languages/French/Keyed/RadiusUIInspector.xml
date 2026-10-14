@@ -324,6 +324,7 @@
   <RUI.Inspector.SpecialSetQuality>Qualité</RUI.Inspector.SpecialSetQuality>
   <RUI.Inspector.SpecialSetDeterioration>Détérioration</RUI.Inspector.SpecialSetDeterioration>
   <RUI.Inspector.SpecialSetRot>Pourriture</RUI.Inspector.SpecialSetRot>
+  <RUI.Inspector.SpecialSetPerishable>Périssable</RUI.Inspector.SpecialSetPerishable>
   <RUI.Inspector.SpecialSetFlammability>Inflammabilité</RUI.Inspector.SpecialSetFlammability>
   <RUI.Inspector.SpecialSetHitPoints>Points de vie</RUI.Inspector.SpecialSetHitPoints>
   <RUI.Inspector.SpecialSetStacking>Empilement</RUI.Inspector.SpecialSetStacking>

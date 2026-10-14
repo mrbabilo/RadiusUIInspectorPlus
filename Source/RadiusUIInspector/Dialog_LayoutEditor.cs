@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using RadiusUI.Framework;
 using RimWorld;
@@ -91,6 +92,27 @@ public class Dialog_LayoutEditor : Window
 	};
 
 	private static readonly string ThingsLabel = "RUI.Inspector.ProfileThings".Translate();
+
+	private readonly struct ToolButton
+	{
+		public readonly string Label;
+
+		public readonly string? Tip;
+
+		public readonly bool Danger;
+
+		public readonly Action OnClick;
+
+		public ToolButton(string label, string? tip, bool danger, Action onClick)
+		{
+			Label = label;
+			Tip = tip;
+			Danger = danger;
+			OnClick = onClick;
+		}
+	}
+
+	private readonly List<ToolButton> toolButtons = new List<ToolButton>();
 
 	private bool armed;
 
@@ -492,7 +514,9 @@ public class Dialog_LayoutEditor : Window
 		float num2 = inRect.x;
 		if (!things)
 		{
-			Rect rect5 = new Rect(inRect.x, y, 190f, 26f);
+			// Segments sized to their labels: a fixed width cut "Panneau de gauche".
+			float a = Mathf.Max(RadiusFont.Size(LaneBody, GameFont.Tiny, heading: true).x, RadiusFont.Size(LaneRail, GameFont.Tiny, heading: true).x) + 24f;
+			Rect rect5 = new Rect(inRect.x, y, Mathf.Max(190f, a * 2f + 4f), 26f);
 			CardChrome.Rounded(rect5, Palette.Surface3, 8f);
 			float num3 = (rect5.width - 4f) / 2f;
 			for (int k = 0; k < 2; k++)
@@ -512,24 +536,8 @@ public class Dialog_LayoutEditor : Window
 			}
 			num2 = rect5.xMax;
 		}
-		InspectorSettings.LayoutPreset[] presets = InspectorSettings.Presets;
-		int num9 = (things ? 1 : (3 + ((lane == 0) ? presets.Length : 0)));
-		// Narrower buttons when the row would not fit the window.
-		float num4 = Mathf.Min(82f, Mathf.Floor((inRect.width + 4f) / (float)num9 - 4f));
-		float num5 = (float)num9 * (num4 + 4f);
-		float num6 = inRect.xMax - num5;
-		float num7 = y;
-		bool flag5 = num6 < num2 + 12f;
-		if (flag5)
-		{
-			num7 = y + 32f;
-		}
-		Rect rect7 = new Rect(num6, num7, num4, 26f);
-		bool flag6 = Mouse.IsOver(rect7);
-		CardChrome.Rounded(rect7, flag6 ? Palette.Surface3 : Palette.Surface2, 8f);
-		RadiusFont.Label(rect7, ResetLayoutLbl, GameFont.Tiny, heading: false, flag6 ? Palette.Bad : Palette.Ink, TextAnchor.MiddleCenter, wrap: false);
-		TooltipHandler.TipRegion(rect7, ResetProfileTip.Formatted(things ? ThingsLabel : ProfileLabels[(int)kind]));
-		if (Widgets.ButtonInvisible(rect7))
+		toolButtons.Clear();
+		toolButtons.Add(new ToolButton(ResetLayoutLbl, ResetProfileTip.Formatted(things ? ThingsLabel : ProfileLabels[(int)kind]), danger: true, delegate
 		{
 			if (things)
 			{
@@ -542,14 +550,10 @@ public class Dialog_LayoutEditor : Window
 			InspectorCore.Poke();
 			Load(s);
 			SoundDefOf.Click.PlayOneShotOnCamera();
-		}
+		}));
 		if (!things)
 		{
-			Rect rect8 = new Rect(num6 + num4 + 4f, num7, num4, 26f);
-			bool flag7 = Mouse.IsOver(rect8);
-			CardChrome.Rounded(rect8, flag7 ? Palette.Surface3 : Palette.Surface2, 8f);
-			RadiusFont.Label(rect8, CopyFromLbl, GameFont.Tiny, heading: false, flag7 ? RadiusTheme.Accent : Palette.Ink, TextAnchor.MiddleCenter, wrap: false);
-			if (Widgets.ButtonInvisible(rect8))
+			toolButtons.Add(new ToolButton(CopyFromLbl, null, danger: false, delegate
 			{
 				List<FloatMenuOption> list = new List<FloatMenuOption>();
 				for (int l = 0; l < 4; l++)
@@ -566,41 +570,87 @@ public class Dialog_LayoutEditor : Window
 					}
 				}
 				Find.WindowStack.Add(new FloatMenu(list));
-			}
+			}));
 			// The player's own presets and the RimHUD import (Dialog_LayoutPresets).
-			Rect rect10 = new Rect(rect8.xMax + 4f, num7, num4, 26f);
-			bool flag9 = Mouse.IsOver(rect10);
-			CardChrome.Rounded(rect10, flag9 ? Palette.Surface3 : Palette.Surface2, 8f);
-			RadiusFont.Label(rect10, UserPresetsLbl, GameFont.Tiny, heading: false, flag9 ? RadiusTheme.Accent : Palette.Ink, TextAnchor.MiddleCenter, wrap: false);
-			TooltipHandler.TipRegion(rect10, UserPresetsTip);
-			if (Widgets.ButtonInvisible(rect10))
+			toolButtons.Add(new ToolButton(UserPresetsLbl, UserPresetsTip, danger: false, delegate
 			{
 				Find.WindowStack.Add(new Dialog_LayoutPresets());
-			}
-		}
-		if (!things && lane == 0)
-		{
-			for (int num8 = 0; num8 < presets.Length; num8++)
+			}));
+			if (lane == 0)
 			{
-				InspectorSettings.LayoutPreset layoutPreset = presets[num8];
-				Rect rect9 = new Rect(num6 + (float)(num8 + 3) * (num4 + 4f), num7, num4, 26f);
-				bool flag8 = Mouse.IsOver(rect9);
-				CardChrome.Rounded(rect9, flag8 ? Palette.Surface3 : Palette.Surface2, 8f);
-				RadiusFont.Label(rect9, layoutPreset.Label, GameFont.Tiny, heading: false, flag8 ? RadiusTheme.Accent : Palette.Ink, TextAnchor.MiddleCenter, wrap: false);
-				TooltipHandler.TipRegion(rect9, layoutPreset.Blurb);
-				if (Widgets.ButtonInvisible(rect9))
+				InspectorSettings.LayoutPreset[] presets = InspectorSettings.Presets;
+				for (int num8 = 0; num8 < presets.Length; num8++)
 				{
-					s.ApplyPreset(layoutPreset, kind);
-					Load(s);
-					SoundDefOf.Click.PlayOneShotOnCamera();
+					InspectorSettings.LayoutPreset layoutPreset = presets[num8];
+					toolButtons.Add(new ToolButton(layoutPreset.Label, layoutPreset.Blurb, danger: false, delegate
+					{
+						s.ApplyPreset(layoutPreset, kind);
+						Load(s);
+						SoundDefOf.Click.PlayOneShotOnCamera();
+					}));
 				}
 			}
 		}
-		if (!flag5)
+		return DrawToolButtons(inRect, num2 + 12f, y);
+	}
+
+	// Buttons sized to their labels, right-aligned; a full row wraps below. The first row shares the line
+	// of the lane toggle, so it starts after it.
+	private float DrawToolButtons(Rect inRect, float firstRowLeft, float y)
+	{
+		float num = y;
+		float num2 = firstRowLeft;
+		int num3 = 0;
+		while (num3 < toolButtons.Count)
 		{
-			return y + 32f;
+			float num4 = 0f;
+			int i;
+			for (i = num3; i < toolButtons.Count; i++)
+			{
+				float num5 = num4 + ((i > num3) ? 4f : 0f) + ToolButtonWidth(toolButtons[i].Label);
+				if (num5 > inRect.xMax - num2 && i > num3)
+				{
+					break;
+				}
+				num4 = num5;
+			}
+			if (num4 > inRect.xMax - num2 && num2 > inRect.x)
+			{
+				num += 32f;
+				num2 = inRect.x;
+				continue;
+			}
+			float num6 = inRect.xMax - num4;
+			for (int j = num3; j < i; j++)
+			{
+				ToolButton toolButton = toolButtons[j];
+				Rect rect = new Rect(num6, num, ToolButtonWidth(toolButton.Label), 26f);
+				bool flag = Mouse.IsOver(rect);
+				CardChrome.Rounded(rect, flag ? Palette.Surface3 : Palette.Surface2, 8f);
+				RadiusFont.Label(rect, toolButton.Label, GameFont.Tiny, heading: false, flag ? (toolButton.Danger ? Palette.Bad : RadiusTheme.Accent) : Palette.Ink, TextAnchor.MiddleCenter, wrap: false);
+				if (!toolButton.Tip.NullOrEmpty())
+				{
+					TooltipHandler.TipRegion(rect, toolButton.Tip);
+				}
+				if (Widgets.ButtonInvisible(rect))
+				{
+					toolButton.OnClick();
+				}
+				num6 = rect.xMax + 4f;
+			}
+			num3 = i;
+			if (num3 < toolButtons.Count)
+			{
+				num += 32f;
+				num2 = inRect.x;
+			}
 		}
-		return num7 + 32f;
+		return num + 32f;
+	}
+
+	private static float ToolButtonWidth(string label)
+	{
+		return Mathf.Max(64f, RadiusFont.Size(label, GameFont.Tiny).x + 20f);
 	}
 
 	private void DrawBoard(InspectorSettings s, Rect area)

@@ -7,5 +7,7 @@
     <li IfModNotActive="Mlie.UselessFilter">Integrations/UselessFilter</li>
     <li IfModNotActive="uranv.betterfilter">Integrations/PropertyPairs</li>
     <li IfModNotActive="rabiosus.noqualityfilter">Integrations/NoQualityFilter</li>
+    <!-- French labels for Better Filter's own filters, which it ships in English only. -->
+    <li IfModActive="uranv.betterfilter">Integrations/BetterFilter</li>
   </v1.6>
 </LoadFolders>
