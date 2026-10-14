@@ -369,4 +369,14 @@
   <RUI.Inspector.RimHudImportedSkipped>« {0} » importé. Laissés de côté (pas de case Inspector) : {1}</RUI.Inspector.RimHudImportedSkipped>
   <RUI.Inspector.RimHudFailed>Import de « {0} » impossible : {1}</RUI.Inspector.RimHudFailed>
   <RUI.Inspector.RimHudEmpty>la mise en page ne contient aucun widget que l'Inspector sait afficher</RUI.Inspector.RimHudEmpty>
+  <!-- Titres de section des mises en page fournies -->
+  <RUI.Inspector.Header.Needs>Besoins</RUI.Inspector.Header.Needs>
+  <RUI.Inspector.Header.Health>Santé</RUI.Inspector.Header.Health>
+  <RUI.Inspector.Header.Produce>Production</RUI.Inspector.Header.Produce>
+  <RUI.Inspector.Header.Skills>Compétences</RUI.Inspector.Header.Skills>
+  <RUI.Inspector.Header.Assignment>Assignations</RUI.Inspector.Header.Assignment>
+  <RUI.Inspector.Header.Equipment>Équipement</RUI.Inspector.Header.Equipment>
+  <RUI.Inspector.Header.Vitals>Essentiel</RUI.Inspector.Header.Vitals>
+  <RUI.Inspector.Header.Mood>Humeur</RUI.Inspector.Header.Mood>
+  <RUI.Inspector.Header.Protection>Protection</RUI.Inspector.Header.Protection>
 </LanguageData>

@@ -278,7 +278,7 @@ public static class ThingPanel
 		switch (spec.Kind)
 		{
 		case InspectorPanel.CellKind.Header:
-			return InspectorPanel.DrawEyebrow(spec.Arg, x, w, y);
+			return InspectorPanel.DrawEyebrow(spec.Display, x, w, y);
 		case InspectorPanel.CellKind.Spacer:
 			return 8f;
 		case InspectorPanel.CellKind.HP:

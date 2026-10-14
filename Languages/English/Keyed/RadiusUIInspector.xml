@@ -369,4 +369,14 @@
   <RUI.Inspector.RimHudImportedSkipped>"{0}" imported. Left out (no Inspector cell): {1}</RUI.Inspector.RimHudImportedSkipped>
   <RUI.Inspector.RimHudFailed>Cannot import "{0}": {1}</RUI.Inspector.RimHudFailed>
   <RUI.Inspector.RimHudEmpty>the layout holds no widget the Inspector can show</RUI.Inspector.RimHudEmpty>
+  <!-- Section titles of the built-in layouts -->
+  <RUI.Inspector.Header.Needs>Needs</RUI.Inspector.Header.Needs>
+  <RUI.Inspector.Header.Health>Health</RUI.Inspector.Header.Health>
+  <RUI.Inspector.Header.Produce>Produce</RUI.Inspector.Header.Produce>
+  <RUI.Inspector.Header.Skills>Skills</RUI.Inspector.Header.Skills>
+  <RUI.Inspector.Header.Assignment>Assignment</RUI.Inspector.Header.Assignment>
+  <RUI.Inspector.Header.Equipment>Equipment</RUI.Inspector.Header.Equipment>
+  <RUI.Inspector.Header.Vitals>Vitals</RUI.Inspector.Header.Vitals>
+  <RUI.Inspector.Header.Mood>Mood</RUI.Inspector.Header.Mood>
+  <RUI.Inspector.Header.Protection>Protection</RUI.Inspector.Header.Protection>
 </LanguageData>

@@ -1291,7 +1291,7 @@ public static class InspectorPanel
 			{
 				Kind = CellKind.Header,
 				Arg = text3,
-				Display = text3
+				Display = HeaderLabel(text3)
 			};
 		}
 		if (raw.StartsWith("stat:"))
@@ -1881,7 +1881,7 @@ public static class InspectorPanel
 		case CellKind.Inspect:
 			return ControlsPanel.DrawInspect(pawn, x, w, y, cullEnabled ? scroll.y : 0f, cullEnabled ? lastViewH : 99999f);
 		case CellKind.Header:
-			return DrawEyebrow(spec.Arg, x, w, y);
+			return DrawEyebrow(spec.Display, x, w, y);
 		case CellKind.Spacer:
 			return 8f;
 		case CellKind.Mood:
@@ -2586,6 +2586,18 @@ public static class InspectorPanel
 	internal static string CellDisplay(string raw)
 	{
 		return ParseCell(raw).Display;
+	}
+
+	// The built-in layouts store their section titles in English ("header:Needs"), and saved layouts keep them so:
+	// a title with a RUI.Inspector.Header.* key shows translated, any other (typed by the player) as written.
+	internal static string HeaderLabel(string text)
+	{
+		string text2 = "RUI.Inspector.Header." + text;
+		if (!text2.CanTranslate())
+		{
+			return text;
+		}
+		return text2.Translate();
 	}
 
 	internal static string CellIcon(string raw)

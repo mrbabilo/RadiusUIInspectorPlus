@@ -809,7 +809,7 @@ public class Dialog_LayoutEditor : Window
 			{
 				int rr = r;
 				int cc = c;
-				Find.WindowStack.Add(new Dialog_RenameHeader(id.Substring(7), delegate(string text2)
+				Find.WindowStack.Add(new Dialog_RenameHeader(InspectorPanel.CellDisplay(id), delegate(string text2)
 				{
 					if (rr < model.Count && cc < model[rr].Count)
 					{
@@ -819,7 +819,7 @@ public class Dialog_LayoutEditor : Window
 				}));
 			}
 		}
-		string text = (flag2 ? id.Substring(7) : InspectorPanel.CellDisplay(id));
+		string text = InspectorPanel.CellDisplay(id);
 		RadiusFont.Label(new Rect(sr.x + 30f, sr.y, sr.width - 54f, sr.height), text, GameFont.Small, flag2, flag2 ? RadiusTheme.Accent : Palette.Ink, TextAnchor.MiddleLeft, wrap: false);
 		Rect rect2 = KillRect(sr);
 		if (Mouse.IsOver(sr))
@@ -933,7 +933,7 @@ public class Dialog_LayoutEditor : Window
 				string text2 = array[j];
 				if (text2.StartsWith("header:"))
 				{
-					RadiusFont.Label(rect, text2.Substring(7), GameFont.Tiny, heading: true, Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+					RadiusFont.Label(rect, InspectorPanel.CellDisplay(text2), GameFont.Tiny, heading: true, Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
 					continue;
 				}
 				CardChrome.Rounded(rect, Palette.Surface2, 8f);
@@ -946,7 +946,7 @@ public class Dialog_LayoutEditor : Window
 	private void DrawGhost()
 	{
 		Vector2 mousePosition = Event.current.mousePosition;
-		string text = (dragId.StartsWith("header:") ? dragId.Substring(7) : InspectorPanel.CellDisplay(dragId));
+		string text = InspectorPanel.CellDisplay(dragId);
 		float width = RadiusFont.Size(text).x + 24f;
 		Rect rect = new Rect(mousePosition.x + 12f, mousePosition.y + 12f, width, 24f);
 		CardChrome.Rounded(rect, RadiusTheme.Accent, 8f);
