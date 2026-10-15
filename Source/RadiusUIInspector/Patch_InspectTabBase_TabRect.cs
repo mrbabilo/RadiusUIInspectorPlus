@@ -13,6 +13,8 @@ public static class Patch_InspectTabBase_TabRect
 		TabPlumbing.Restore(__instance);
 	}
 
+	// After Bio Tab+, which sets the rect of the bio tab to its own card size: the pane decides where a hosted tab goes.
+	[HarmonyAfter(new string[] { "Axolki.BioTabPlus" })]
 	public static void Postfix(InspectTabBase __instance, ref Rect __result)
 	{
 		if (InspectorCore.Active && !InspectorMod.Settings.showVanillaTabs)

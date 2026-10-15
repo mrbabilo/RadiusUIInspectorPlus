@@ -49,6 +49,8 @@ Avec **[UR] Better Filter**, un bouton « Avancé » ouvre son filtre avancé, s
 
 Les onglets du jeu et des autres mods (équipement, santé, dressage…) s'affichent dans l'Inspector et prennent toute sa largeur. Avec **Radius UI - Health Tab**, l'onglet santé retrouve sa taille d'origine quand on repasse de l'onglet Radius à celui du jeu ou de **Nice Health Tab**, au lieu de rester déformé.
 
+Avec **Bio Tab+**, la fiche Bio remplit tout le panneau. Avec **Modern Bio Tab**, le bouton « Modern Bio » de l'onglet Bio devient une icône (celle de la disposition en cartes de Modern Bio, infobulle « Modern Bio »). Elle se place à droite de la fiche du jeu, ou au-dessus d'elle quand la place manque, sans recouvrir ses boutons. Sur la fiche Bio Tab+, elle se place dans l'en-tête, à gauche de la roue dentée. Un clic dessus passe à Modern Bio et désactive Bio Tab+, qui remplace le même onglet ; Bio Tab+ se réactive depuis la fiche du jeu.
+
 Le mod écrit ces filtres dans les sauvegardes. Le retirer en cours de partie fait apparaître des avertissements au chargement, et ces réglages sont perdus.
 
 ## Compiler

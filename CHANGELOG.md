@@ -2,12 +2,14 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
-## Non publiée
+## 1.2.2 — 2026-10-15
 
 ### Corrections
 
 - **Onglets du jeu dans l'Inspector** : un onglet plus étroit que le panneau (équipement, dressage, visiteur…) prend maintenant toute la place au lieu de laisser une bande vide à droite. L'onglet retrouve sa propre taille dès qu'il n'est plus affiché dans l'Inspector.
 - **Radius UI - Health Tab et Nice Health Tab** : après être passé de l'onglet santé Radius à l'onglet du jeu (ou de Nice Health Tab), la carte de santé n'est plus déformée. Radius laissait sa hauteur en place ; la taille d'origine de l'onglet est maintenant rétablie au changement.
+- **Bio Tab+** : sa fiche remplit tout le panneau de l'Inspector au lieu de laisser une bande vide à droite.
+- **Modern Bio Tab** : dans l'Inspector, le bouton « Modern Bio » (affiché quand l'onglet Modern Bio est désactivé) ne touche plus les boutons de la fiche du jeu. Il devient une icône (celle de la disposition en cartes de Modern Bio, infobulle « Modern Bio ») : à droite de la fiche du jeu quand le panneau laisse de la place, sinon au-dessus de la fiche, à gauche de la croix de fermeture ; sur la fiche Bio Tab+, dans l'en-tête, à gauche de la roue dentée, au lieu de recouvrir ses icônes ; un clic passe à Modern Bio et désactive Bio Tab+, qui se réactive depuis la fiche du jeu.
 - **Titres de section traduits** : les titres des mises en page fournies (Besoins, Santé, Compétences, Équipement…) s'affichaient en anglais, y compris dans les mises en page déjà enregistrées. Un titre tapé par le joueur reste tel quel.
 - **Filtres spéciaux** : sur une ligne à un seul choix (« Qualité », armes ou vêtements sans qualité), la catégorie s'aligne avec celles des autres lignes au lieu de coller au bord droit.
 

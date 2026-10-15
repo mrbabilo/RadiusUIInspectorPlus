@@ -3,7 +3,7 @@
   <name>Radius UI - Inspector Plus</name>
   <packageId>mrbabilo.RadiusUI.InspectorPlus</packageId>
   <author>mrbabilo</author>
-  <modVersion>1.2.1</modVersion>
+  <modVersion>1.2.2</modVersion>
   <description>[h1]◆ Radius UI - Inspector Plus ◆[/h1]
 A fork of [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3786131805]Radius UI - Inspector[/url] by astryl, with [url=https://github.com/keepercraft/RimKeeperFilterHelper]RimKeeper Storage and Filters Helper[/url] by Keepercraft merged into its Storage panel. It replaces both mods: disable them.
 
@@ -36,6 +36,7 @@ This is the part to read first. Clicking a tab does not throw a window over your
 [list]
 [*][b]Every tab still belongs to whoever wrote it[/b]: the inspector never redraws another mod's tab, it moves it. Vanilla Health, Bills, Storage, Social and the rest render exactly as they always did, in the panel instead of over it.
 [*][b]Modded tabs work the same way[/b]: Radius UI - Health Tab shows its full medical chart in there, True RPG Inventory shows its paperdoll. Neither needed a patch, and neither does yours.
+[*][b]Tabs fill the panel[/b]: a tab narrower than the panel (gear, training, Bio Tab+) spreads over the whole width instead of leaving an empty strip. With Modern Bio Tab, its switch is an icon that no longer covers the card's buttons or Bio Tab+'s header.
 [*][b]Close it and it shrinks back[/b]: the Overview pill returns the panel to its normal height, so nothing is ever left hanging open.
 [*][b]It reserves its own space[/b]: the command buttons on the right slide clear as the panel grows, so a wide tab never ends up underneath them.
 [/list]
