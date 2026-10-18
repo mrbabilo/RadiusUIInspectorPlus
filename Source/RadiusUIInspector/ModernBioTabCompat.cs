@@ -17,6 +17,8 @@ namespace RadiusUIInspector;
 // - Bio Tab+ card, anywhere: in Bio Tab+'s header, left of its gear. Clicking it also turns
 //   Bio Tab+ off: both replace the same tab, and Bio Tab+ would keep setting the tab size under Modern Bio. Bio Tab+ is
 //   turned back on from the vanilla card, by its own icon there.
+// The icon is loaded lazily, from OnGUI; the attribute only tells the game's startup check that a Texture2D field here is safe.
+[StaticConstructorOnStartup]
 internal static class ModernBioTabCompat
 {
 	internal const string PackageId = "astryl.ModernBioTab";

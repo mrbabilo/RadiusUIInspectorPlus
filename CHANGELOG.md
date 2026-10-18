@@ -2,6 +2,13 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
+## Non publié
+
+### Corrections
+
+- **Performance du panneau Stockage** : avec l'arbre entièrement déplié, le panneau parcourait à chaque image tous les objets du jeu (plus de 500), même ceux hors de la vue. Les branches entièrement hors de la vue sont maintenant sautées d'un coup, et les catégories hors de la vue n'ont plus de bouton invisible, comme dans l'arbre du jeu. La disposition des pastilles des filtres spéciaux n'est plus recalculée à chaque image, et l'infobulle de l'en-tête « Spécial » n'est construite qu'au survol. Mesuré avec Dubs Performance Analyzer : l'arbre coûte environ trois fois moins (de 341 à 112 µs par passage, et de 409 à 144 µs une fois défilé).
+- **Avertissement au démarrage** : le jeu ne signale plus que `ModernBioTabCompat` « needs a StaticConstructorOnStartup attribute ». L'icône était déjà chargée au bon moment ; seul l'attribut manquait.
+
 ## 1.2.3 — 2026-10-18
 
 ### Corrections

@@ -26,6 +26,20 @@ public static partial class StoragePanel
 		public bool partition;
 
 		public readonly List<SpecialThingFilterDef> choices = new List<SpecialThingFilterDef>();
+
+		// Chip widths and line count, kept until the width, the font or the italic setting changes: measuring
+		// every chip on every pass cost more than drawing the visible ones.
+		public float[]? chipW;
+
+		public float layoutVw = -1f;
+
+		public int layoutEpoch = -1;
+
+		public bool layoutItalic;
+
+		public float scopeW;
+
+		public int lines;
 	}
 
 	// Known sets, in the order of their choices. Apparel and weapons versions are separate sets: the scope
@@ -206,9 +220,42 @@ public static partial class StoragePanel
 		return RadiusFont.Width(ChipText(sf), GameFont.Tiny, bold: false) + ((SpecialEffect(sf) != 0) ? 26f : 16f);
 	}
 
+	private static string? specialAllLabel;
+
+	private static string SpecialAllLabel => specialAllLabel ??= "RUI.Inspector.SpecialAll".Translate();
+
+	// Flows the chips of a row (a new line when the next one does not fit) once per width and font.
+	private static void LayoutRow(SpecialRow row, float vw, float allW, float left)
+	{
+		if (row.chipW != null && row.layoutVw == vw && row.layoutEpoch == RadiusFont.Epoch && row.layoutItalic == RadiusTheme.Italic)
+		{
+			return;
+		}
+		row.layoutVw = vw;
+		row.layoutEpoch = RadiusFont.Epoch;
+		row.layoutItalic = RadiusTheme.Italic;
+		row.scopeW = (row.scope != null) ? (RadiusFont.Width(row.scope, GameFont.Tiny, bold: false) + 8f) : 0f;
+		row.chipW = new float[row.choices.Count];
+		float right = vw - 4f - (allW + 4f) - row.scopeW;
+		int lines = 1;
+		float x = left;
+		for (int i = 0; i < row.choices.Count; i++)
+		{
+			float w = row.chipW[i] = ChipW(row.choices[i]);
+			if (x > left && x + w > right)
+			{
+				lines++;
+				x = left;
+			}
+			x += w + 4f;
+		}
+		row.lines = lines;
+	}
+
 	private static void DrawSpecialRows(ThingFilter filter, ThingFilter? parentFilter, float vw, ref float cy, string q)
 	{
-		string all = "RUI.Inspector.SpecialAll".Translate();
+		string all = SpecialAllLabel;
+		// Measuring the label also brings RadiusFont.Epoch up to date before the cached layouts are checked.
 		float allW = RadiusFont.Width(all, GameFont.Tiny, bold: false) + 16f;
 		for (int r = 0; r < specialRows.Count; r++)
 		{
@@ -219,23 +266,12 @@ public static partial class StoragePanel
 			}
 			bool multi = row.choices.Count > 1;
 			float left = Indent + 6f + ((row.title != null) ? titleW : 0f);
-			float scopeW = (row.scope != null) ? (RadiusFont.Width(row.scope, GameFont.Tiny, bold: false) + 8f) : 0f;
+			LayoutRow(row, vw, allW, left);
+			float scopeW = row.scopeW;
 			// The "All" column is kept on single-choice rows too, so the scopes line up.
 			float right = vw - 4f - (allW + 4f) - scopeW;
-			// Flow the chips: a new line when the next one does not fit.
-			int lines = 1;
-			float x = left;
-			for (int i = 0; i < row.choices.Count; i++)
-			{
-				float w = ChipW(row.choices[i]);
-				if (x > left && x + w > right)
-				{
-					lines++;
-					x = left;
-				}
-				x += w + 4f;
-			}
-			float rowH = lines * ChipLineH;
+			float[] widths = row.chipW!;
+			float rowH = row.lines * ChipLineH;
 			Rect rowRect = new Rect(Indent, cy, vw - Indent, rowH);
 			bool visible = ViewCull.Visible(cy, rowH, scroll.y, lastViewH);
 			if (visible)
@@ -254,13 +290,13 @@ public static partial class StoragePanel
 					RadiusFont.Label(new Rect(right + 4f, cy, scopeW - 4f, ChipLineH), row.scope, GameFont.Tiny, heading: false, Palette.TextFaint, TextAnchor.MiddleLeft, wrap: false);
 				}
 			}
-			x = left;
+			float x = left;
 			float y = cy;
 			int allowed = 0;
 			for (int i = 0; i < row.choices.Count; i++)
 			{
 				SpecialThingFilterDef sf = row.choices[i];
-				float w = ChipW(sf);
+				float w = widths[i];
 				if (x > left && x + w > right)
 				{
 					x = left;

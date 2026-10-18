@@ -34,6 +34,13 @@ public static partial class StoragePanel
 
 	private static readonly HashSet<ThingCategoryDef> expanded = new HashSet<ThingCategoryDef>();
 
+	// Height of each category's subtree as the last full walk laid it out. A subtree wholly outside the view is
+	// stepped over by its height instead of walked: the walk over every def cost more than the visible rows.
+	// Anything that changes which rows show raises treeShapeDirty, and the next DrawTree starts over.
+	private static readonly Dictionary<ThingCategoryDef, float> subtreeH = new Dictionary<ThingCategoryDef, float>();
+
+	private static bool treeShapeDirty = true;
+
 	private static float lastContentH = 10f;
 
 	private static float lastViewH = 10f;
@@ -860,6 +867,7 @@ public static partial class StoragePanel
 				{
 					expanded.Add(cat);
 				}
+				treeShapeDirty = true;
 			}
 		}
 		revealDef = def;
@@ -1085,6 +1093,7 @@ public static partial class StoragePanel
 			if (anyOpen)
 			{
 				expanded.Clear();
+				treeShapeDirty = true;
 				specialOpen = false;
 				materialOpen = false;
 			}
@@ -1125,6 +1134,7 @@ public static partial class StoragePanel
 	// Empty categories are skipped: the tree never draws them.
 	private static void ExpandBranch(ThingCategoryDef cat)
 	{
+		treeShapeDirty = true;
 		List<ThingCategoryDef> childCategories = cat.childCategories;
 		for (int i = 0; i < childCategories.Count; i++)
 		{
@@ -1188,6 +1198,7 @@ public static partial class StoragePanel
 			RebuildCounts(treeNode_ThingCategory.catDef, filter, parentFilter);
 			RebuildPartlyRefused(treeNode_ThingCategory.catDef, filter, parentFilter);
 			memoDirty = false;
+			treeShapeDirty = true;
 			// The filter changed: recount the stock on the next event so rows show at once what leaves.
 			contentsFrame = -1;
 		}
@@ -1196,18 +1207,25 @@ public static partial class StoragePanel
 			specialRoot = treeNode_ThingCategory.catDef;
 			specialParent = parentFilter;
 			RebuildSpecials(treeNode_ThingCategory.catDef, filter, parentFilter);
+			treeShapeDirty = true;
 		}
 		string text = query.Trim();
 		if (text != matchText || badgeMask != matchMask)
 		{
 			matchText = text;
 			matchMask = badgeMask;
+			treeShapeDirty = true;
 			matchCats.Clear();
 			nameMatched.Clear();
 			if (text.Length > 0 || badgeMask != Trait.None)
 			{
 				RebuildMatches(treeNode_ThingCategory.catDef, parentFilter, text);
 			}
+		}
+		if (treeShapeDirty)
+		{
+			subtreeH.Clear();
+			treeShapeDirty = false;
 		}
 		lastViewH = area.height;
 		float num = Mathf.Floor(area.width - 20f);
@@ -1249,14 +1267,19 @@ public static partial class StoragePanel
 				{
 					CardChrome.Rounded(rect2, Palette.Surface3, 8f);
 					CardChrome.Outline(rect2, Palette.WithAlpha(RadiusTheme.Accent, 0.6f), 1f, 8f);
-					if (Mouse.IsOver(rect2))
+					bool overHeader = Mouse.IsOver(rect2);
+					if (overHeader)
 					{
 						CardChrome.Hover(rect2, 8f);
 					}
 					IconSet.Get(flag2 ? "Action/ChevronDown" : "Action/Next").Draw(new Rect(6f, rect2.y + 7f, 12f, 12f), RadiusTheme.Accent);
 					RadiusFont.Label(new Rect(24f, rect2.y, num - 84f, 26f), "RUI.Inspector.StorageSpecial".Translate(), GameFont.Small, heading: true, RadiusTheme.Accent, TextAnchor.MiddleLeft, wrap: false);
 					RadiusFont.Label(new Rect(num - 60f, rect2.y, 52f, 26f), num3 + "/" + num2, GameFont.Tiny, heading: false, (num3 < num2) ? Palette.Warn : Palette.TextDim, TextAnchor.MiddleRight, wrap: false);
-					TooltipHandler.TipRegion(rect2, "RUI.Inspector.StorageSpecialTip".Translate());
+					// Built only under the mouse: translating the tip on every pass cost as much as drawing the header.
+					if (overHeader)
+					{
+						TooltipHandler.TipRegion(rect2, "RUI.Inspector.StorageSpecialTip".Translate());
+					}
 				}
 				if (text2.Length == 0 && Widgets.ButtonInvisible(rect2))
 				{
@@ -1308,6 +1331,13 @@ public static partial class StoragePanel
 		{
 			return;
 		}
+		// A pending reveal needs the walk to reach its row, so nothing is stepped over until it is consumed.
+		if (depth > 0 && !revealScroll && subtreeH.TryGetValue(cat, out var known) && !ViewCull.Visible(cy, known, scroll.y, lastViewH))
+		{
+			cy += known;
+			return;
+		}
+		float startY = cy;
 		bool flag2 = flag && nameMatched.Contains(cat);
 		bool flag3 = flag || expanded.Contains(cat) || depth == 0;
 		if (depth > 0)
@@ -1316,7 +1346,8 @@ public static partial class StoragePanel
 			// checkbox of one level sits in the same column. Only the checkbox paints; chevron and label fold.
 			float num4 = (float)(depth - 1) * Indent;
 			Rect rect = new Rect(num4, cy, vw - num4, 24f);
-			if (ViewCull.Visible(cy, 24f, scroll.y, lastViewH))
+			bool rowShown = ViewCull.Visible(cy, 24f, scroll.y, lastViewH);
+			if (rowShown)
 			{
 				DrawGuides(depth - 1, cy, 24f, hue);
 				if (Mouse.IsOver(rect))
@@ -1350,17 +1381,20 @@ public static partial class StoragePanel
 				memoDirty = true;
 				InspectorCore.Poke();
 			}
-			else if (Widgets.ButtonInvisible(new Rect(rect.x, rect.y, 16f, 24f)) || Widgets.ButtonInvisible(new Rect(rect.x + 36f, rect.y, rect.width - 36f, 24f)))
+			// Rows off screen get no fold button, as in the vanilla tree (Listing_TreeThingFilter).
+			else if (rowShown && (Widgets.ButtonInvisible(new Rect(rect.x, rect.y, 16f, 24f)) || Widgets.ButtonInvisible(new Rect(rect.x + 36f, rect.y, rect.width - 36f, 24f))))
 			{
 				if (!expanded.Remove(cat))
 				{
 					expanded.Add(cat);
 				}
+				treeShapeDirty = true;
 				InspectorCore.Poke();
 			}
 			cy += 24f;
 			if (!flag3)
 			{
+				subtreeH[cat] = cy - startY;
 				return;
 			}
 		}
@@ -1450,6 +1484,7 @@ public static partial class StoragePanel
 			}
 			cy += ItemRowH;
 		}
+		subtreeH[cat] = cy - startY;
 	}
 
 	// Def-level properties behind the vanilla special filters, read once per def. Burnable and smeltable carry a
@@ -2091,6 +2126,7 @@ public static partial class StoragePanel
 		{
 			visibleMemo.Clear();
 			visibleMemoParent = parentFilter;
+			treeShapeDirty = true;
 		}
 		if (!visibleMemo.TryGetValue(d, out var value))
 		{
