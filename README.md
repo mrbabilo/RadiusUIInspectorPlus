@@ -53,6 +53,10 @@ Avec **Bio Tab+**, la fiche Bio remplit tout le panneau. Avec **Modern Bio Tab**
 
 Le mod écrit ces filtres dans les sauvegardes. Le retirer en cours de partie fait apparaître des avertissements au chargement, et ces réglages sont perdus.
 
+## Performance
+
+Le défilement du framework Radius (`FlatScroll`) reconstruisait 16 fois le cache des styles de l'interface à chaque affichage d'une zone de défilement : environ 0,5 ms par image et des saccades jusqu'à 10 ms. Inspector Plus corrige ce défilement pour toute la suite Radius chargée avec lui, sans toucher au framework ; le même correctif est livré avec Colonist Bar Plus, et le premier des deux chargé l'applique. Il ne s'active qu'avec la version 32 du framework ; l'option de lancement `-ruinoflatfix` le désactive.
+
 ## Compiler
 
 Le dépôt ne contient pas la DLL. Le projet `Source/RadiusUIInspector.csproj` (`net472`) se compile contre les DLL du jeu (RimWorld 1.6), contre `0Harmony.dll` et contre `RadiusUI.Framework.dll` installé. Adaptez les `HintPath` du `.csproj` à votre installation.

@@ -2,6 +2,13 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
+## 1.2.3 — 2026-10-18
+
+### Corrections
+
+- **Sans Biotech** : le panneau d'un pion ne plante plus. Le xénotype n'est lu que si Biotech est actif ; sinon la ligne affiche la race.
+- **Performance des zones de défilement** : le défilement du framework Radius reconstruisait 16 fois le cache des styles de l'interface à chaque affichage d'une zone de défilement (environ 0,5 ms par image, saccades jusqu'à 10 ms). Un correctif, actif seulement avec la version 32 du framework, pose les styles une seule fois ; l'option de lancement `-ruinoflatfix` le désactive. Le même correctif est livré avec Colonist Bar Plus : le premier des deux chargé l'applique.
+
 ## 1.2.2 — 2026-10-15
 
 ### Corrections

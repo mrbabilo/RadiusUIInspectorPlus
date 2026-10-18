@@ -586,7 +586,8 @@ public class PawnSnapshot
 
 	private void RefreshIdentityValues(Pawn pawn)
 	{
-		string value = pawn.genes?.XenotypeLabelCap ?? ((string)pawn.def.LabelCap);
+		// Without Biotech, XenotypeDefOf.Baseliner is null and XenotypeLabel throws: fall back to the race label.
+		string value = ((ModsConfig.BiotechActive && pawn.genes != null) ? pawn.genes.XenotypeLabelCap : ((string)pawn.def.LabelCap));
 		GenderAge = ScratchText.Sb().Append(pawn.gender.GetLabel(pawn.RaceProps.Animal).CapitalizeFirst()).Append(", ")
 			.Append(value)
 			.Append(", ")
