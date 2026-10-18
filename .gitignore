@@ -6,3 +6,7 @@ obj/
 .vs/
 *.user
 .DS_Store
+
+# In-game test mod: built by tests/run-checks.sh into its work folder.
+tests/**/bin/
+tests/**/obj/

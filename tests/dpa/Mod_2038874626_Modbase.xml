@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dubs Performance Analyzer settings for the test sandbox only (copied by run-scene.sh). Methods are listed as
+     Namespace.Type:Method and show in the Custom Update category. -->
+<SettingsBlock>
+	<ModSettings Class="Analyzer.Settings">
+		<showMainTabIcon>True</showMainTabIcon>
+		<disableThreadedPatching>True</disableThreadedPatching>
+		<disableCleanup>True</disableCleanup>
+		<SavedPatches_Update>
+			<li>RimWorld.InspectPaneUtility:InspectPaneOnGUI</li>
+			<li>RimWorld.InspectPaneUtility:ExtraOnGUI</li>
+			<li>RadiusUIInspector.InspectorPanel:DrawPane</li>
+			<li>RadiusUIInspector.InspectorPanel:DrawFull</li>
+			<li>RadiusUIInspector.InspectorPanel:DrawMulti</li>
+			<li>RadiusUIInspector.ThingPanel:DrawPane</li>
+			<li>RadiusUIInspector.ZonePanel:DrawPane</li>
+			<li>RadiusUIInspector.StoragePanel:Draw</li>
+			<li>RadiusUIInspector.StoragePanel:DrawTree</li>
+			<li>RadiusUIInspector.ContentsPanel:Draw</li>
+			<li>RadiusUIInspector.TabPlumbing:DrawOpenTab</li>
+			<li>RadiusUIInspector.Dialog_Materials:DoWindowContents</li>
+			<li>RadiusUIInspector.PawnSnapshot:Refresh</li>
+			<li>UnityEngine.GUISkin:BuildStyleCache</li>
+			<li>RadiusUI.Framework.FlatScroll:Begin</li>
+			<li>RadiusUI.Framework.FlatScroll:EndOrUnwind</li>
+		</SavedPatches_Update>
+		<SavedPatches_Tick />
+	</ModSettings>
+</SettingsBlock>

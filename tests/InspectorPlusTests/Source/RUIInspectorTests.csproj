@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>RUIInspectorTests</AssemblyName>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Managed>/Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Contents/Resources/Data/Managed</Managed>
+    <ModsDir>/Volumes/BABILOGAMES/JEUX EN COURS/RimWorld.app/Mods</ModsDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp"><HintPath>$(Managed)/Assembly-CSharp.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(Managed)/UnityEngine.CoreModule.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>$(Managed)/UnityEngine.IMGUIModule.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule"><HintPath>$(Managed)/UnityEngine.ScreenCaptureModule.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="System.Core"><HintPath>$(Managed)/System.Core.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(ModsDir)/3708476081/Assemblies/0Harmony.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="RadiusUI.Framework"><HintPath>$(ModsDir)/3786107692/Assemblies/RadiusUI.Framework.dll</HintPath><Private>False</Private></Reference>
+    <Reference Include="RadiusUIInspector"><HintPath>$(ModsDir)/RadiusUIInspectorPlus/Assemblies/RadiusUIInspector.dll</HintPath><Private>False</Private></Reference>
+  </ItemGroup>
+</Project>

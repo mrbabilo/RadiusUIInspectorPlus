@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ModMetaData>
+  <name>Inspector Plus - Tests</name>
+  <packageId>mrbabilo.RadiusUI.InspectorPlus.Tests</packageId>
+  <author>mrbabilo</author>
+  <description>Automated checks and measurement scenes for Inspector Plus. Never published. Runs only with -ruitest=PATH or -ruiscene=DIR on the command line.</description>
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+    </li>
+    <li>
+      <packageId>mrbabilo.RadiusUI.InspectorPlus</packageId>
+      <displayName>Radius UI - Inspector Plus</displayName>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>mrbabilo.RadiusUI.InspectorPlus</li>
+  </loadAfter>
+</ModMetaData>
