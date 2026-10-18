@@ -2,7 +2,7 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
-## Non publié
+## 1.2.4 — 2026-10-19
 
 ### Corrections
 

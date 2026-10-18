@@ -57,6 +57,8 @@ Le mod écrit ces filtres dans les sauvegardes. Le retirer en cours de partie fa
 
 Le défilement du framework Radius (`FlatScroll`) reconstruisait 16 fois le cache des styles de l'interface à chaque affichage d'une zone de défilement : environ 0,5 ms par image et des saccades jusqu'à 10 ms. Inspector Plus corrige ce défilement pour toute la suite Radius chargée avec lui, sans toucher au framework ; le même correctif est livré avec Colonist Bar Plus, et le premier des deux chargé l'applique. Il ne s'active qu'avec la version 32 du framework ; l'option de lancement `-ruinoflatfix` le désactive.
 
+Le panneau Stockage, arbre entièrement déplié, ne parcourt plus les branches hors de la vue : chaque branche retient sa hauteur, et une branche entièrement hors de la vue est sautée d'un coup. L'arbre coûte environ trois fois moins (de 341 à 112 µs par passage, mesuré avec Dubs Performance Analyzer).
+
 ## Compiler
 
 Le dépôt ne contient pas la DLL. Le projet `Source/RadiusUIInspector.csproj` (`net472`) se compile contre les DLL du jeu (RimWorld 1.6), contre `0Harmony.dll` et contre `RadiusUI.Framework.dll` installé. Adaptez les `HintPath` du `.csproj` à votre installation.
