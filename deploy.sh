@@ -16,5 +16,5 @@ dotnet build "$HERE/Source/RadiusUIInspector.csproj" -c Release -nologo -v q \
 	-o "$TMP/build" -p:BaseIntermediateOutputPath="$TMP/obj/"
 
 cp "$TMP/build/RadiusUIInspector.dll" "$HERE/Assemblies/"
-rsync -a --delete --exclude Source/ --exclude docs/ --exclude tests/ --exclude deploy.sh --exclude .DS_Store --exclude .git/ --exclude .gitignore --exclude .gitkeep "$HERE/" "$DEST/"
+rsync -a --delete --exclude Source/ --exclude docs/ --exclude tests/ --exclude deploy.sh --exclude .DS_Store --exclude .git/ --exclude .gitignore --exclude .gitkeep --exclude .remember/ "$HERE/" "$DEST/"
 echo "Publié : $DEST"

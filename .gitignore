@@ -10,3 +10,6 @@ obj/
 # In-game test mod: built by tests/run-checks.sh into its work folder.
 tests/**/bin/
 tests/**/obj/
+
+# Session notes of the coding assistant: never committed, never published.
+.remember/

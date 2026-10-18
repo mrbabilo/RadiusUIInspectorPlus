@@ -13,6 +13,8 @@ PLIST_BAK="$WORK/ludeon.rimworld.plist.bak"
 
 [ -d "$MODS" ] || { echo "Mods folder not found (BABILOGAMES volume not mounted?): $MODS" >&2; exit 1; }
 mkdir -p "$SANDBOX/Config"
+# The checks read the game's English messages: a fresh sandbox would start in the system language.
+[ -f "$SANDBOX/Config/Prefs.xml" ] || printf '<?xml version="1.0" encoding="utf-8"?>\n<PrefsData>\n  <langFolderName>English</langFolderName>\n</PrefsData>\n' > "$SANDBOX/Config/Prefs.xml"
 
 # Unity keeps the window size and fullscreen flag in the player's own preferences, shared with their game:
 # save them once, put them back after every run.
