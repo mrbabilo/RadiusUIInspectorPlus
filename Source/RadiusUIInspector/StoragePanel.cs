@@ -146,6 +146,10 @@ public static partial class StoragePanel
 
 	private static int contentsTotal;
 
+	private static readonly CountedLabel BookmarksLabel = new CountedLabel("RUI.Inspector.Bookmarks");
+
+	private static readonly CountedLabel ContentsLabel = new CountedLabel("RUI.Inspector.StorageContents");
+
 	private static readonly List<KeyValuePair<ThingDef, int>> contents = new List<KeyValuePair<ThingDef, int>>();
 
 	private static readonly Dictionary<ThingDef, int> contentsScratch = new Dictionary<ThingDef, int>();
@@ -513,7 +517,7 @@ public static partial class StoragePanel
 		bool over = Mouse.IsOver(header);
 		CardChrome.Rounded(header, over ? Palette.Surface3 : Palette.Surface2, 8f);
 		IconSet.Get(bookmarksOpen ? "Action/ChevronDown" : "Action/Next").Draw(new Rect(header.x + 8f, header.y + 6f, 12f, 12f), Palette.TextDim);
-		RadiusFont.Label(new Rect(header.x + 26f, header.y, header.width - 34f, header.height), "RUI.Inspector.Bookmarks".Translate(bookmarks.Count), GameFont.Tiny, heading: false, over ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+		RadiusFont.Label(new Rect(header.x + 26f, header.y, header.width - 34f, header.height), BookmarksLabel.For(bookmarks.Count), GameFont.Tiny, heading: false, over ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
 		TooltipHandler.TipRegion(header, "RUI.Inspector.BookmarksTip".Translate());
 		if (Widgets.ButtonInvisible(header))
 		{
@@ -781,7 +785,7 @@ public static partial class StoragePanel
 		bool over = Mouse.IsOver(header);
 		CardChrome.Rounded(header, over ? Palette.Surface3 : Palette.Surface2, 8f);
 		IconSet.Get(contentsOpen ? "Action/ChevronDown" : "Action/Next").Draw(new Rect(header.x + 8f, header.y + 6f, 12f, 12f), Palette.TextDim);
-		RadiusFont.Label(new Rect(header.x + 26f, header.y, header.width - 34f, header.height), "RUI.Inspector.StorageContents".Translate(contents.Count, contentsTotal), GameFont.Tiny, heading: false, over ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+		RadiusFont.Label(new Rect(header.x + 26f, header.y, header.width - 34f, header.height), ContentsLabel.For(contents.Count, contentsTotal), GameFont.Tiny, heading: false, over ? Palette.Ink : Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
 		if (Widgets.ButtonInvisible(header))
 		{
 			contentsOpen = !contentsOpen;

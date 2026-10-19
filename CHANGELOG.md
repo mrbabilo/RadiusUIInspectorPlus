@@ -2,6 +2,12 @@
 
 Les versions suivent `<modVersion>` dans `About.xml` et les releases GitHub. Les plus récentes en premier.
 
+## Non publié
+
+### Corrections
+
+- **Performance** : les en-têtes « Favoris (n) », « Contenu (n types, m objets) » du panneau Stockage et « n cases » du panneau de zone ne sont plus retraduits à chaque image ; le texte n'est refait que quand un compteur ou la langue change.
+
 ## 1.2.4 — 2026-10-19
 
 ### Corrections

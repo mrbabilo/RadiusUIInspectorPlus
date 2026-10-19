@@ -10,6 +10,8 @@ public static class ZonePanel
 {
 	private const float Margin = 6f;
 
+	private static readonly CountedLabel CellsLabel = new CountedLabel("RUI.Inspector.ZoneCells");
+
 	private const float Pad = 12f;
 
 	private static Vector2 scroll;
@@ -114,7 +116,7 @@ public static class ZonePanel
 		float num2 = num + 56f;
 		float width = bx + 24f - num2 - 4f;
 		RadiusFont.Label(new Rect(num2, y, width, 23f), zone.RenamableLabel, GameFont.Small, heading: true, Palette.Ink, TextAnchor.MiddleLeft, wrap: false);
-		RadiusFont.Label(new Rect(num2, y + 22f, width, 23f), "RUI.Inspector.ZoneCells".Translate(zone.cells.Count), GameFont.Small, heading: false, Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
+		RadiusFont.Label(new Rect(num2, y + 22f, width, 23f), CellsLabel.For(zone.cells.Count), GameFont.Small, heading: false, Palette.TextDim, TextAnchor.MiddleLeft, wrap: false);
 		y += 50f;
 	}
 
