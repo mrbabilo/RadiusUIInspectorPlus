@@ -29,7 +29,13 @@ public static class Boot
 	static Boot()
 	{
 		SceneServer.Bind();
-		if (!GenCommandLine.TryGetCommandLineArg("ruitest", out ResultsPath))
+		bool scene = GenCommandLine.TryGetCommandLineArg("ruiscene", out _);
+		bool test = GenCommandLine.TryGetCommandLineArg("ruitest", out ResultsPath);
+		if (scene || test)
+		{
+			QuietStartup.Apply();
+		}
+		if (!test)
 		{
 			return;
 		}
@@ -731,6 +737,12 @@ internal class Checks
 			dialog.Close(doCloseSound: false);
 			return Expect(open, "dialog closed itself");
 		});
+
+		// Pawns hauling with the special filters
+		foreach (ValueTuple<string, Action, int, Func<string>> step in HaulChecks.Steps())
+		{
+			yield return step;
+		}
 
 		// Final state
 		yield return ("end: no trip, FlatScroll styles registered at most once", null, 0, delegate

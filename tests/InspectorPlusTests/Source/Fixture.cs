@@ -66,7 +66,7 @@ internal static class Fixture
 	}
 
 	// A square stockpile on free ground: every cell is standable, reachable and empty.
-	private static Zone_Stockpile NewStockpile(int side)
+	internal static Zone_Stockpile NewStockpile(int side)
 	{
 		IntVec3 center = FreeCell(14);
 		Zone_Stockpile zone = new Zone_Stockpile(StorageSettingsPreset.DefaultStockpile, Map.zoneManager);
@@ -80,7 +80,9 @@ internal static class Fixture
 		}
 		if (zone.Cells.Count < 12)
 		{
-			throw new Exception("stockpile too small: " + zone.Cells.Count + " cells");
+			int count = zone.Cells.Count;
+			zone.Delete();
+			throw new Exception("stockpile too small: " + count + " cells");
 		}
 		return zone;
 	}

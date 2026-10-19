@@ -23,6 +23,8 @@ tests/run-checks.sh C "ludeon.rimworld.royalty ludeon.rimworld.ideology ludeon.r
 tests/run-checks.sh D "" -ruinoflatfix
 ```
 
+Le journal de debug et la notice du framework Radius ne s'ouvrent pas pendant les tests et les scènes (`QuietStartup.cs`) ; les erreurs restent comptées par les contrôles.
+
 Chaque script n'affiche que les lignes qui ne sont pas PASS, et rend le code 1 si un contrôle a échoué. Les résultats complets sont dans `$RUITEST_WORK/<nom>.txt`, et le journal du jeu dans `<nom>.log`.
 
 Ce qui est vérifié :
@@ -33,6 +35,7 @@ Ce qui est vérifié :
 - le mode du panneau selon la sélection, et l'onglet Santé affiché dans le panneau ;
 - le panneau Stockage (stock, contenu, avertissement quand des objets stockés ne sont plus acceptés, Tout déplier) ;
 - l'arbre Stockage : hauteur comparée à un parcours complet forcé (en haut, au milieu, en bas, après repli, pendant une recherche), et saut vers un objet depuis la liste du contenu ;
+- le comportement des colons avec les filtres spéciaux (`HaulChecks.cs`). Deux zones de stockage aux filtres opposés, des objets posés au sol entre elles, puis le jeu avance tick par tick jusqu'à ce que les colons aient tout rangé. Chaque objet doit finir dans la zone attendue. Paires testées : objets inutiles et utiles (vêtements, armes), avec ou sans qualité, périssables ou non, inflammables ou non, empilables ou non, avec ou sans points de vie, et filtre de matériau acier. Plus : un tas déjà stocké puis refusé, signalé « sur le départ » dans le panneau puis déplacé par un colon ; un filtre de zone aux filtres spéciaux refusés, sauvegardé puis rechargé. Pendant ces scénarios, le reste de la carte est neutralisé (autres objets interdits, autres stockages fermés), puis remis en état ;
 - le dialogue Matériaux ;
 - l'absence d'erreur et de retour au panneau vanilla.
 
