@@ -59,6 +59,8 @@ Le défilement du framework Radius (`FlatScroll`) reconstruisait 16 fois le cach
 
 Le panneau Stockage, arbre entièrement déplié, ne parcourt plus les branches hors de la vue : chaque branche retient sa hauteur, et une branche entièrement hors de la vue est sautée d'un coup. L'arbre coûte environ trois fois moins (de 341 à 112 µs par passage, mesuré avec Dubs Performance Analyzer).
 
+Les en-têtes à compteur (« Favoris », « Contenu », nombre de cases d'une zone) ne sont plus retraduits à chaque image : le texte n'est refait que quand un compteur change. Mesures et profil du panneau d'un pion : `docs/perf/2026-10-18-tests-dpa.md`.
+
 ## Compiler
 
 Le dépôt ne contient pas la DLL. Le projet `Source/RadiusUIInspector.csproj` (`net472`) se compile contre les DLL du jeu (RimWorld 1.6), contre `0Harmony.dll` et contre `RadiusUI.Framework.dll` installé. Adaptez les `HintPath` du `.csproj` à votre installation.
