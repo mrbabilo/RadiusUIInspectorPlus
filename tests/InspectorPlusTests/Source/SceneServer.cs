@@ -35,6 +35,8 @@ public class SceneServer : GameComponent
 
 	private Dialog_Materials dialog;
 
+	private Fluency fluency;
+
 	internal static void Bind()
 	{
 		if (GenCommandLine.TryGetCommandLineArg("ruiscene", out dir))
@@ -90,6 +92,14 @@ public class SceneServer : GameComponent
 			File.WriteAllText(Path.Combine(dir, "scene-ack.txt"), ackText);
 			ackFrame = -1;
 		}
+		if (fluency != null)
+		{
+			fluency.Update();
+			if (fluency.Done)
+			{
+				fluency = null;
+			}
+		}
 		if (Time.frameCount % 30 == 0)
 		{
 			WriteState();
@@ -136,6 +146,19 @@ public class SceneServer : GameComponent
 				dialog = new Dialog_Materials(filter, (System.Collections.Generic.List<SpecialThingFilterDef>)HarmonyLib.AccessTools.Field(typeof(MaterialFilters), "Generated").GetValue(null));
 				Find.WindowStack.Add(dialog);
 				break;
+			case "fluency":
+			{
+				string[] args = (array.Length > 2 ? array[2] : "").Split(' ');
+				if (!Fluency.Known(args[0]))
+				{
+					note = "unknown scene";
+					break;
+				}
+				CloseDialog();
+				fluency = new Fluency(args[0], args.Length > 1 ? int.Parse(args[1]) : 3600, args.Length > 2 && args[2] == "vanillafirst", dir);
+				note = "started, result in fluency-" + args[0] + ".txt";
+				break;
+			}
 			case "closeall":
 				CloseDialog();
 				Pane.CloseOpenTab();
@@ -173,7 +196,7 @@ public class SceneServer : GameComponent
 		}
 	}
 
-	private static string Select(string what)
+	internal static string Select(string what)
 	{
 		Pane.CloseOpenTab();
 		switch (what)
@@ -207,7 +230,7 @@ public class SceneServer : GameComponent
 		return "selected=" + Find.Selector.NumSelected;
 	}
 
-	private static string Tab(string which)
+	internal static string Tab(string which)
 	{
 		IInspectPane pane = Pane;
 		Type type = which switch
@@ -244,6 +267,7 @@ public class SceneServer : GameComponent
 			+ ",\"native\":\"" + InspectorCore.NativeKind + "\""
 			+ ",\"hosting\":" + (InspectorCore.HostingTab ? "true" : "false")
 			+ ",\"tripped\":" + (InspectorCore.KillSwitch || InspectorCore.Guard.Disabled ? "true" : "false")
-			+ ",\"windows\":" + Find.WindowStack.Count + "}");
+			+ ",\"windows\":" + Find.WindowStack.Count
+			+ ",\"fluency\":" + (fluency != null ? "true" : "false") + "}");
 	}
 }

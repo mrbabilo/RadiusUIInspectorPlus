@@ -54,11 +54,43 @@ Commandes de `scene.sh` :
 - `select pawn|pawns|pawns3|bed|zone|shelf|none`
 - `tab storage|health|gear|needs|none`
 - `materials`, `closeall`, `speed <0-4>`, `shot <fichier.png>`, `quit`
+- `fluency pawn|health|pawns|zone|shelf [images] [vanillafirst]` : sonde de fluidité, sans DPA (voir plus bas)
 
 Le panneau DPA s'ouvre par la loupe de la barre du bas, catégorie Custom Update.
 
 Deux pièges de mesure :
 - **Méthode récursive** (`DrawNode`) : ne la mesurer que depuis le site d'appel de son appelant, jamais avec un second profileur DPA sur elle.
 - **Repli automatique** : le panneau se replie quand la souris le quitte. Un clic sur le panneau replié tombe sur la carte.
+
+## Fluidité : allocations, GC et saccades
+
+La sonde `fluency` mesure ce que les moyennes de DPA ne montrent pas. Toutes les 600 images, elle passe d'un état à l'autre, sur la même carte et au même moment de la partie :
+- `off` : rien de sélectionné ;
+- `plus` : la scène, dessinée par Inspector Plus ;
+- `vanilla` : la même scène avec Inspector Plus désactivé.
+
+La part propre à Inspector Plus est « plus − vanilla ». Des parties séparées ne se comparent pas : chaque test rapide tire une carte et des colons au hasard.
+
+```sh
+tests/run-scene.sh &
+tests/scene.sh speed 1
+tests/scene.sh fluency zone 5400     # rend la main tout de suite ; 3 blocs par état
+# attendre $RUITEST_WORK/fluency-zone.txt
+```
+
+Scènes : `pawn` (un colon), `health` (un colon, onglet Santé), `pawns` (20 colons), `zone` et `shelf` (onglet Stockage).
+
+L'ordre par défaut est off, plus, vanilla. L'état plus exécute aussi du code vanilla (onglets hébergés, dessin de la sélection) : dans une partie neuve, il paie seul le premier passage de ce code. Pour mesurer la première ouverture du panneau, ajouter `vanillafirst` dans une partie neuve.
+
+Pour chaque état, la sonde donne :
+- ce qui était réellement à l'écran (mode du panneau, onglet ouvert) ;
+- la mémoire allouée par image, en moyenne et par bloc, mesurée par la somme des hausses de `GC.GetTotalMemory` (le compteur par thread vaut toujours 0 sous le GC de Unity) ;
+- les collectes de génération 0 ;
+- les temps d'image p50, p95, p99, max, et le nombre d'images au-delà de 25 et 40 ms ;
+- à part, les 30 premières images après chaque bascule : coût ponctuel de l'ouverture du panneau.
+
+Pendant la mesure, le plafond de fréquence est levé : au plafond de 30 ips, toutes les images durent 33 ms. Le panneau est aussi épinglé, sinon il se replie au bout de quelques secondes. Les deux réglages sont remis en fin de mesure.
+
+Le jeu doit rester au premier plan : une fois caché derrière une autre fenêtre, il se fige.
 
 Rapports de mesure : `docs/perf/`.
